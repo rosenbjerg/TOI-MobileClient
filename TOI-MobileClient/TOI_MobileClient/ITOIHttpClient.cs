@@ -7,6 +7,6 @@ namespace TOI_MobileClient
 {
     interface ITOIHttpClient
     {
-        async Task<string> GetStringAsync(string url);
+        Task<string> GetStringAsync(string url);
     }
 }
