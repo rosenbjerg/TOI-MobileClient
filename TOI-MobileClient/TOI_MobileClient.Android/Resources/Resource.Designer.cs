@@ -26,6 +26,7 @@ namespace TOI_MobileClient.Droid
 		
 		public static void UpdateIdValues()
 		{
+			global::Xamarin.Forms.Platform.Android.Resource.Attribute.actionBarSize = global::TOI_MobileClient.Droid.Resource.Attribute.actionBarSize;
 		}
 		
 		public partial class Animation
