@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace TOI_MobileClient
 {
-    interface ITOIHttpClient
+    public interface IToiHttpClient : IDisposable
     {
-        async Task<string> GetStringAsync(string url);
+        Task<string> GetStringAsync(string url);
     }
 }

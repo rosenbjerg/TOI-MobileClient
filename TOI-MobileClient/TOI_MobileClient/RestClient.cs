@@ -6,8 +6,13 @@ using System.Text;
 namespace TOI_MobileClient
 {
     
-    class RestClient
+    public class RestClient
     {
-        HttpClient _client;
+        IToiHttpClient _client;
+
+        public RestClient(IToiHttpClient client)
+        {
+            this._client = client;
+        }
     }
 }

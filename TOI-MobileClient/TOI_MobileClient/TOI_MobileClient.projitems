@@ -13,7 +13,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)BleScannerBase.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ITOIHttpClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IToiHttpClient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
