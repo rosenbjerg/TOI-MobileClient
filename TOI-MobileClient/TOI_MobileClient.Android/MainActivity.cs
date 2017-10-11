@@ -6,6 +6,7 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Android.OS;
+using Rosenbjerg.DepMan;
 
 namespace TOI_MobileClient.Droid
 {
@@ -18,9 +19,9 @@ namespace TOI_MobileClient.Droid
 			ToolbarResource = Resource.Layout.Toolbar; 
 
 			base.OnCreate (bundle);
-
+		    DependencyManager.Register<BleScannerBase, AndroidBleScanner>(new AndroidBleScanner());
 			global::Xamarin.Forms.Forms.Init (this, bundle);
-			LoadApplication (new TOI_MobileClient.App ());
+			LoadApplication (new App ());
 		}
 	}
 }

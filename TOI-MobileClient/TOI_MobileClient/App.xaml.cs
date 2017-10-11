@@ -1,20 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-
-using Xamarin.Forms;
+using Rosenbjerg.DepMan;
 
 namespace TOI_MobileClient
 {
-	public partial class App : Application
+	public partial class App : Xamarin.Forms.Application
 	{
 		public App ()
 		{
 			InitializeComponent();
-
-			MainPage = new TOI_MobileClient.MainPage();
+			MainPage = new MainPage();
 		}
+
+	    public async void test()
+	    {
+	        var tags = new List<string> {"jonas"};
+	        var scanner = DependencyManager.Get<BleScannerBase>();
+	        var devs = await scanner.ScanDevices();
+	        devs.Where(d => tags.Contains(d.Address));
+
+	    }
 
 		protected override void OnStart ()
 		{
