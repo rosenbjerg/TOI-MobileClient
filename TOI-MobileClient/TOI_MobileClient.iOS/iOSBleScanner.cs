@@ -9,7 +9,7 @@ namespace TOI_MobileClient.iOS
     {
         private bool _isScanning;
 
-        public override Task<List<BleDevice>> ScanDevices(HashSet<string> bda = null, int limit = 10, int scanTimeout = 10000)
+        public override async Task<List<BleDevice>> ScanDevices(HashSet<string> bda = null, int limit = 10, int scanTimeout = 10000)
         {
             if (!Ble.IsAvailable || !Ble.IsOn)
                 return null;
@@ -22,13 +22,13 @@ namespace TOI_MobileClient.iOS
 
             Adapter.DeviceDiscovered += (s, a) =>
             {
-                var dev = a.Device.NativeDevice as ;
-                if (i++ < limit && bda != null && bda.Contains(dev.Address))
+                var dev = a.Device.NativeDevice as CBPeripheral;
+                if (i++ < limit && bda != null && bda.Contains(dev?.UUID.ToString() ?? ""))
                 {
                     deviceList.Add(new BleDevice
                     {
                         RSSI = a.Device.Rssi,
-                        Address = dev.Address,
+                        Address = dev?.UUID.ToString() ?? "",
                     });
                 }
                 else
