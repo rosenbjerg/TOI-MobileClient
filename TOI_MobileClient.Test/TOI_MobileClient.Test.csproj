@@ -44,10 +44,14 @@
     <Reference Include="Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\MSTest.TestFramework.1.1.18\lib\net45\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CustomAsserts.cs" />
     <Compile Include="MockHttpClient.cs" />
     <Compile Include="RestClientTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -59,6 +63,10 @@
     <ProjectReference Include="..\TOI-MobileClient\TOI_MobileClient.Android\TOI_MobileClient.Android.csproj">
       <Project>{c7db9a21-05ce-455f-8454-cf3d2b663f21}</Project>
       <Name>TOI_MobileClient.Android</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TOIClasses\TOIClasses.csproj">
+      <Project>{862289AC-3D41-420D-8B5C-B79889256ADD}</Project>
+      <Name>TOIClasses</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
