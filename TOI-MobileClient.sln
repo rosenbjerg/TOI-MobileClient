@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2002
+VisualStudioVersion = 15.0.26730.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "TOI_MobileClient", "TOI-MobileClient\TOI_MobileClient\TOI_MobileClient.shproj", "{1C7AFEBB-D35A-45E2-ABA4-170678483D7B}"
 EndProject
@@ -17,7 +17,6 @@ Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		TOI-MobileClient\TOI_MobileClient\TOI_MobileClient.projitems*{1c7afebb-d35a-45e2-aba4-170678483d7b}*SharedItemsImports = 13
 		TOI-MobileClient\TOI_MobileClient\TOI_MobileClient.projitems*{c7db9a21-05ce-455f-8454-cf3d2b663f21}*SharedItemsImports = 4
-		TOI-MobileClient\TOI_MobileClient\TOI_MobileClient.projitems*{d7dff9ea-aea7-4bd2-bb8c-713f465bb263}*SharedItemsImports = 4
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Ad-Hoc|Any CPU = Ad-Hoc|Any CPU
