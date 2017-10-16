@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2002
+VisualStudioVersion = 15.0.26730.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "TOI_MobileClient", "TOI-MobileClient\TOI_MobileClient\TOI_MobileClient.shproj", "{1C7AFEBB-D35A-45E2-ABA4-170678483D7B}"
 EndProject
@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TOI_MobileClient.iOS", "TOI
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TOI_MobileClient.Test", "TOI_MobileClient.Test\TOI_MobileClient.Test.csproj", "{8038424D-606F-4678-AAA6-CE2AB211EC4A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TOIClasses", "TOIClasses\TOIClasses.csproj", "{862289AC-3D41-420D-8B5C-B79889256ADD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TOIClasses", "TOIClasses\TOIClasses.csproj", "{862289AC-3D41-420D-8B5C-B79889256ADD}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
