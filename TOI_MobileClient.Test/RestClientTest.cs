@@ -20,7 +20,7 @@ namespace TOI_MobileClient.Test
         {
             var tagInfo = _rc.Get<TagInfo>("tags/valid");
 
-            Assert.IsNotNull(tagInfo);
+            Assert.IsNotNull(tagInfo.Result);
         }
 
         [TestMethod]
@@ -34,7 +34,7 @@ namespace TOI_MobileClient.Test
         {
             var tagInfo = _rc.Get<TagInfo>("tags/invalid");
 
-            Assert.IsNull(tagInfo);
+            Assert.IsNull(tagInfo.Result);
         }
 
         [TestMethod]

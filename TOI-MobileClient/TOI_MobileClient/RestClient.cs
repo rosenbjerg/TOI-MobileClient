@@ -21,13 +21,15 @@ namespace TOI_MobileClient
             where T : class, new()
         {
             var jsonString = await _client.GetStringAsync(url);
+            if (string.IsNullOrEmpty(jsonString))
+                return null;
 
             try
             {
                 T obj = JsonConvert.DeserializeObject<T>(jsonString);
                 return obj;
             }
-            catch (JsonException e)
+            catch (Newtonsoft.Json.JsonReaderException e)
             {
                 Console.WriteLine(e);
                 throw new FormatException(e.Message);
