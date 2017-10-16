@@ -17,7 +17,7 @@ namespace TOI_MobileClient
         protected IBluetoothLE Ble;
         protected IAdapter Adapter;
 
-        public abstract Task<List<BleDevice>> ScanDevices(HashSet<string> bda = null, int limit = 10, int scanTimeout = 10000);
+        public abstract Task<List<BleDevice>> ScanDevices(HashSet<string> bdaFilter = null, int limit = 10, int scanTimeout = 10000);
 
     }
     public class BleDevice

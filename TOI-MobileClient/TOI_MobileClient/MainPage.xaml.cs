@@ -2,8 +2,8 @@
 
 namespace TOI_MobileClient
 {
-	public partial class MainPage : ContentPage
-	{
+	public partial class MainPage 
+    {
 		public MainPage()
 		{
 			InitializeComponent();

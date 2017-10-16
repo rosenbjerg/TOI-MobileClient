@@ -9,17 +9,10 @@ namespace TOI_MobileClient
 		public App ()
 		{
 			InitializeComponent();
-			MainPage = new MainPage();
+		    var nav = new MainPage();
+            MainPage = nav;
+		    nav.PushAsync(new ScanTestPage());
 		}
-
-	    public async void test()
-	    {
-	        var tags = new List<string> {"jonas"};
-	        var scanner = DependencyManager.Get<BleScannerBase>();
-	        var devs = await scanner.ScanDevices();
-	        devs.Where(d => tags.Contains(d.Address));
-
-	    }
 
 		protected override void OnStart ()
 		{

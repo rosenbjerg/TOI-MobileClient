@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Android.Bluetooth;
 
@@ -8,7 +9,7 @@ namespace TOI_MobileClient.Droid
     {
         private bool _isScanning;
 
-        public override async Task<List<BleDevice>> ScanDevices(HashSet<string> bda = null, int limit = 10, int scanTimeout = 10000)
+        public override async Task<List<BleDevice>> ScanDevices(HashSet<string> bdaFilter = null, int limit = 10, int scanTimeout = 10000)
         {
             if (_isScanning) return null;
             _isScanning = true;
@@ -20,13 +21,14 @@ namespace TOI_MobileClient.Droid
             Adapter.DeviceDiscovered += (s, a) =>
             {
                 var dev = a.Device.NativeDevice as BluetoothDevice;
-                if (i++ < limit && bda != null && bda.Contains(dev.Address))
+                if (i++ < limit && (bdaFilter == null || !bdaFilter.Contains(dev.Address)))
                 {
                     deviceList.Add(new BleDevice
                     {
                         RSSI = a.Device.Rssi,
                         Address = dev.Address,
                     });
+                    Console.WriteLine("Adding devices");
                 }
                 else
                 {
