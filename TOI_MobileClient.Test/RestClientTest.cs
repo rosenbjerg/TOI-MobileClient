@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TOIClasses;
 
 namespace TOI_MobileClient.Test
 {
@@ -17,32 +18,36 @@ namespace TOI_MobileClient.Test
         [TestMethod]
         public void GetTagInfo_ValidTagIdValidUrl_ReturnsTagObject()
         {
-            Assert.Fail("Not implemented yet.");
+            var tagInfo = _rc.Get<TagInfo>("tags/valid");
+
+            Assert.IsNotNull(tagInfo);
         }
 
         [TestMethod]
         public void GetTagInfo_ValidTagIdInvalidUrl_ThrowsArgumentException()
         {
-            Assert.Fail("Not implemented yet.");
+            Assert.ThrowsException<ArgumentException>(() => _rc.Get<TagInfo>("sdljkahgf"));
         }
 
         [TestMethod]
         public void GetTagInfo_InvalidTagIdValidUrl_ReturnsNull()
         {
-            Assert.Fail("Not implemented yet.");
+            var tagInfo = _rc.Get<TagInfo>("tags/invalid");
+
+            Assert.IsNull(tagInfo);
         }
 
         [TestMethod]
         public void GetTagInfo_InvalidTagIdInvalidUrl_ThrowArgumentException()
         {
-            Assert.Fail("Not implemented yet.");
+            Assert.ThrowsException<ArgumentException>(() => _rc.Get<TagInfo>("sdlhg"));
 
         }
 
         [TestMethod]
         public void GetTagInfo_ValidTagIdValidUrlUnexpectedAnswerFormat_ThrowsFormatException()
         {
-            Assert.Fail("Not implemented yet.");
+            Assert.ThrowsException<FormatException>(() => _rc.Get<TagInfo>("tags/badformat"));
 
         }
     }

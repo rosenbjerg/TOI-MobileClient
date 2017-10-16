@@ -60,6 +60,10 @@
       <Project>{c7db9a21-05ce-455f-8454-cf3d2b663f21}</Project>
       <Name>TOI_MobileClient.Android</Name>
     </ProjectReference>
+    <ProjectReference Include="..\TOIClasses\TOIClasses.csproj">
+      <Project>{862289AC-3D41-420D-8B5C-B79889256ADD}</Project>
+      <Name>TOIClasses</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
