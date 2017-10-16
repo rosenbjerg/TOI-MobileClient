@@ -26,7 +26,12 @@ namespace TOI_MobileClient.Test
         [TestMethod]
         public void GetTagInfo_ValidTagIdInvalidUrl_ThrowsArgumentException()
         {
-            Assert.ThrowsException<ArgumentException>(() => _rc.Get<TagInfo>("sdljkahgf"));
+            CustomAsserts.ThrowsAsync<ArgumentException>(() =>
+            {
+                var r = _rc.Get<TagInfo>("sdljkahgf");
+                r.Wait();
+                return r.Result;
+            });
         }
 
         [TestMethod]
@@ -40,15 +45,24 @@ namespace TOI_MobileClient.Test
         [TestMethod]
         public void GetTagInfo_InvalidTagIdInvalidUrl_ThrowArgumentException()
         {
-            Assert.ThrowsException<ArgumentException>(() => _rc.Get<TagInfo>("sdlhg"));
+            CustomAsserts.ThrowsAsync<ArgumentException>(() =>
+            {
+                var r = _rc.Get<TagInfo>("sdlhg");
+                r.Wait();
+                return r.Result;
+            });
 
         }
 
         [TestMethod]
         public void GetTagInfo_ValidTagIdValidUrlUnexpectedAnswerFormat_ThrowsFormatException()
         {
-            Assert.ThrowsException<FormatException>(() => _rc.Get<TagInfo>("tags/badformat"));
-
+            CustomAsserts.ThrowsAsync<FormatException>(() =>
+            {
+                var r = _rc.Get<TagInfo>("tags/badformat");
+                r.Wait();
+                return r.Result;
+            });
         }
     }
 }
