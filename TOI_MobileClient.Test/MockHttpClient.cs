@@ -9,10 +9,9 @@ namespace TOI_MobileClient.Test
     {
         private Dictionary<string, string> mockUrlContent = new Dictionary<string, string>()
         {
-            {"tags/valid", "{khfdjgskjfg}" },
+            {"tags/valid", "{'key': 'value'}" },
             {"tags/badformat", "This is a bad json string!" },
-            //TODO fix this value
-            {"tags/invalidurl", "INSERT THE DEFAULT 404 message." }
+            {"tags/invalid", null }
         };
 
         public void Dispose()
