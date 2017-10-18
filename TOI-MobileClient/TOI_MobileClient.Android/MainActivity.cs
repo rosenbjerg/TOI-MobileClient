@@ -26,7 +26,9 @@ namespace TOI_MobileClient.Droid
 		    DependencyManager.Register<BleScannerBase, AndroidBleScanner>(new AndroidBleScanner());
             FontAwesome = Typeface.CreateFromAsset(Android.App.Application.Context.Assets, "FontAwesome.ttf");
             global::Xamarin.Forms.Forms.Init (this, bundle);
-			LoadApplication (new App ());
+		    Plugin.Iconize.Iconize.With(new Plugin.Iconize.Fonts.FontAwesomeModule());
+            FormsPlugin.Iconize.Droid.IconControls.Init(Resource.Id.toolbar, Resource.Id.sliding_tabs);
+            LoadApplication (new App ());
 		}
 	}
 }

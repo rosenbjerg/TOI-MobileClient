@@ -7,10 +7,12 @@ namespace TOI_MobileClient
 {
 	public partial class App : Xamarin.Forms.Application
 	{
+	    public static INavigation Navigation;
 		public App ()
 		{
 			InitializeComponent();
             MainPage = new MainPage();
+		    Navigation = MainPage.Navigation;
 		}
 
 		protected override void OnStart ()

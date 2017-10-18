@@ -2,16 +2,17 @@
 <MasterDetailPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TOI_MobileClient.MainPage"
-             xmlns:pages="clr-namespace:TOI_MobileClient">
+             xmlns:pages="clr-namespace:TOI_MobileClient"
+             xmlns:iconize="clr-namespace:FormsPlugin.Iconize;assembly=FormsPlugin.Iconize">
   
   <MasterDetailPage.Master>
     <pages:MainPageMaster x:Name="MasterPage" />
   </MasterDetailPage.Master>
     <MasterDetailPage.Detail>
-        <NavigationPage>
+        <iconize:IconNavigationPage>
             <x:Arguments>
-        <pages:ScanTestPage />
+        <pages:ScanPage />
       </x:Arguments>
-    </NavigationPage>
+    </iconize:IconNavigationPage>
   </MasterDetailPage.Detail>
 </MasterDetailPage>

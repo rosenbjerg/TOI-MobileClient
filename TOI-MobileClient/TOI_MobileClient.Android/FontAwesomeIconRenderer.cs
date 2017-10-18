@@ -10,6 +10,7 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
+using Java.Util;
 using TOI_MobileClient;
 using TOI_MobileClient.Droid;
 using Xamarin.Forms;
