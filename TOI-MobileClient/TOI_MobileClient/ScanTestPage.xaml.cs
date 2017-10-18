@@ -14,6 +14,7 @@ namespace TOI_MobileClient
 	{
 		public ScanTestPage ()
 		{
+            BindingContext = new ScanViewModel();
 			InitializeComponent ();
 		}
 

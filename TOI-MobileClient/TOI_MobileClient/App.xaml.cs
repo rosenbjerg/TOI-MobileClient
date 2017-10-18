@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Rosenbjerg.DepMan;
+using Xamarin.Forms;
 
 namespace TOI_MobileClient
 {
@@ -9,9 +10,7 @@ namespace TOI_MobileClient
 		public App ()
 		{
 			InitializeComponent();
-		    var nav = new MainPage();
-            MainPage = nav;
-		    nav.PushAsync(new ScanTestPage());
+            MainPage = new MainPage();
 		}
 
 		protected override void OnStart ()

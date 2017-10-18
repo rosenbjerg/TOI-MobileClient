@@ -9,7 +9,7 @@ namespace TOI_MobileClient
 {
     class ToiHttpClient : IToiHttpClient
     {
-        private HttpClient _client;
+        private readonly HttpClient _client;
 
         public ToiHttpClient()
         {
