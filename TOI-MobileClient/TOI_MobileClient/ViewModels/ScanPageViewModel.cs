@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Input;
 using Rosenbjerg.DepMan;
+using TOIClasses;
 using TOI_MobileClient.ViewModels;
 using Xamarin.Forms;
 
@@ -57,6 +58,7 @@ namespace TOI_MobileClient
         public ScanPageViewModel()
         {
             SyncCommand = new Command(ScanForBLE);
+            NearbyTags = new List<TagViewModel>();
         }
 
         private async void ScanForBLE()
@@ -74,9 +76,18 @@ namespace TOI_MobileClient
             {
                 //Todo: Request the server for information here!
 
-                //tvms.Add(new Tag)
+                var ti = new TagInfo
+                {
+                    Title = d.Address,
+                    Description = d.RSSI.ToString(),
+                    Image = "http://ridning-heste.dk/wp-content/uploads/2015/04/horse-659182_1280-672x372.jpg",
+                    Url = "https://google.dk"
+                };
+                tvms.Add(new TagViewModel(ti));
             });
             NearbyTags = tvms;
+
+            Loaded = true;
         }
     }
 }
