@@ -13,7 +13,6 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Dependencies\BleScannerBase.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Dependencies\ShadowEffect.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Localization\ILanguage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IToiHttpClient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\TagViewModel.cs" />

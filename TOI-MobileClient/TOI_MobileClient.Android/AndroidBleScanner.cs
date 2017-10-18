@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Android.Bluetooth;
+using Plugin.BLE.Abstractions.Contracts;
+using Plugin.BLE.Abstractions.EventArgs;
+using Xamarin.Forms;
 
 namespace TOI_MobileClient.Droid
 {
@@ -9,34 +12,29 @@ namespace TOI_MobileClient.Droid
     {
         private bool _isScanning;
 
-        public override async Task<List<BleDevice>> ScanDevices(HashSet<string> bdaFilter = null, int limit = 10, int scanTimeout = 10000)
+        public override bool IsEnabled => Ble.IsOn && Ble.IsAvailable;
+
+        public override async Task<List<BleDevice>> ScanDevices(HashSet<Guid> deviceFilter, int scanTimeout = 5000)
         {
             if (_isScanning) return null;
             _isScanning = true;
-
-            Adapter.ScanTimeout = scanTimeout; // scan for 10 seconds
+            
+            Adapter.ScanTimeout = scanTimeout;
             var deviceList = new List<BleDevice>();
-            var i = 0;
 
-            Adapter.DeviceDiscovered += (s, a) =>
+            void ScanHandler(object s, DeviceEventArgs a)
             {
                 var dev = a.Device.NativeDevice as BluetoothDevice;
-                if (i++ < limit && (bdaFilter == null || !bdaFilter.Contains(dev.Address)))
+                deviceList.Add(new BleDevice
                 {
-                    deviceList.Add(new BleDevice
-                    {
-                        RSSI = a.Device.Rssi,
-                        Address = dev.Address,
-                    });
-                    Console.WriteLine("Adding devices");
-                }
-                else
-                {
-                    Adapter.StopScanningForDevicesAsync();
-                }
-            };
+                    RSSI = a.Device.Rssi,
+                    Address = dev.Address,
+                });
+            }
 
-            await Adapter.StartScanningForDevicesAsync();
+            Adapter.DeviceDiscovered += ScanHandler;
+            await Adapter.StartScanningForDevicesAsync(null, device => deviceFilter.Contains(device.Id));
+            Adapter.DeviceDisconnected -= ScanHandler;
             _isScanning = false;
             return deviceList;
         }

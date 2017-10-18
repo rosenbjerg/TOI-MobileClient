@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Plugin.BLE;
 using Plugin.BLE.Abstractions.Contracts;
@@ -17,12 +18,14 @@ namespace TOI_MobileClient
         protected IBluetoothLE Ble;
         protected IAdapter Adapter;
 
-        public abstract Task<List<BleDevice>> ScanDevices(HashSet<string> bdaFilter = null, int limit = 10, int scanTimeout = 10000);
+        public abstract bool IsEnabled { get; }
 
+        public abstract Task<List<BleDevice>> ScanDevices(HashSet<Guid> deviceFilter, int limit = 10);
+        
     }
     public class BleDevice
     {
-        public string Address { get; set; }
+        public Guid Address { get; set; }
         public int RSSI { get; set; }
     }
 }

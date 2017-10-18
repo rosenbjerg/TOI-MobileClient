@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -6,7 +7,7 @@ namespace TOI_MobileClient.Test
 {
     class MockBleScanner : BleScannerBase
     {
-        public override Task<List<BleDevice>> ScanDevices(HashSet<string> bdaFilter = null, int limit = 10, int scanTimeout = 10000)
+        public override Task<List<BleDevice>> ScanDevices(HashSet<Guid> bdaFilter = null, int scanTimeout = 10000)
         {
             return Task.FromResult(new List<BleDevice>
             {
