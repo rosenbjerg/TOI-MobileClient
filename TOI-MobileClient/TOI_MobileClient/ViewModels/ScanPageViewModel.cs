@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Windows.Input;
 using Rosenbjerg.DepMan;
 using TOIClasses;
@@ -13,12 +12,12 @@ namespace TOI_MobileClient
     class ScanPageViewModel : PageViewModelBase
     {
         public override string PageTitle => "Scan for tags";
-        public ICommand SyncCommand { get; private set; }
+        public ICommand SyncCommand { get; }
 
         private bool _loading;
         public bool Loading
         {
-            get { return _loading; }
+            get => _loading;
             private set
             {
                 if (_loading == value)
@@ -30,7 +29,7 @@ namespace TOI_MobileClient
         }
         public bool Loaded
         {
-            get { return !_loading; }
+            get => !_loading;
             private set
             {
                 if (_loading != value)
@@ -45,7 +44,7 @@ namespace TOI_MobileClient
 
         public List<TagViewModel> NearbyTags
         {
-            get { return _nearbyTags; }
+            get => _nearbyTags;
             set
             {
                 if (value == _nearbyTags)
@@ -57,17 +56,17 @@ namespace TOI_MobileClient
 
         public ScanPageViewModel()
         {
-            SyncCommand = new Command(ScanForBLE);
+            SyncCommand = new Command(ScanForBle);
             NearbyTags = new List<TagViewModel>();
         }
 
-        private async void ScanForBLE()
+        private async void ScanForBle()
         {
             Loading = true;
 
             var scanner = DependencyManager.Get<BleScannerBase>();
             Console.WriteLine("Scan started");
-            var devs = await scanner.ScanDevices();
+            var devs = await scanner.ScanDevices(null);
             Console.WriteLine("Scan completed");
 
             var tvms = new List<TagViewModel>();
@@ -78,8 +77,8 @@ namespace TOI_MobileClient
 
                 var ti = new TagInfo
                 {
-                    Title = d.Address,
-                    Description = d.RSSI.ToString(),
+                    Title = d.Address.ToString(),
+                    Description = d.Rssi.ToString(),
                     Image = "http://ridning-heste.dk/wp-content/uploads/2015/04/horse-659182_1280-672x372.jpg",
                     Url = "https://google.dk"
                 };

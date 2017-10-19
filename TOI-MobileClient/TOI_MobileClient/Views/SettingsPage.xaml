@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:views="clr-namespace:TOI_MobileClient.Views;assembly=TOI_MobileClient.Android"
+             xmlns:viewModels="clr-namespace:TOI_MobileClient.ViewModels;assembly=TOI_MobileClient.Android"
+             x:Class="TOI_MobileClient.Views.SettingsPage">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <DataTemplate x:Key="RadioTemplate">
+                <ViewCell>
+                    <StackLayout Orientation="Horizontal" Padding="16,0">
+                        <Label Text="{Binding Title}" VerticalOptions="Center" />
+                        <Picker
+                            VerticalOptions="Center"
+                            HorizontalOptions="FillAndExpand"
+                            Title="{Binding Title}"
+                            ItemsSource="{Binding Options}"
+                            SelectedIndex="{Binding Selected}" />
+                    </StackLayout>
+                </ViewCell>
+            </DataTemplate>
+            <DataTemplate x:Key="BooleanTemplate">
+                <SwitchCell
+                    Text="{Binding Title}"
+                    On="{Binding Toggle}" />
+            </DataTemplate>
+            <views:SettingsDataTemplateSelector
+                x:Key="SettingDataTemplateSelector"
+                RadioTemplate="{StaticResource RadioTemplate}"
+                BooleanTemplate="{StaticResource BooleanTemplate}" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <ContentPage.Content>
+        <ListView 
+            ItemsSource="{Binding Settings}"
+            ItemTemplate="{StaticResource SettingDataTemplateSelector}"/>
+    </ContentPage.Content>
+    <ContentPage.BindingContext>
+        <viewModels:SettingsPageViewModel></viewModels:SettingsPageViewModel>   
+    </ContentPage.BindingContext>
+</ContentPage>
