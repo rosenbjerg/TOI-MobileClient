@@ -15,13 +15,17 @@
                 <ActivityIndicator Color="Blue" IsRunning="True" VerticalOptions="Center" HorizontalOptions="Center"/>
             </ContentView>
             <StackLayout IsVisible="{Binding Loaded}">
-                <ListView RowHeight="200" ItemsSource="{Binding NearbyTags}" x:Name="NearbyTags" >
+                <ListView IsVisible="{Binding FoundTags}" RowHeight="200" ItemsSource="{Binding NearbyTags}" x:Name="NearbyTags" >
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <views:CardView></views:CardView>
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
+                <StackLayout IsVisible="{Binding NoTags}">
+                    <Label Text="{Binding Language.NoNearbyTags}"></Label>
+                    <Image Source="no-tags.png"/>
+                </StackLayout>
             </StackLayout>
         </StackLayout>
     </ContentPage.Content>

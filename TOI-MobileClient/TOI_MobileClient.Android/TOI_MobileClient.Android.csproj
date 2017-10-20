@@ -130,7 +130,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AndroidBleScanner.cs" />
-    <Compile Include="LabelShadowEffect.cs" />
+    <Compile Include="AndroidNotifier.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -154,6 +154,9 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\Drawable\SyncIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\Drawable\no-tags.png" />
   </ItemGroup>
   <Import Project="..\TOI_MobileClient\TOI_MobileClient.projitems" Label="Shared" Condition="Exists('..\TOI_MobileClient\TOI_MobileClient.projitems')" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />

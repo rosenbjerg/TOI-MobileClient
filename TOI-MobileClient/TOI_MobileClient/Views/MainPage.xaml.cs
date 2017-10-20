@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using FormsPlugin.Iconize;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -16,18 +16,30 @@ namespace TOI_MobileClient
         {
             InitializeComponent();
             MasterPage.ListView.ItemSelected += ListView_ItemSelected;
+            // Caching and loading of front page
+            var firstPage = new IconNavigationPage(new ScanPage());
+            _loadedPages.Add(typeof(ScanPage), firstPage);
+            Detail = firstPage;
         }
+
+        // Page cache
+        private readonly Dictionary<Type, IconNavigationPage> _loadedPages = new Dictionary<Type, IconNavigationPage>();
 
         private void ListView_ItemSelected(object sender, SelectedItemChangedEventArgs e)
         {
             var item = (MainPageMenuItem) e.SelectedItem;
             if (item == null)
                 return;
+            IconNavigationPage page;
+            if (!_loadedPages.TryGetValue(item.TargetType, out page))
+            {
+                var innerPage = (Page) Activator.CreateInstance(item.TargetType);
+                innerPage.Title = item.Title;
+                page = new IconNavigationPage(innerPage);
+                _loadedPages.Add(item.TargetType, page);
+            }
 
-            var page = (Page)Activator.CreateInstance(item.TargetType);
-            page.Title = item.Title;
-
-            Detail = new NavigationPage(page);
+            Detail = page;
             IsPresented = false;
 
             MasterPage.ListView.SelectedItem = null;

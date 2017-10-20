@@ -1,31 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using TOI_MobileClient.Managers;
 using TOI_MobileClient.Models;
 
 namespace TOI_MobileClient.ViewModels
 {
     class SettingsPageViewModel : PageViewModelBase
     {
-        public override string PageTitle => "Settings";
+        public override string PageTitle => SettingsManager.Language.Settings;
         public List<SettingViewModel> Settings { get; }
 
         public SettingsPageViewModel()
         {
+            var lang = SettingsManager.Language;
             // TODO: read and write on disk
             Settings = new List<SettingViewModel>
             {
-                new RadioSettingViewModel(new RadioSetting("Scan Frequency", new List<string>
+                new RadioSettingViewModel(new RadioSetting(lang.ScanFrequency, new List<string>
                 {
-                    "Often",
-                    "Normal",
-                    "Rarely",
-                    "Never"
+                    lang.Often,
+                    lang.Normal,
+                    lang.Rarely,
+                    lang.Never
                 }, 1)),
-                new BooleanSettingViewModel(new BooleanSetting("GPS")),
-                new BooleanSettingViewModel(new BooleanSetting("Bluetooth")),
-                new BooleanSettingViewModel(new BooleanSetting("Wi-Fi")),
-                new BooleanSettingViewModel(new BooleanSetting("NFC")),
+                new BooleanSettingViewModel(new BooleanSetting(lang.GPS)),
+                new BooleanSettingViewModel(new BooleanSetting(lang.Bluetooth)),
+                new BooleanSettingViewModel(new BooleanSetting(lang.Wifi)),
+                new BooleanSettingViewModel(new BooleanSetting(lang.NFC)),
             };
         }
     }

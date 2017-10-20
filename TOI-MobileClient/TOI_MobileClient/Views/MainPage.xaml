@@ -8,11 +8,4 @@
   <MasterDetailPage.Master>
     <pages:MainPageMaster x:Name="MasterPage" />
   </MasterDetailPage.Master>
-    <MasterDetailPage.Detail>
-        <iconize:IconNavigationPage>
-            <x:Arguments>
-        <pages:ScanPage />
-      </x:Arguments>
-    </iconize:IconNavigationPage>
-  </MasterDetailPage.Detail>
 </MasterDetailPage>
