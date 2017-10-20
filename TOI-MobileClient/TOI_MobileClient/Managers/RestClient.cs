@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,6 +31,32 @@ namespace TOI_MobileClient
                 return obj;
             }
             catch (Newtonsoft.Json.JsonReaderException e)
+            {
+                Console.WriteLine(e);
+                throw new FormatException(e.Message);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<T>> GetMany<T>(string url, IEnumerable<Guid> ids)
+            where T : class, new()
+        {
+            var jArray = JsonConvert.SerializeObject(ids.ToList());
+            var res = await _manager.PostAsync(url, jArray);
+
+            if (string.IsNullOrEmpty(res))
+                return null;
+
+            try
+            {
+                var TList = JsonConvert.DeserializeObject<List<T>>(res);
+                return TList;
+            }
+            catch (JsonReaderException e)
             {
                 Console.WriteLine(e);
                 throw new FormatException(e.Message);

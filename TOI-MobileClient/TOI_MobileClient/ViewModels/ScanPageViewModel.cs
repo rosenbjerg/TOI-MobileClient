@@ -74,23 +74,11 @@ namespace TOI_MobileClient
             Console.WriteLine("Scan started");
             var devs = await scanner.ScanDevices(null);
             Console.WriteLine("Scan completed");
+            
+            var rc = DependencyManager.Get<RestClient>();
 
-            var tvms = new List<TagViewModel>();
-            var devsList = devs.ToList();
-            devsList.ForEach(d =>
-            {
-                //Todo: Request the server for information here!
-
-                var ti = new TagInfo
-                {
-                    Title = d.Address.ToString(),
-                    Description = d.Rssi.ToString(),
-                    Image = "http://ridning-heste.dk/wp-content/uploads/2015/04/horse-659182_1280-672x372.jpg",
-                    Url = "https://google.dk"
-                };
-                tvms.Add(new TagViewModel(ti));
-            });
-            NearbyTags = tvms;
+            var tvms = await rc.GetMany<TagInfo>("http://replacethis.dk", devs.Select(d => d.Address));
+            NearbyTags = tvms.Select( t => new TagViewModel (t)).ToList();
 
             Loaded = true;
         }
