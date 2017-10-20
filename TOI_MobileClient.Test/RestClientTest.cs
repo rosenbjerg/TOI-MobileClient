@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TOIClasses;
 
@@ -63,6 +65,46 @@ namespace TOI_MobileClient.Test
                 r.Wait();
                 return r.Result;
             });
+        }
+
+        [TestMethod]
+        public void GetManyTags_ValidTagIdsValidUrl_ListOfTagInfos()
+        {
+            var ti = _rc.GetMany<TagInfo>("tags/valid", new List<Guid> {MockHttpManager.ValidGuid1, MockHttpManager.ValidGuid2, MockHttpManager.ValidGuid3 });
+            ti.Wait();
+            Assert.IsInstanceOfType(ti.Result, typeof(List<TagInfo>));
+            Assert.AreEqual(ti.Result.ToList().Count, 3);
+        }
+
+        [TestMethod]
+        public void GetManyTags_ValidTagIdsInvalidUrl_ThrowsArgumentException()
+        {
+            CustomAsserts.ThrowsAsync<ArgumentException>(() =>
+            {
+                var ti = _rc.GetMany<TagInfo>("tags/invalid", new List<Guid> { MockHttpManager.ValidGuid1, MockHttpManager.ValidGuid2});
+                ti.Wait();
+                return ti.Result;
+            });
+            
+        }
+
+        [TestMethod]
+        public void GetManyTags_OneInvalidTagIdValidUrl_ListOfTagInfosNullForInvalid()
+        {
+            var ti = _rc.GetMany<TagInfo>("tags/valid", new List<Guid> { MockHttpManager.ValidGuid1, MockHttpManager.InvalidGuid, MockHttpManager.ValidGuid3 });
+            ti.Wait();
+            Assert.IsInstanceOfType(ti.Result, typeof(List<TagInfo>));
+            Assert.IsNull(ti.Result.ToList()[1]);
+            Assert.AreEqual(ti.Result.ToList().Count, 3);
+        }
+
+        [TestMethod]
+        public void GetManyTags_EmptyTagIdsListValidUrl_ListOfTagInfos()
+        {
+            var ti = _rc.GetMany<TagInfo>("tags/valid", new List<Guid> ());
+            ti.Wait();
+            Assert.IsInstanceOfType(ti.Result, typeof(List<TagInfo>));
+            Assert.AreEqual(ti.Result.ToList().Count, 0);
         }
     }
 }
