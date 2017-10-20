@@ -15,6 +15,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Dependencies\BleScannerBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Localization\ILanguage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IToiHttpClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Setting.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\SettingsPageViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\TagViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ViewModelBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Views\CardView.xaml.cs">
@@ -39,6 +41,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)ToiHttpClient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ScanPageViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\PageViewModelBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Views\SettingsPage.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)App.xaml">
@@ -71,6 +76,11 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\CardView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\SettingsPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>

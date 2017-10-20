@@ -8,8 +8,9 @@ namespace TOI_MobileClient
 {
     public abstract class BleScannerBase
     {
-        protected BleScannerBase()
+        protected BleScannerBase(bool init = false)
         {
+            if (!init) return;
             Ble = CrossBluetoothLE.Current;
             Adapter = Ble.Adapter;
         }
@@ -20,12 +21,12 @@ namespace TOI_MobileClient
 
         public abstract bool IsEnabled { get; }
 
-        public abstract Task<List<BleDevice>> ScanDevices(HashSet<Guid> deviceFilter, int limit = 10);
+        public abstract Task<List<BleDevice>> ScanDevices(HashSet<Guid> deviceFilter, int scanTimeout = 5000);
         
     }
     public class BleDevice
     {
         public Guid Address { get; set; }
-        public int RSSI { get; set; }
+        public int Rssi { get; set; }
     }
 }

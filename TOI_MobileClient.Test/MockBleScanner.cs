@@ -5,33 +5,35 @@ using System.Threading.Tasks;
 
 namespace TOI_MobileClient.Test
 {
-    class MockBleScanner : BleScannerBase
+    internal class MockBleScanner : BleScannerBase
     {
-        public override Task<List<BleDevice>> ScanDevices(HashSet<Guid> bdaFilter = null, int scanTimeout = 10000)
+        public override bool IsEnabled => true;
+
+        public override Task<List<BleDevice>> ScanDevices(HashSet<Guid> deviceFilter, int scanTimeout = 5000)
         {
             return Task.FromResult(new List<BleDevice>
             {
                 new BleDevice
                 {
                     Address = "CC:14:54:01:52:82",
-                    RSSI = -67
+                    Rssi = -67
                 },
                 new BleDevice
                 {
                     Address = "CC:15:54:01:52:82",
-                    RSSI = -64
+                    Rssi = -64
                 },
                 new BleDevice
                 {
                     Address = "CC:16:54:01:52:82",
-                    RSSI = -30
+                    Rssi = -30
                 },
                 new BleDevice
                 {
                     Address = "CC:17:54:01:52:82",
-                    RSSI = -98
+                    Rssi = -98
                 },
-            }.Where(s => bdaFilter?.Contains(s.Address) ?? true).ToList());
+            }.Where(s => deviceFilter?.Contains(s.Address) ?? true).ToList());
         }
     }
 }

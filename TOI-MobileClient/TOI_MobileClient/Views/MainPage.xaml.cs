@@ -15,12 +15,12 @@ namespace TOI_MobileClient
         public MainPage()
         {
             InitializeComponent();
-            //MasterPage.ListView.ItemSelected += ListView_ItemSelected;
+            MasterPage.ListView.ItemSelected += ListView_ItemSelected;
         }
 
         private void ListView_ItemSelected(object sender, SelectedItemChangedEventArgs e)
         {
-            var item = e.SelectedItem as MainPageMenuItem;
+            var item = (MainPageMenuItem) e.SelectedItem;
             if (item == null)
                 return;
 
@@ -30,7 +30,7 @@ namespace TOI_MobileClient
             Detail = new NavigationPage(page);
             IsPresented = false;
 
-            //MasterPage.ListView.SelectedItem = null;
+            MasterPage.ListView.SelectedItem = null;
         }
     }
 }
