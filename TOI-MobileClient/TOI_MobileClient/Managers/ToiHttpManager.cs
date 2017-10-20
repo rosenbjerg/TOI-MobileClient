@@ -36,5 +36,23 @@ namespace TOI_MobileClient
                 throw;
             }
         }
+
+        public async Task<string> PostAsync(string url, string body, bool isJson = true)
+        {
+            try
+            {
+                var cont = new StringContent(body, Encoding.UTF8, isJson ? "application/json" : "text/plain");
+                var response = await _client.PostAsync(url, cont);
+                if (!response.IsSuccessStatusCode)
+                    throw new ArgumentException($"The request to {url} did not succeed.");
+
+                return await response.Content.ReadAsStringAsync();
+            }
+            catch (WebException e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
     }
 }

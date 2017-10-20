@@ -13,7 +13,7 @@ namespace TOI_MobileClient.Test
         {
             var scanner = new MockBleScanner();
 
-            var devices = scanner.ScanDevices();
+            var devices = scanner.ScanDevices(null);
 
             Assert.AreEqual(devices.Result.Count, 4);
         }

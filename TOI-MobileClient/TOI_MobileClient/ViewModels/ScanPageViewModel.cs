@@ -77,17 +77,11 @@ namespace TOI_MobileClient
 
             var tvms = new List<TagViewModel>();
             var devsList = devs.ToList();
-            devsList.ForEach(d =>
-            {
-                //Todo: Request the server for information here!
+            var rc = DependencyManager.Get<RestClient>();
 
-                var ti = new TagInfo
-                {
-                    Title = d.Address.ToString(),
-                    Description = d.Rssi.ToString(),
-                    Image = "http://ridning-heste.dk/wp-content/uploads/2015/04/horse-659182_1280-672x372.jpg",
-                    Url = "https://google.dk"
-                };
+            devsList.ForEach(async d =>
+            {
+                var ti = await rc.Get<TagInfo>("localhost:5000/tags/" + d.Address.ToString("N"));
                 tvms.Add(new TagViewModel(ti));
             });
             NearbyTags = tvms;
