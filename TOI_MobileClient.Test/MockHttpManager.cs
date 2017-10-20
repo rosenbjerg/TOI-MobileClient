@@ -5,7 +5,7 @@ using TOI_MobileClient;
 
 namespace TOI_MobileClient.Test
 {
-    class MockHttpClient : IToiHttpClient
+    class MockHttpManager : IToiHttpManager
     {
         private Dictionary<string, string> mockUrlContent = new Dictionary<string, string>()
         {

@@ -50,9 +50,15 @@ namespace TOI_MobileClient
                 if (value == _nearbyTags)
                     return;
                 _nearbyTags = value;
+                OnPropertyChanged(nameof(FoundTags));
+                OnPropertyChanged(nameof(NoTags));
                 OnPropertyChanged();
             }
         }
+
+        public bool FoundTags => _nearbyTags.Count > 0;
+
+        public bool NoTags => _nearbyTags.Count == 0;
 
         public ScanPageViewModel()
         {

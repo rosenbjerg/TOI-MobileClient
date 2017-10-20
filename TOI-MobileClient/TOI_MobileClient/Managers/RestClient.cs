@@ -10,17 +10,17 @@ namespace TOI_MobileClient
     
     public class RestClient
     {
-        private readonly IToiHttpClient _client;
+        private readonly IToiHttpManager _manager;
 
-        public RestClient(IToiHttpClient client)
+        public RestClient(IToiHttpManager manager)
         {
-            this._client = client;
+            this._manager = manager;
         }
 
         public async Task<T> Get<T>(string url)
             where T : class, new()
         {
-            var jsonString = await _client.GetStringAsync(url);
+            var jsonString = await _manager.GetStringAsync(url);
             if (string.IsNullOrEmpty(jsonString))
                 return null;
 

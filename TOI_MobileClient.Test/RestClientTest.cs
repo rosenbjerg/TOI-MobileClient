@@ -12,7 +12,7 @@ namespace TOI_MobileClient.Test
         [TestInitialize]
         public void SetupRestClient()
         {
-            _rc = new RestClient(new MockHttpClient());
+            _rc = new RestClient(new MockHttpManager());
         }
 
         [TestMethod]

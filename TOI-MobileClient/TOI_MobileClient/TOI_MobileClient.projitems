@@ -13,8 +13,12 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Dependencies\BleScannerBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Dependencies\NotifierBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Localization\EnglishLanguage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Localization\ILanguage.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)IToiHttpClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Managers\IToiHttpManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Managers\NotificationManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Managers\SettingsManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Setting.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\SettingsPageViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\TagViewModel.cs" />
@@ -37,8 +41,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Views\ScanPage.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="$(MSBuildThisFileDirectory)RestClient.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ToiHttpClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Managers\RestClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Managers\ToiHttpManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ScanPageViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\PageViewModelBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Views\SettingsPage.xaml.cs">
@@ -55,9 +59,6 @@
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\ScanPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="$(MSBuildThisFileDirectory)Localization\" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\MainPage.xaml">

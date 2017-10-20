@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using TOI_MobileClient.Managers;
 using TOI_MobileClient.Views;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -31,11 +32,12 @@ namespace TOI_MobileClient
             
             public MainPageMasterViewModel()
             {
+                var lang = SettingsManager.Language;
                 MenuItems = new ObservableCollection<MainPageMenuItem>(new[]
                 {
-                    new MainPageMenuItem { MenuItemId = 0, Title = "Home" },
-                    new MainPageMenuItem { MenuItemId = 1, Title = "Settings", TargetType = typeof(SettingsPage)},
-                    new MainPageMenuItem { MenuItemId = 2, Title = "About" }
+                    new MainPageMenuItem { MenuItemId = 0, Title = lang.ScanForTags, TargetType = typeof(ScanPage) },
+                    new MainPageMenuItem { MenuItemId = 1, Title = lang.Settings, TargetType = typeof(SettingsPage)},
+                    new MainPageMenuItem { MenuItemId = 2, Title = lang.About }
                 });
             }
             

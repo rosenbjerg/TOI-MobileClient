@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace TOI_MobileClient
 {
-    class ToiHttpClient : IToiHttpClient
+    class ToiHttpManager : IToiHttpManager
     {
         private readonly HttpClient _client;
 
-        public ToiHttpClient()
+        public ToiHttpManager()
         {
             _client = new HttpClient();
         }
