@@ -74,17 +74,11 @@ namespace TOI_MobileClient
             Console.WriteLine("Scan started");
             var devs = await scanner.ScanDevices(null);
             Console.WriteLine("Scan completed");
-
-            var tvms = new List<TagViewModel>();
-            var devsList = devs.ToList();
+            
             var rc = DependencyManager.Get<RestClient>();
 
-            devsList.ForEach(async d =>
-            {
-                var ti = await rc.Get<TagInfo>("localhost:5000/tags/" + d.Address.ToString("N"));
-                tvms.Add(new TagViewModel(ti));
-            });
-            NearbyTags = tvms;
+            var tvms = await rc.GetMany<TagInfo>("http://replacethis.dk", devs.Select(d => d.Address));
+            NearbyTags = tvms.Select( t => new TagViewModel (t)).ToList();
 
             Loaded = true;
         }
