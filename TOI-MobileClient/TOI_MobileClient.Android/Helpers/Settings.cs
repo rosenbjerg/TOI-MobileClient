@@ -7,36 +7,26 @@ namespace TOI_MobileClient.Droid.Helpers
     /// This is the Settings static class that can be used in your Core solution or in any
     /// of your client applications. All settings are laid out the same exact way with getters
     /// and setters. 
-    /// </summary>
+    /// </summary>        
     public static class Settings
-	{
-		private static ISettings AppSettings
+    {
+        private CrossSettings _appSettings;
+
+	    static Settings()
+	    {
+	        _appSettings = CrossSettings.Current;
+	    }
+
+		public static bool BluetoothEnabled
 		{
-			get
-			{
-				return CrossSettings.Current;
-			}
+			get => AppSettings.GetValueOrDefault(nameof(BluetoothEnabled), true);
+			set => AppSettings.AddOrUpdateValue(nameof(BluetoothEnabled), value);
 		}
 
-		#region Setting Constants
-
-		private const string SettingsKey = "settings_key";
-		private static readonly string SettingsDefault = string.Empty;
-
-		#endregion
-
-
-		public static string GeneralSettings
-		{
-			get
-			{
-				return AppSettings.GetValueOrDefault(SettingsKey, SettingsDefault);
-			}
-			set
-			{
-				AppSettings.AddOrUpdateValue(SettingsKey, value);
-			}
-		}
-
+	    public static bool GpsEnabled
+	    {
+	        get => AppSettings.GetValueOrDefault(nameof(GpsEnabled), true);
+	        set => AppSettings.AddOrUpdateValue(nameof(GpsEnabled), value);
+	    }
 	}
 }
