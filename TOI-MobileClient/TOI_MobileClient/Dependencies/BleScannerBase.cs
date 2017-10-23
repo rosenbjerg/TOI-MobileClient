@@ -21,7 +21,7 @@ namespace TOI_MobileClient
 
         public abstract bool IsEnabled { get; }
 
-        public abstract Task<IReadOnlyList<BleDevice>> ScanDevices(HashSet<Guid> deviceFilter, int scanTimeout = 5000);
+        public abstract Task<IReadOnlyList<BleDevice>> ScanDevices(HashSet<Guid> deviceFilter, int scanTimeout = 2000);
         
     }
     public class BleDevice

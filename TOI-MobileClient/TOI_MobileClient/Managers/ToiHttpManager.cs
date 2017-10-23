@@ -53,6 +53,11 @@ namespace TOI_MobileClient
                 Console.WriteLine(e);
                 throw;
             }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+            }
+            return "";
         }
     }
 }

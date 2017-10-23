@@ -53,17 +53,17 @@ namespace TOI_MobileClient
 
             try
             {
-                var TList = JsonConvert.DeserializeObject<List<T>>(res);
-                return TList;
+                var tagList = JsonConvert.DeserializeObject<List<T>>(res);
+                return tagList;
             }
             catch (JsonReaderException e)
             {
                 Console.WriteLine(e);
                 throw new FormatException(e.Message);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine(e);
+                Console.WriteLine(ex);
                 throw;
             }
         }

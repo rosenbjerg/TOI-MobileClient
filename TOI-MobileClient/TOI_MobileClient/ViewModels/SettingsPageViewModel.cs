@@ -13,11 +13,16 @@ namespace TOI_MobileClient.ViewModels
 
         public SettingsPageViewModel()
         {
-
-
             var lang = SettingsManager.Language;
-            // TODO: read and write on disk
-            this.Settings = Droid.Helpers.Settings.GetList();
+
+            Settings = new List<SettingViewModel> {
+                new RadioSettingViewModel(new RadioSetting("ScanFrequency", lang.ScanFrequency, SettingsManager.ScanFrequencyOptions)),
+                new BooleanSettingViewModel(new BooleanSetting("GPS", lang.Gps)),
+                new BooleanSettingViewModel(new BooleanSetting("BLE", lang.Bluetooth)),
+                new BooleanSettingViewModel(new BooleanSetting("Wi-Fi", lang.Wifi)),
+                new BooleanSettingViewModel(new BooleanSetting("NFC", lang.Nfc))
+            };
+
         }
     }
 
@@ -37,7 +42,16 @@ namespace TOI_MobileClient.ViewModels
     {
         private readonly RadioSetting _setting;
         public List<string> Options => _setting.Options;
-        public int Selected => _setting.Selected;
+
+        public int Selected
+        {
+            get => _setting.Selected;
+            set
+            {
+                _setting.Selected = value;
+                OnPropertyChanged(nameof(Selected));
+            }
+        }
         public string SelectedValue => _setting.SelectedValue;
 
         public RadioSettingViewModel(RadioSetting setting) : base(setting)
@@ -55,7 +69,6 @@ namespace TOI_MobileClient.ViewModels
             get => _setting.Toggle;
             set
             {
-                Console.WriteLine("Setting " + _setting.Title + " to " + value);
                 _setting.Toggle = value;
                 OnPropertyChanged(nameof(Toggle));
             }
