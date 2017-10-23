@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Android.Bluetooth;
 using Plugin.BLE.Abstractions.Contracts;
 using Plugin.BLE.Abstractions.EventArgs;
-using Rosenbjerg.DepMan;
+using DepMan;
 using TOI_MobileClient.Dependencies;
 using TOI_MobileClient.Managers;
 using Xamarin.Forms;
@@ -14,6 +14,7 @@ namespace TOI_MobileClient.Droid
     class AndroidBleScanner : BleScannerBase
     {
         private bool _isScanning;
+
 
         public override bool IsEnabled => Ble.IsOn && Ble.IsAvailable;
         private readonly IReadOnlyList<BleDevice> _emptyListCache = new List<BleDevice>();

@@ -24,6 +24,7 @@
             </DataTemplate>
             <DataTemplate x:Key="BooleanTemplate">
                 <SwitchCell
+                    IsEnabled="True"
                     Text="{Binding Title}"
                     On="{Binding Toggle}" />
             </DataTemplate>
@@ -35,10 +36,16 @@
     </ContentPage.Resources>
     <ContentPage.Content>
         <ListView 
+            ItemTapped="ListView_OnItemTapped"
+            IsPullToRefreshEnabled="True"
+            Refreshing="ListView_OnRefreshing"
             ItemsSource="{Binding Settings}"
             ItemTemplate="{StaticResource SettingDataTemplateSelector}"/>
     </ContentPage.Content>
     <ContentPage.BindingContext>
-        <viewModels:SettingsPageViewModel></viewModels:SettingsPageViewModel>   
+        <viewModels:SettingsPageViewModel x:Name="SettingsViewModel"></viewModels:SettingsPageViewModel>   
     </ContentPage.BindingContext>
 </ContentPage>
+
+<!--RefreshCommand="{Binding RefreshCapabilitesCommand}"-->
+    

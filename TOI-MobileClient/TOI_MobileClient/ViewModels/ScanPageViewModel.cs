@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
-using Rosenbjerg.DepMan;
+using DepMan;
 using TOIClasses;
 using TOI_MobileClient.Managers;
 using TOI_MobileClient.ViewModels;

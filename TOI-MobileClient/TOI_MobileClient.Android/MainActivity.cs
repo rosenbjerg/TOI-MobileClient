@@ -8,7 +8,7 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Android.OS;
-using Rosenbjerg.DepMan;
+using DepMan;
 using TOI_MobileClient.Dependencies;
 using Xamarin.Forms;
 

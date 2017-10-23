@@ -32,15 +32,25 @@ namespace TOI_MobileClient
             
             public MainPageMasterViewModel()
             {
+                try
+                {
+                    var lang_2 = SettingsManager.Language;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    throw;
+                }
                 var lang = SettingsManager.Language;
+
                 MenuItems = new ObservableCollection<MainPageMenuItem>(new[]
                 {
-                    new MainPageMenuItem { MenuItemId = 0, Title = lang.ScanForTags, TargetType = typeof(ScanPage) },
-                    new MainPageMenuItem { MenuItemId = 1, Title = lang.Settings, TargetType = typeof(SettingsPage)},
-                    new MainPageMenuItem { MenuItemId = 2, Title = lang.About }
+                    new MainPageMenuItem {MenuItemId = 0, Title = lang.ScanForTags, TargetType = typeof(ScanPage)},
+                    new MainPageMenuItem {MenuItemId = 1, Title = lang.Settings, TargetType = typeof(SettingsPage)},
+                    new MainPageMenuItem {MenuItemId = 2, Title = lang.About}
                 });
             }
-            
+
             #region INotifyPropertyChanged Implementation
             public event PropertyChangedEventHandler PropertyChanged;
             void OnPropertyChanged([CallerMemberName] string propertyName = "")

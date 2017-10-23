@@ -26,6 +26,8 @@ namespace TOI_MobileClient.Models
             set => SettingsManager.AppSettings.AddOrUpdateValue(_id, value);
         }
 
+        public Type Capability { get; set; }
+
         public BooleanSetting(string id, string title)
         {
             _id = id;

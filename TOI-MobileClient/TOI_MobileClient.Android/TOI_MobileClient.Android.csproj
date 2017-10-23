@@ -49,6 +49,9 @@
     <AndroidLinkMode>SdkOnly</AndroidLinkMode>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DepMan, Version=1.2.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Rosenbjerg.DepMan.1.2.3\lib\netstandard2.0\DepMan.dll</HintPath>
+    </Reference>
     <Reference Include="FormsPlugin.Iconize, Version=1.0.10.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Xam.FormsPlugin.Iconize.1.0.10\lib\MonoAndroid10\FormsPlugin.Iconize.dll</HintPath>
     </Reference>
@@ -81,9 +84,6 @@
     </Reference>
     <Reference Include="Plugin.Settings.Abstractions, Version=3.1.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Xam.Plugins.Settings.3.1.1\lib\MonoAndroid10\Plugin.Settings.Abstractions.dll</HintPath>
-    </Reference>
-    <Reference Include="Rosenbjerg.DepMan, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Rosenbjerg.DepMan.1.2.0\lib\MonoAndroid10\Rosenbjerg.DepMan.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.10.0.3\lib\netstandard1.3\Newtonsoft.Json.dll</HintPath>

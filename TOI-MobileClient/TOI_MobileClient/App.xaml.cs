@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Rosenbjerg.DepMan;
+using DepMan;
 using Xamarin.Forms;
 
 namespace TOI_MobileClient

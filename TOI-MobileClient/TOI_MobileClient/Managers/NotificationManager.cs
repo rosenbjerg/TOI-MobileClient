@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Rosenbjerg.DepMan;
+using DepMan;
 using TOI_MobileClient.Dependencies;
 
 namespace TOI_MobileClient.Managers
