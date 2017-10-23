@@ -28,7 +28,7 @@ namespace TOI_MobileClient.Models
 
     public class RadioSetting : Setting
     {
-        public List<string> Options { get; private set; }
+        public List<string> Options { get; }
         public int Selected { get; private set; }
         public string SelectedValue => Options[Selected];
 

@@ -13,22 +13,11 @@ namespace TOI_MobileClient.ViewModels
 
         public SettingsPageViewModel()
         {
+
+
             var lang = SettingsManager.Language;
             // TODO: read and write on disk
-            Settings = new List<SettingViewModel>
-            {
-                new RadioSettingViewModel(new RadioSetting(lang.ScanFrequency, new List<string>
-                {
-                    lang.Often,
-                    lang.Normal,
-                    lang.Rarely,
-                    lang.Never
-                }, 1)),
-                new BooleanSettingViewModel(new BooleanSetting(lang.GPS)),
-                new BooleanSettingViewModel(new BooleanSetting(lang.Bluetooth)),
-                new BooleanSettingViewModel(new BooleanSetting(lang.Wifi)),
-                new BooleanSettingViewModel(new BooleanSetting(lang.NFC)),
-            };
+            this.Settings = Droid.Helpers.Settings.GetList();
         }
     }
 

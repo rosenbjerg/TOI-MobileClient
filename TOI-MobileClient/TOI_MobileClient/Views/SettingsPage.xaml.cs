@@ -19,7 +19,7 @@ namespace TOI_MobileClient.Views
 		}
 	}
 
-    public class SettingsDataTemplateSelector : DataTemplateSelector
+    /*public class SettingsDataTemplateSelector : DataTemplateSelector
     {
         public DataTemplate RadioTemplate { get; set; }
         public DataTemplate BooleanTemplate { get; set; }
@@ -37,5 +37,5 @@ namespace TOI_MobileClient.Views
                     return null;
             }
         }
-    }
+    }*/
 }
