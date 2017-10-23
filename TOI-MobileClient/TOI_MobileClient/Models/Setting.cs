@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using TOI_MobileClient.Managers;
 
 namespace TOI_MobileClient.Models
 {
@@ -17,10 +18,19 @@ namespace TOI_MobileClient.Models
 
     public class BooleanSetting : Setting
     {
-        public bool Toggle { get; set; }
+        private readonly string _id;
 
-        public BooleanSetting(string title)
+        public bool Toggle
         {
+            get => SettingsManager.AppSettings.GetValueOrDefault(_id, true);
+            set => SettingsManager.AppSettings.AddOrUpdateValue(_id, value);
+        }
+
+        public Type Capability { get; set; }
+
+        public BooleanSetting(string id, string title)
+        {
+            _id = id;
             Title = title;
             Type = SettingType.Boolean;
         }
@@ -28,22 +38,31 @@ namespace TOI_MobileClient.Models
 
     public class RadioSetting : Setting
     {
-        public List<string> Options { get; private set; }
-        public int Selected { get; private set; }
+        private readonly string _id;
+        private readonly int _default;
+        public List<string> Options { get; }
+
+        public int Selected
+        {
+            get => SettingsManager.AppSettings.GetValueOrDefault(_id, _default);
+            set => SettingsManager.AppSettings.AddOrUpdateValue(_id, value);
+        }
+
         public string SelectedValue => Options[Selected];
 
-        public RadioSetting(string title, List<string> options) : this(title, options, 0)
+        public RadioSetting(string id, string title, List<string> options) : this(id, title, options, 1)
         {
         }
 
-        public RadioSetting(string title, List<string> options, int selectedIndex)
+        public RadioSetting(string id, string title, List<string> options, int selectedIndex)
         {
+            _id = id;
+            _default = selectedIndex;
             if (options.Count == 0) throw new ArgumentException("Option list must have some content.");
             if (selectedIndex > options.Count)
                 throw new ArgumentException("Selected index is greater than the amount of options.");
             Title = title;
             Options = options;
-            SetSelected(selectedIndex);
             Type = SettingType.Radio;
         }
 

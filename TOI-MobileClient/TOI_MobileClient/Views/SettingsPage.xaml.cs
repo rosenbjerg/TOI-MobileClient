@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TOI_MobileClient.Dependencies;
+using TOI_MobileClient.Managers;
 using TOI_MobileClient.Models;
 using TOI_MobileClient.ViewModels;
 using Xamarin.Forms;
@@ -10,14 +12,34 @@ using Xamarin.Forms.Xaml;
 
 namespace TOI_MobileClient.Views
 {
-	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class SettingsPage : ContentPage
-	{
-		public SettingsPage()
-		{
-			InitializeComponent ();
-		}
-	}
+    [XamlCompilation(XamlCompilationOptions.Compile)]
+    public partial class SettingsPage
+    {
+        public SettingsPage()
+        {
+            InitializeComponent();
+        }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            SettingsViewModel.UpdateCapabilities();
+        }
+
+        private void ListView_OnRefreshing(object sender, EventArgs e)
+        {
+            SettingsViewModel.UpdateCapabilities();
+            ((ListView) sender).IsRefreshing = false;
+        }
+
+        private void ListView_OnItemTapped(object sender, ItemTappedEventArgs e)
+        {
+            // don't do anything if we just de-selected the row
+            if (e.Item == null) return;
+            // do something with e.SelectedItem
+            ((ListView)sender).SelectedItem = null; // de-select the row
+        }
+    }
 
     public class SettingsDataTemplateSelector : DataTemplateSelector
     {

@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Android.Bluetooth;
 using Plugin.BLE.Abstractions.Contracts;
 using Plugin.BLE.Abstractions.EventArgs;
-using Rosenbjerg.DepMan;
+using DepMan;
 using TOI_MobileClient.Dependencies;
 using TOI_MobileClient.Managers;
 using Xamarin.Forms;
@@ -15,10 +15,11 @@ namespace TOI_MobileClient.Droid
     {
         private bool _isScanning;
 
-        public override bool IsEnabled => Ble.IsOn && Ble.IsAvailable;
-        private IReadOnlyList<BleDevice> _emptyListCache = new List<BleDevice>();
 
-        public override async Task<IReadOnlyList<BleDevice>> ScanDevices(HashSet<Guid> deviceFilter, int scanTimeout = 5000)
+        public override bool IsEnabled => Ble.IsOn && Ble.IsAvailable;
+        private readonly IReadOnlyList<BleDevice> _emptyListCache = new List<BleDevice>();
+
+        public override async Task<IReadOnlyList<BleDevice>> ScanDevices(HashSet<Guid> deviceFilter, int scanTimeout = 2000)
         {
             if (_isScanning || !IsEnabled)
             {

@@ -13,7 +13,10 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Dependencies\BleScannerBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Dependencies\GpsLocatorBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Dependencies\NfcScannerBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Dependencies\NotifierBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Dependencies\WiFiScannerBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Localization\EnglishLanguage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Localization\ILanguage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Managers\IToiHttpManager.cs" />

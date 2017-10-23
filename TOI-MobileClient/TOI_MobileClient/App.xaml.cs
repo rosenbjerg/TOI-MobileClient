@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Rosenbjerg.DepMan;
+using DepMan;
 using Xamarin.Forms;
 
 namespace TOI_MobileClient
 {
-	public partial class App : Xamarin.Forms.Application
+	public partial class App
 	{
 	    public static INavigation Navigation;
 		public App ()
@@ -13,9 +13,10 @@ namespace TOI_MobileClient
 			InitializeComponent();
             MainPage = new MainPage();
 		    Navigation = MainPage.Navigation;
-		}
+		    DependencyManager.Register<RestClient, RestClient>(new RestClient(new ToiHttpManager()));
+        }
 
-		protected override void OnStart ()
+        protected override void OnStart ()
 		{
 			// Handle when your app starts
 		}

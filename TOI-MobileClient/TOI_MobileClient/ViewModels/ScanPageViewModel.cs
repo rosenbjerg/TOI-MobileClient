@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
-using Rosenbjerg.DepMan;
+using DepMan;
 using TOIClasses;
+using TOI_MobileClient.Managers;
 using TOI_MobileClient.ViewModels;
 using Xamarin.Forms;
 
@@ -72,12 +73,15 @@ namespace TOI_MobileClient
 
             var scanner = DependencyManager.Get<BleScannerBase>();
             Console.WriteLine("Scan started");
-            var devs = await scanner.ScanDevices(null);
+            var devs = await scanner.ScanDevices(new HashSet<Guid>
+            {
+                Guid.ParseExact("cc1454015282".PadLeft(32, '0'), "N")
+            });
             Console.WriteLine("Scan completed");
             
             var rc = DependencyManager.Get<RestClient>();
-
-            var tvms = await rc.GetMany<TagInfo>("http://replacethis.dk", devs.Select(d => d.Address));
+            
+            var tvms = await rc.GetMany<TagInfo>(SettingsManager.Url, devs.Select(d => d.Address));
             NearbyTags = tvms.Select( t => new TagViewModel (t)).ToList();
 
             Loaded = true;

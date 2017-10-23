@@ -8,7 +8,7 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Android.OS;
-using Rosenbjerg.DepMan;
+using DepMan;
 using TOI_MobileClient.Dependencies;
 using Xamarin.Forms;
 
@@ -26,7 +26,6 @@ namespace TOI_MobileClient.Droid
 
 		    DependencyManager.Register<BleScannerBase, AndroidBleScanner>(new AndroidBleScanner());
 		    DependencyManager.Register<NotifierBase, AndroidNotifier>(new AndroidNotifier());
-		    DependencyManager.Register<RestClient, RestClient>(new RestClient(new ToiHttpManager()));
 
             global::Xamarin.Forms.Forms.Init (this, bundle);
 		    Plugin.Iconize.Iconize.With(new Plugin.Iconize.Fonts.FontAwesomeModule());

@@ -18,10 +18,10 @@ namespace TOI_MobileClient
         string Rarely { get; }
         string Never { get; }
 
-        string GPS { get; }
+        string Gps { get; }
         string Bluetooth { get; }
         string Wifi { get; }
-        string NFC { get; }
+        string Nfc { get; }
         #endregion
 
         string ScanForTags { get; }
