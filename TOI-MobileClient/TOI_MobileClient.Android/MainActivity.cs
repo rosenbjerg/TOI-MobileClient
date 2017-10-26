@@ -20,9 +20,16 @@ namespace TOI_MobileClient.Droid
 		protected override void OnCreate (Bundle bundle)
 		{
 			TabLayoutResource = Resource.Layout.Tabbar;
-			ToolbarResource = Resource.Layout.Toolbar; 
+			ToolbarResource = Resource.Layout.Toolbar;
 
-			base.OnCreate (bundle);
+		    try
+		    {
+		        base.OnCreate (bundle);
+		    }
+		    catch (Exception e)
+		    {
+		        Console.WriteLine(e);
+		    }
 
 		    DependencyManager.Register<BleScannerBase, AndroidBleScanner>(new AndroidBleScanner());
 		    DependencyManager.Register<NotifierBase, AndroidNotifier>(new AndroidNotifier());

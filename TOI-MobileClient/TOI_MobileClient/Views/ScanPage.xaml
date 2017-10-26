@@ -18,7 +18,26 @@
                 <ListView IsVisible="{Binding FoundTags}" RowHeight="200" ItemsSource="{Binding NearbyTags}" x:Name="NearbyTags" >
                     <ListView.ItemTemplate>
                         <DataTemplate>
-                            <views:CardView></views:CardView>
+                            <toiMobileClient:TapViewCell x:Key="TapViewCell" Command="{Binding CardTapped}">
+                                <toiMobileClient:TapViewCell.View>
+                                    <Frame Margin="5,10">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="7*" />
+                                                <ColumnDefinition Width="3*" />
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="3*" />
+                                                <RowDefinition Height="7*" />
+                                            </Grid.RowDefinitions>
+                                            <Label Grid.Row="0" Grid.Column="0" Text="{Binding Title}" FontSize="12"
+                                                   FontAttributes="Bold" />
+                                            <Label Grid.Row="1" Grid.Column="0" Text="{Binding ShortDescription}" FontSize="10" />
+                                            <Image Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Source="{Binding Image}" />
+                                        </Grid>
+                                    </Frame>
+                                </toiMobileClient:TapViewCell.View>
+                            </toiMobileClient:TapViewCell>
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>

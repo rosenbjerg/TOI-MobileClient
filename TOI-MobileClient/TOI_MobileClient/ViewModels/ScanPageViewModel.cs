@@ -80,9 +80,21 @@ namespace TOI_MobileClient
             Console.WriteLine("Scan completed");
             
             var rc = DependencyManager.Get<RestClient>();
-            
-            var tvms = await rc.GetMany<TagInfo>(SettingsManager.Url, devs.Select(d => d.Address));
-            NearbyTags = tvms.Select( t => new TagViewModel (t)).ToList();
+
+            try
+            {
+                var tvms = await rc.GetMany<TagInfo>(SettingsManager.Url, devs.Select(d => d.Address));
+                if (tvms == null)
+                {
+                    NearbyTags = new List<TagViewModel>();
+                    DependencyManager.Get<NotificationManager>().Display("Could not connect to server", NotificationManager.NotificationType.Toast);
+                }
+                else 
+                    NearbyTags = tvms.Select(t => new TagViewModel(t)).ToList();
+            }
+            catch (Exception e){
+                Console.WriteLine(e);
+            }
 
             Loaded = true;
         }

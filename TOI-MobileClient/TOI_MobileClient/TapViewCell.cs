@@ -3,12 +3,19 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Input;
 using Xamarin.Forms;
+using Type = Android.Renderscripts.Type;
 
 namespace TOI_MobileClient
 {
-    class TapViewCell : ViewCell
+    public class TapViewCell : ViewCell
     {
-        public ICommand Command { get; set; }
+        public static readonly BindableProperty CommandProperty = BindableProperty.Create(nameof(Command), typeof(ICommand), typeof(TapViewCell), null);
+
+        public ICommand Command
+        {
+            get => (ICommand) GetValue(CommandProperty);
+            set => SetValue(CommandProperty, value);
+        }
 
         public TapViewCell()
         {
