@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Input;
 using TOIClasses;
+using TOI_MobileClient.Views;
 using Xamarin.Forms;
 
 namespace TOI_MobileClient.ViewModels
@@ -28,6 +29,7 @@ namespace TOI_MobileClient.ViewModels
         private void OpenTagWebsite()
         {
             Console.WriteLine("Tag card was tapped!");
+            MainPage.NavigateTo(new TOIWebPage(Url));
         }
     }
 }
