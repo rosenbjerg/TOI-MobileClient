@@ -14,6 +14,7 @@ namespace TOI_MobileClient
         public ToiHttpManager()
         {
             _client = new HttpClient();
+            _client.Timeout = TimeSpan.FromSeconds(5);
         }
         public void Dispose()
         {

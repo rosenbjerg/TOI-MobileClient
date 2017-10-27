@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Windows.Input;
 using TOIClasses;
+using TOI_MobileClient.Views;
+using Xamarin.Forms;
 
 namespace TOI_MobileClient.ViewModels
 {
-    class TagViewModel : ViewModelBase
+    public class TagViewModel : ViewModelBase
     {
         private TagInfo _tagInfo;
         public string Title => _tagInfo.Title;
@@ -13,9 +16,20 @@ namespace TOI_MobileClient.ViewModels
         public string Image => _tagInfo.Image;
         public string Url => _tagInfo.Url;
 
+        public ICommand CardTapped {
+            get; private set; 
+        }
+
         public TagViewModel(TagInfo tf)
         {
             _tagInfo = tf;
+            CardTapped = new Command(OpenTagWebsite);
+        }
+
+        private void OpenTagWebsite()
+        {
+            Console.WriteLine("Tag card was tapped!");
+            MainPage.NavigateTo(new TOIWebPage(Url));
         }
     }
 }

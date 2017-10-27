@@ -12,6 +12,8 @@ namespace TOI_MobileClient
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class MainPage : MasterDetailPage
     {
+
+        public static Action<Page> NavigateTo;
         public MainPage()
         {
             InitializeComponent();
@@ -20,6 +22,15 @@ namespace TOI_MobileClient
             var firstPage = new IconNavigationPage(new ScanPage());
             _loadedPages.Add(typeof(ScanPage), firstPage);
             Detail = firstPage;
+
+            NavigateTo = delegate(Page page)
+            {
+                Device.BeginInvokeOnMainThread(() =>
+                {
+                    (Detail as IconNavigationPage)?.PushAsync(page);
+                    //Detail = new IconNavigationPage(page);
+                });
+            };
         }
 
         // Page cache

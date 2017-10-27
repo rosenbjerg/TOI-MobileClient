@@ -12,7 +12,7 @@ namespace TOI_MobileClient.Test
         [ExpectedException(typeof(ArgumentException), "An unlisted option was selected in a Settings list.")]
         public void RadioSetting_SetSelected_ThrowArgumentException()
         {
-            var radioSetting = new RadioSetting("radio settings", CreateOptionList());
+            var radioSetting = new RadioSetting("radio settings", "Radio Setting", CreateOptionList());
 
             radioSetting.SetSelected(555);
         }
@@ -20,7 +20,7 @@ namespace TOI_MobileClient.Test
         [TestMethod]
         public void RadioSetting_SetSelected_ValidOptionSelected()
         {
-            var radioSetting = new RadioSetting("radio settings", CreateOptionList());
+            var radioSetting = new RadioSetting("radio settings", "Radio Setting", CreateOptionList());
 
             radioSetting.SetSelected(1);
             Assert.AreEqual("option2", radioSetting.SelectedValue);
@@ -29,7 +29,7 @@ namespace TOI_MobileClient.Test
         [TestMethod]
         public void RadioSetting_Constructor_ValidNoOptionSelected()
         {
-            var radioSetting = new RadioSetting("radio settings", CreateOptionList());
+            var radioSetting = new RadioSetting("radio settings", "Radio Setting", CreateOptionList());
 
             Assert.AreEqual("option1", radioSetting.SelectedValue);
         }
@@ -41,7 +41,7 @@ namespace TOI_MobileClient.Test
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException), "An empty options list was successfully passed to a Radio Setting.")]
-        public void RadioSetting_Constructor_EmptyListException() => new RadioSetting("radio settings", new List<string>());
+        public void RadioSetting_Constructor_EmptyListException() => new RadioSetting("radio settings", "Radio Setting", new List<string>());
     }
 
 
