@@ -4,15 +4,16 @@
              xmlns:toiMobileClient="clr-namespace:TOI_MobileClient;assembly=TOI_MobileClient.Android"
              xmlns:iconize="clr-namespace:FormsPlugin.Iconize;assembly=FormsPlugin.Iconize"
              xmlns:views="clr-namespace:TOI_MobileClient.Views;assembly=TOI_MobileClient.Android"
+             xmlns:managers="clr-namespace:TOI_MobileClient.Managers;assembly=TOI_MobileClient.Android"
              x:Class="TOI_MobileClient.ScanPage"
              Title="Scan for tags">
     <ContentPage.ToolbarItems>
-        <iconize:IconToolbarItem Icon="fa-refresh" IconColor="White" Order="Primary" Command="{Binding SyncCommand}" />
+        <iconize:IconToolbarItem Icon="fa-refresh" IconColor="{Binding SyncColor}" Order="Primary" Command="{Binding SyncCommand}" />
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <StackLayout >
             <ContentView VerticalOptions="FillAndExpand" IsVisible="{Binding Loading}">
-                <ActivityIndicator Color="Blue" IsRunning="True" VerticalOptions="Center" HorizontalOptions="Center"/>
+                <ActivityIndicator Color="{x:Static managers:Styling.ActivityIndicatorColor}" IsRunning="True" VerticalOptions="Center" HorizontalOptions="Center"/>
             </ContentView>
             <StackLayout IsVisible="{Binding Loaded}">
                 <ListView IsVisible="{Binding FoundTags}" RowHeight="200" ItemsSource="{Binding NearbyTags}" x:Name="NearbyTags" >

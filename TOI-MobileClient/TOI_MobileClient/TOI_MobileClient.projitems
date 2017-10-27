@@ -22,6 +22,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Managers\IToiHttpManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Managers\NotificationManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Managers\SettingsManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Managers\Styling.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Setting.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TapViewCell.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TOIWebView.cs" />

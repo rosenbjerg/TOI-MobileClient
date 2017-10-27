@@ -6,8 +6,8 @@
              xmlns:viewModels="clr-namespace:TOI_MobileClient.ViewModels;assembly=TOI_MobileClient.Android"
              x:Class="TOI_MobileClient.Views.TOIWebPage">
     <ContentPage.ToolbarItems>
-        <iconize:IconToolbarItem Icon="fa-angle-left" IconColor="White" Order="Primary" BindingContext="{x:Reference Browser}" Command="{Binding GoBackCommand}" IsEnabled="{Binding CanGoBack}"/>
-        <iconize:IconToolbarItem Icon="fa-angle-right" IconColor="White" Order="Primary" BindingContext="{x:Reference Browser}" Command="{Binding GoForwardCommand}" IsEnabled="{Binding CanGoForward}"/>
+        <iconize:IconToolbarItem Icon="fa-angle-left" IconColor="{Binding BackColor}" Order="Primary" BindingContext="{x:Reference Browser}" Command="{Binding GoBackCommand}"/>
+        <iconize:IconToolbarItem Icon="fa-angle-right" IconColor="{Binding ForwardColor}" Order="Primary" BindingContext="{x:Reference Browser}" Command="{Binding GoForwardCommand}"/>
         <!--<iconize:IconToolbarItem Icon="fa-angle-left" IconColor="White" Order="Primary"/>
         <iconize:IconToolbarItem Icon="fa-angle-right" IconColor="White" Order="Primary"/>-->
     </ContentPage.ToolbarItems>
