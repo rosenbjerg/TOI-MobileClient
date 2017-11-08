@@ -45,7 +45,7 @@ namespace TOI_MobileClient
                 var cont = new StringContent(body, Encoding.UTF8, isJson ? "application/json" : "text/plain");
                 var response = await _client.PostAsync(url, cont);
                 if (!response.IsSuccessStatusCode)
-                    throw new ArgumentException($"The request to {url} did not succeed.");
+                    return null;
 
                 return await response.Content.ReadAsStringAsync();
             }

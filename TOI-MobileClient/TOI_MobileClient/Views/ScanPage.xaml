@@ -42,9 +42,9 @@
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
-                <StackLayout IsVisible="{Binding NoTags}">
-                    <Label Text="{Binding Language.NoNearbyTags}"></Label>
-                    <Image Source="no_tags.png"/>
+                <StackLayout VerticalOptions="FillAndExpand" IsVisible="{Binding NoTags}">
+                    <iconize:IconLabel Text="fa-search"  FontSize="160" HorizontalTextAlignment="Center" VerticalOptions="Center" TextColor="{x:Static managers:Styling.WaterMarkColor}" />
+                    <Label Text="{Binding Language.NoNearbyTags}" HorizontalTextAlignment="Center"></Label>
                 </StackLayout>
             </StackLayout>
         </StackLayout>

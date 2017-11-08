@@ -102,8 +102,16 @@ namespace TOI_MobileClient
                     else
                         NearbyTags = tvms.Select(t => new TagViewModel(t)).ToList();
                 }
-                catch (Exception e)
+                catch (WebException e)
                 {
+                    DependencyManager.Get<NotificationManager>().Display("Could not connect to server",
+                        NotificationManager.NotificationType.Toast);
+                    Console.WriteLine(e);
+                }
+                catch (JsonReaderException e)
+                {
+                    DependencyManager.Get<NotificationManager>().Display("Invalid data received from feed",
+                        NotificationManager.NotificationType.Toast);
                     Console.WriteLine(e);
                 }
 
