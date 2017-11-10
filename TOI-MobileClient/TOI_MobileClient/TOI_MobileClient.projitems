@@ -12,8 +12,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Dependencies\IBackgroundScanner.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Dependencies\BleScannerBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Dependencies\GpsLocatorBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Dependencies\IScannerServiceProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Dependencies\NfcScannerBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Dependencies\NotifierBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Dependencies\WiFiScannerBase.cs" />

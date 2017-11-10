@@ -141,6 +141,9 @@
     <Compile Include="MainActivity.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\ToiScannerService.cs" />
+    <Compile Include="Services\ScannerServiceBinder.cs" />
+    <Compile Include="Services\ScannerServiceConnection.cs" />
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\FontAwesome.ttf" />
@@ -163,7 +166,10 @@
     <AndroidResource Include="Resources\Drawable\SyncIcon.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\Drawable\no_tags.png" />
+    <AndroidResource Include="Resources\Drawable\NoTagsIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\Drawable\TagSyncIcon.png" />
   </ItemGroup>
   <Import Project="..\TOI_MobileClient\TOI_MobileClient.projitems" Label="Shared" Condition="Exists('..\TOI_MobileClient\TOI_MobileClient.projitems')" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />

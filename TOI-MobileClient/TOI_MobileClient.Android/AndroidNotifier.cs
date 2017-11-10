@@ -5,9 +5,11 @@ using System.Text;
 
 using Android.App;
 using Android.Content;
+using Android.Graphics;
 using Android.OS;
 using Android.Runtime;
 using Android.Support.Design.Widget;
+using Android.Support.V7.App;
 using Android.Views;
 using Android.Widget;
 using TOI_MobileClient.Dependencies;
@@ -36,6 +38,11 @@ namespace TOI_MobileClient.Droid
                 Toast.MakeText(Forms.Context, text, longDur ? ToastLength.Long : ToastLength.Short).Show();
             });
             
+        }
+
+        public override void DisplayStatusNotification()
+        {
+            throw new NotImplementedException();
         }
     }
 }
