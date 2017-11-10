@@ -22,7 +22,7 @@ namespace TOI_MobileClient.Test
                 Console.WriteLine(e.GetType());
                 Assert.IsInstanceOfType(e.InnerException, typeof(T));
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 Assert.Fail("A wrong exception was thrown.");
             }

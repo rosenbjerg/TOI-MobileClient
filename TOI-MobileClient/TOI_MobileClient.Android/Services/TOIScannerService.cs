@@ -7,6 +7,7 @@ using Android.App;
 using Android.Content;
 using Android.Graphics;
 using Android.OS;
+using Android.Locations;
 using Android.Support.V7.App;
 using DepMan;
 using TOI_MobileClient.Dependencies;
@@ -40,6 +41,7 @@ namespace TOI_MobileClient.Droid.Services
         public async void ScanForToi(HashSet<Guid> filter)
         {
             var ble = await ScanBle(filter);
+            var gps = await ScanGps(10);
             var tags = ble.Select(b => b.Address).Where(filter.Contains).ToList();
 
             TagsFound?.Invoke(this, new TagsFoundsEventArgs(tags));
@@ -59,14 +61,20 @@ namespace TOI_MobileClient.Droid.Services
         //    //return await scanner
         //}
 
-        //public void ScanGps()
-        //{
-            
-        //}
+        //public async Task<IReadOnlyList<Position>> ScanGps(double radius)
+        public async Task<Location> ScanGps(double radius)
+        {
+            //tjek om gps er slået til
+            var scanner = DependencyManager.Get<GpsLocatorBase>();
+            var position = scanner.GetLocation();
+
+
+            return position;
+        }
 
         //public void ScanWifi()
         //{
-            
+
         //}
     }
 

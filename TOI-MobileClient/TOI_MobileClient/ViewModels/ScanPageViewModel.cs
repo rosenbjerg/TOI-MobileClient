@@ -2,18 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using DepMan;
 using Newtonsoft.Json;
 using TOIClasses;
 using TOI_MobileClient.Dependencies;
 using TOI_MobileClient.Managers;
-using TOI_MobileClient.Models;
 using TOI_MobileClient.ViewModels;
 using Xamarin.Forms;
-using System.Net;
-using Newtonsoft.Json;
 
 namespace TOI_MobileClient
 {
