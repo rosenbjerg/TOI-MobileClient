@@ -8,6 +8,8 @@ using TOIClasses;
 using TOI_MobileClient.Managers;
 using TOI_MobileClient.ViewModels;
 using Xamarin.Forms;
+using System.Net;
+using Newtonsoft.Json;
 
 namespace TOI_MobileClient
 {
