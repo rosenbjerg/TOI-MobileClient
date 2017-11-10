@@ -28,5 +28,10 @@ namespace TOI_MobileClient
         string Settings { get; }
         string About { get; }
 
+        string Scanning { get; }
+        string ScanningExplanation { get; }
+        string NewToi { get; }
+        string NewToiExplanation { get; }
+
     }
 }

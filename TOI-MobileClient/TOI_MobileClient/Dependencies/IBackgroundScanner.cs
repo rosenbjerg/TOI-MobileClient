@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using TOI_MobileClient.Managers;
+using TOI_MobileClient.Models;
 
 namespace TOI_MobileClient.Dependencies
 {
     public interface IBackgroundScanner
     {
-        void ScanForToi(HashSet<Guid> filter);
+        void ScanForToi(HashSet<Guid> filter, ScanConfiguration configuration = null);
 
         event EventHandler<TagsFoundsEventArgs> TagsFound;
     }
@@ -22,5 +24,23 @@ namespace TOI_MobileClient.Dependencies
 
         public List<Guid> Tags { get; }
         public bool Handled { get; set; } = false;
+    }
+
+    public class ScanConfiguration
+    {
+        public bool UseBle;
+        public bool UseNfc;
+        public bool UseGps;
+        public bool UseWifi;
+
+        public ScanConfiguration(bool useBle = true, bool useNfc = false, bool useGps = false, bool useWifi = false)
+        {
+            UseBle = useBle;
+            UseNfc = useNfc;
+            UseGps = useGps;
+            UseWifi = useWifi;
+        }
+
+        public static readonly ScanConfiguration DefaultScanConfiguration = new ScanConfiguration();
     }
 }

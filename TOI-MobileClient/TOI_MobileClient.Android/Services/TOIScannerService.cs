@@ -22,7 +22,6 @@ namespace TOI_MobileClient.Droid.Services
     {
         public int ServiceId { get; } = 6969;
         public ScannerServiceBinder Binder { get; private set; }
-        private NotificationBuilder _notificationBuilder = new NotificationBuilder();
 
         public override IBinder OnBind(Intent intent)
         {
@@ -31,24 +30,42 @@ namespace TOI_MobileClient.Droid.Services
         }
         public override StartCommandResult OnStartCommand(Intent intent, StartCommandFlags flags, int startId)
         {
-            var notification = _notificationBuilder.BuildNotification();
-            StartForeground(ServiceId, notification);
+            var lang = DependencyManager.Get<ILanguage>();
+            DependencyManager.Get<NotifierBase>().DisplayNewToi(ServiceId, lang.Scanning,
+                lang.ScanningExplanation, 
+                Resource.Drawable.TagSyncIcon, Resource.Drawable.Icon);
             //Logger.Instance.WriteToLog("MusicPlayerService", "Service started");
             return StartCommandResult.Sticky;
         }
 
-        public async void ScanForToi(HashSet<Guid> filter)
+        public async void ScanForToi(HashSet<Guid> filter, ScanConfiguration configuration = null)
         {
-            var ble = await ScanBle(filter);
+            if(configuration == null) configuration = ScanConfiguration.DefaultScanConfiguration;
+            
+            var ble = await ScanBle(filter, configuration.UseBle);
             var tags = ble.Select(b => b.Address).Where(filter.Contains).ToList();
 
-            TagsFound?.Invoke(this, new TagsFoundsEventArgs(tags));
+            if (TagsFound != null)
+                TagsFound.Invoke(this, new TagsFoundsEventArgs(tags));
+            else
+            {
+                var lang = DependencyManager.Get<ILanguage>();
+                if(tags.Count == 0)
+                    DependencyManager.Get<NotifierBase>().DisplayNewToi(ServiceId, lang.Scanning,
+                        lang.ScanningExplanation,
+                        Resource.Drawable.TagSyncIcon, Resource.Drawable.Icon, true);
+                else
+                    DependencyManager.Get<NotifierBase>().DisplayNewToi(ServiceId, lang.NewToi,
+                        lang.NewToiExplanation,
+                        Resource.Drawable.TagFoundIcon, Resource.Drawable.Icon, true);
+            }
         }
 
         public event EventHandler<TagsFoundsEventArgs> TagsFound;
 
-        public async Task<IReadOnlyList<BleDevice>> ScanBle(HashSet<Guid> filter)
+        public async Task<IReadOnlyList<BleDevice>> ScanBle(HashSet<Guid> filter, bool useBle)
         {
+            if (!useBle) return new List<BleDevice>();
             var scanner = DependencyManager.Get<BleScannerBase>();
             return await scanner.ScanDevices(filter);
         }
@@ -68,31 +85,5 @@ namespace TOI_MobileClient.Droid.Services
         //{
             
         //}
-    }
-
-    internal class NotificationBuilder
-    {
-        //Todo This class should probably have a platform-independent implementation
-        private readonly Bitmap _largeIcon;
-
-        public NotificationBuilder()
-        {
-            _largeIcon = Bitmap.CreateScaledBitmap(
-                BitmapFactory.DecodeResource(Forms.Context.ApplicationContext.Resources, Resource.Drawable.Icon), 120,
-                120, false);
-        }
-        public Notification BuildNotification()
-        {
-
-            return new NotificationCompat.Builder(Forms.Context.ApplicationContext)
-                .SetTicker("TOI Scanner")
-                .SetContentTitle("TOI Scanner")
-                .SetContentText("Scanning for TOIs in the background.")
-                .SetSmallIcon(Resource.Drawable.TagSyncIcon)
-                .SetLargeIcon(_largeIcon)
-                .SetVisibility(1)
-                //.SetStyle()
-                .Build();
-        }
     }
 }
