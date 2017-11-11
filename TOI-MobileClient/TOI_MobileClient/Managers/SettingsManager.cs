@@ -5,7 +5,6 @@ using Plugin.Settings;
 using Plugin.Settings.Abstractions;
 using TOI_MobileClient.Dependencies;
 using TOI_MobileClient.Localization;
-using TOI_MobileClient.Models;
 using TOI_MobileClient.ViewModels;
 
 namespace TOI_MobileClient.Managers

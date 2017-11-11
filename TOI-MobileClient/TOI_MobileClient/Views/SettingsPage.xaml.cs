@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using TOI_MobileClient.Dependencies;
 using TOI_MobileClient.Managers;
-using TOI_MobileClient.Models;
 using TOI_MobileClient.ViewModels;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;

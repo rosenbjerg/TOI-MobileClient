@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using TOI_MobileClient.Managers;
-using TOI_MobileClient.Models;
 
 namespace TOI_MobileClient.Dependencies
 {
