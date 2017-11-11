@@ -21,7 +21,7 @@ namespace TOI_MobileClient.Droid
 
         public override async Task<IReadOnlyList<BleDevice>> ScanDevices(HashSet<Guid> deviceFilter, int scanTimeout = 2000)
         {
-            if (_isScanning || !IsEnabled)
+            if (_isScanning || !IsEnabled || !SettingsManager.BleEnabled)
             {
                 DependencyManager.Get<NotifierBase>().DisplayToast(SettingsManager.Language.BluetoothNotEnabled, true);
                 return _emptyListCache;

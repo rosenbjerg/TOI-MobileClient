@@ -16,6 +16,38 @@ namespace TOI_MobileClient.Managers
         public static ISettings AppSettings => CrossSettings.Current;
         public static string Url => "http://192.168.0.105:7474/tags/";
 
+        private const bool Default = false;
+
+        public static bool BleEnabled
+        {
+            get => AppSettings.GetValueOrDefault(nameof(BleEnabled), Default);
+            set => AppSettings.AddOrUpdateValue(nameof(BleEnabled), value);
+        }
+
+        public static bool WiFiEnabled
+        {
+            get => AppSettings.GetValueOrDefault(nameof(WiFiEnabled), Default);
+            set => AppSettings.AddOrUpdateValue(nameof(WiFiEnabled), value);
+        }
+
+        public static bool GpsEnabled
+        {
+            get => AppSettings.GetValueOrDefault(nameof(GpsEnabled), Default);
+            set => AppSettings.AddOrUpdateValue(nameof(GpsEnabled), value);
+        }
+
+        public static bool NfcEnabled
+        {
+            get => AppSettings.GetValueOrDefault(nameof(NfcEnabled), Default);
+            set => AppSettings.AddOrUpdateValue(nameof(NfcEnabled), value);
+        }
+
+        public static int ScanFrequency
+        {
+            get => AppSettings.GetValueOrDefault(nameof(ScanFrequency), 1);
+            set => AppSettings.AddOrUpdateValue(nameof(ScanFrequency), value);
+        }
+
         public static List<string> ScanFrequencyOptions => new List<string>
         {
             Language.Often,
@@ -24,38 +56,11 @@ namespace TOI_MobileClient.Managers
             Language.Never
         };
 
-        /// <summary>
-        /// Used to access the setting for a given Capability.
-        /// </summary>
-        public static Dictionary<Type, BooleanSetting> Capabilities { get; }
-
-        public static List<Setting> Settings { get; }
-
+        public static string ScanFrequencyValue => ScanFrequencyOptions[ScanFrequency];
+      
         static SettingsManager()
         {
             Language = new EnglishLanguage();
-
-            var gpsSetting = new BooleanSetting("GPS", Language.Gps) {Capability = typeof(GpsLocatorBase)};
-            var bleSetting = new BooleanSetting("BLE", Language.Bluetooth) {Capability = typeof(BleScannerBase)};
-            var wifiSetting = new BooleanSetting("Wi-Fi", Language.Wifi) {Capability = typeof(WiFiScannerBase)};
-            var nfcSetting = new BooleanSetting("NFC", Language.Nfc) {Capability = typeof(NfcScannerBase)};
-
-            Capabilities = new Dictionary<Type, BooleanSetting>
-            {
-                {typeof(GpsLocatorBase), gpsSetting},
-                {typeof(BleScannerBase), bleSetting },
-                {typeof(WiFiScannerBase), wifiSetting },
-                {typeof(NfcScannerBase), nfcSetting }
-            };
-
-            Settings = new List<Setting>
-            {
-                new RadioSetting("ScanFrequency", Language.ScanFrequency, ScanFrequencyOptions),
-                gpsSetting,
-                bleSetting,
-                wifiSetting,
-                nfcSetting
-            };
         }
     }
 }

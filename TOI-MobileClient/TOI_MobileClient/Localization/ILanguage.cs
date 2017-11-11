@@ -22,6 +22,8 @@ namespace TOI_MobileClient
         string Bluetooth { get; }
         string Wifi { get; }
         string Nfc { get; }
+
+        string EnableToast { get; }
         #endregion
 
         string ScanForTags { get; }
