@@ -21,5 +21,12 @@ namespace TOI_MobileClient.Localization
         public string Settings => "Settings";
         public string About => "About";
         public string EnableToast => "Please enable ";
+        public string Scanning => "Scanning...";
+        public string ScanningExplanation => "Scanning in the background to find things of interest near you.";
+
+        public string NewToi => "Thing of interest near you";
+
+        public string NewToiExplanation =>
+            "There is something nearby that you might be interested in learning more about.";
     }
 }

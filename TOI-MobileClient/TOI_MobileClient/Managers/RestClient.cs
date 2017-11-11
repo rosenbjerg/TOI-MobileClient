@@ -50,22 +50,9 @@ namespace TOI_MobileClient
 
             if (string.IsNullOrEmpty(res))
                 return null;
-
-            try
-            {
-                var tagList = JsonConvert.DeserializeObject<List<T>>(res);
-                return tagList;
-            }
-            catch (JsonReaderException e)
-            {
-                Console.WriteLine(e);
-                throw new FormatException(e.Message);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-                throw;
-            }
+            
+            var tagList = JsonConvert.DeserializeObject<List<T>>(res);
+            return tagList;
         }
     }
 }

@@ -9,5 +9,15 @@ namespace TOI_MobileClient.ViewModels
     public abstract class ViewModelBase : BindableObject
     {
         public ILanguage Language => SettingsManager.Language;
+
+        public virtual void OnViewAppearing()
+        {
+            
+        }
+
+        public virtual void OnViewDisappearing()
+        {
+            
+        }
     }
 }
