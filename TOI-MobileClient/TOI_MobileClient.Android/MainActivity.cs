@@ -37,6 +37,7 @@ namespace TOI_MobileClient.Droid
             DependencyManager.Register<BleScannerBase, AndroidBleScanner>(new AndroidBleScanner());
 		    DependencyManager.Register<NotifierBase, AndroidNotifier>(new AndroidNotifier());
 		    DependencyManager.Register<GpsLocatorBase, AndroidGpsScanner>(new AndroidGpsScanner());
+            DependencyManager.Register<NfcScannerBase, AndroidNfcScanner>(new AndroidNfcScanner());
 
             global::Xamarin.Forms.Forms.Init (this, bundle);
 		    Plugin.Iconize.Iconize.With(new Plugin.Iconize.Fonts.FontAwesomeModule());
