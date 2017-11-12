@@ -55,10 +55,10 @@ namespace TOI_MobileClient.Droid.Services
             return await scanner.ScanDevices(filter);
         }
 
-        //public Task<IReadOnlyList<NfcDevice>> ScanNfc();
+        //public Guid ScanNfc()
         //{
-        //    var scanner = DependencyManager.Get<NfcScannerBase>();
-        //    //return await scanner
+            //var scanner = DependencyManager.Get<NfcScannerBase>();
+            //return scanner.ScanNfc(Application); Mangler at finde ud af hvordan man parser Intent
         //}
 
         //public async Task<IReadOnlyList<Position>> ScanGps(double radius)

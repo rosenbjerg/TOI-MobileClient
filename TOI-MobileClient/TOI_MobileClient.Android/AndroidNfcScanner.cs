@@ -7,7 +7,7 @@ using System.Text;
 
 namespace TOI_MobileClient.Droid
 {
-    class AndroidNfcScanner : NfcScannerBase
+    public class AndroidNfcScanner : NfcScannerBase
     {
         private NfcAdapter _nfcAdapter;
         

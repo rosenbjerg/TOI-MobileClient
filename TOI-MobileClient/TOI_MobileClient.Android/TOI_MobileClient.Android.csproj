@@ -192,6 +192,7 @@
   <ItemGroup>
     <Compile Include="AndroidBleScanner.cs" />
     <Compile Include="AndroidGpsScanner.cs" />
+    <Compile Include="AndroidNfcScanner.cs" />
     <Compile Include="AndroidNotifier.cs" />
     <Compile Include="Helpers\Settings.cs" />
     <Compile Include="MainActivity.cs" />

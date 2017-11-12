@@ -48,7 +48,7 @@ namespace TOI_MobileClient.Droid
 
             LoadApplication(new App());
         }
-
+        
 	    protected override void OnDestroy()
 	    {
 	        base.OnDestroy();
