@@ -1,87 +1,74 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-using Android.App;
-using Android.Content;
 using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
-using Android.Locations;
-using Android.Util;
-using DepMan;
-using Java.Security;
-using Java.Util.Logging;
+using Android.Gms.Common.Apis;
 using TOI_MobileClient.Dependencies;
+using Android.Gms.Common;
+using Android.Gms.Location;
+using Android.App;
+using Android.Locations;
+
 
 namespace TOI_MobileClient.Droid
 {
-    class AndroidGpsScanner : GpsLocatorBase, ILocationListener
+    class AndroidGpsScanner : GpsLocatorBase, GoogleApiClient.IConnectionCallbacks, GoogleApiClient.IOnConnectionFailedListener, Android.Gms.Location.ILocationListener
     {
-        private double _latitude;
-        private double _longtitude;
-
-        readonly LocationManager _locMan =
-            Application.Context.GetSystemService(Context.LocationService) as LocationManager;
-
+        GoogleApiClient _client;
+        Location _currentLocation;
         public AndroidGpsScanner()
         {
-            
+            _client = new GoogleApiClient.Builder(Application.Context, this, this).AddApi(LocationServices.Api).Build();
+            _client.Connect();
         }
-        public AndroidGpsScanner(IntPtr javaReference = default(IntPtr), JniHandleOwnership transfer = default(JniHandleOwnership))
-        {
-            string Provider = LocationManager.GpsProvider;
-
-            if (_locMan.IsProviderEnabled(Provider))
-            {
-                IsEnabled = true;
-                _locMan.RequestLocationUpdates(Provider, 2000, 1, this);
-            }
-            else
-            {
-               IsEnabled = false;
-               DependencyManager.Get<NotifierBase>().DisplayToast("Locations is not enabled", true);
-            }
-        }
-
 
         public override Location GetLocation()
         {
-            if(IsEnabled)
-                return _locMan.GetLastKnownLocation(LocationManager.GpsProvider);
-            else
-                return null;
-
+            if (_client.IsConnected)
+            {
+                LocationRequest locationRequest = new LocationRequest();
+                locationRequest.SetPriority(100);
+                locationRequest.SetInterval(10000);
+                locationRequest.SetFastestInterval(5000);
+                
+                _currentLocation = LocationServices.FusedLocationApi.GetLastLocation(_client);
+                
+                return _currentLocation;
+            }
+            else return null;
         }
 
-        public void Dispose()
+        public void OnConnected(Bundle connectionHint)
         {
-            throw new NotImplementedException();
+            Console.WriteLine("connected to google play services");
         }
 
-        public IntPtr Handle { get; }
+        public void OnConnectionFailed(ConnectionResult result)
+        {
+            int queryResult = GoogleApiAvailability.Instance.IsGooglePlayServicesAvailable(Application.Context);
+            if(queryResult == ConnectionResult.Success)
+            {
+                //GooglePlayService er installereret så en anden fejl!
+            }
+            if (GoogleApiAvailability.Instance.IsUserResolvableError(queryResult))
+            {
+                string errorString = GoogleApiAvailability.Instance.GetErrorString(queryResult);
+
+                // error string viser hvad der er galt.
+            }
+            else
+            {
+                //Google play services er ikke instaleret
+            }
+        }
+
+        public void OnConnectionSuspended(int cause)
+        {
+
+        }
 
         public void OnLocationChanged(Location location)
         {
-            _latitude = location.Latitude;
-            _longtitude = location.Longitude;
-        }
-
-        public void OnProviderDisabled(string provider)
-        {
-            IsEnabled = false;
-        }
-
-        public void OnProviderEnabled(string provider)
-        {
-            IsEnabled = true;
-        }
-
-        public void OnStatusChanged(string provider, Availability status, Bundle extras)
-        {
-            throw new NotImplementedException();
+            _currentLocation = location;
         }
     }
 }

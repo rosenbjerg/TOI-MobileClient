@@ -41,7 +41,7 @@ namespace TOI_MobileClient.Droid
             global::Xamarin.Forms.Forms.Init (this, bundle);
 		    Plugin.Iconize.Iconize.With(new Plugin.Iconize.Fonts.FontAwesomeModule());
             FormsPlugin.Iconize.Droid.IconControls.Init(Resource.Id.toolbar, Resource.Id.sliding_tabs);
-
+            
 		    ServiceConnection = new ScannerServiceConnection();
 		    DependencyManager.Register<IScannerServiceProvider, ScannerServiceConnection>(ServiceConnection);
 
