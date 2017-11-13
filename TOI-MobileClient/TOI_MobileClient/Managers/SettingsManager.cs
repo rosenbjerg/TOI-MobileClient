@@ -15,7 +15,7 @@ namespace TOI_MobileClient.Managers
         public static ISettings AppSettings => CrossSettings.Current;
         public static string Url => "http://ssh.windelborg.info:7474/tags/";
 
-        private const bool Default = false;
+        private const bool Default = true;
 
         public static bool BleEnabled
         {

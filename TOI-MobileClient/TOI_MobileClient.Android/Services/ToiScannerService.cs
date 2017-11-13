@@ -18,6 +18,26 @@ namespace TOI_MobileClient.Droid.Services
         public int ServiceId { get; } = 6969;
         public ScannerServiceBinder Binder { get; private set; }
 
+        public ToiScannerService()
+        {
+            TagsFound += async delegate(object sender, TagsFoundsEventArgs args)
+            {
+                await Task.Delay(1000);
+                if (args.Handled)
+                    return;
+
+                var lang = DependencyManager.Get<ILanguage>();
+
+                if (args.Tags.Count == 0)
+                    DependencyManager.Get<NotifierBase>().DisplayNewToi(ServiceId, lang.Scanning,
+                        lang.ScanningExplanation,
+                        Resource.Drawable.TagSyncIcon, Resource.Drawable.Icon);
+                else
+                    DependencyManager.Get<NotifierBase>().DisplayNewToi(ServiceId, lang.NewToi,
+                        lang.NewToiExplanation,
+                        Resource.Drawable.TagFoundIcon, Resource.Drawable.Icon, true);
+            };
+        }
         public override IBinder OnBind(Intent intent)
         {
             Binder = new ScannerServiceBinder(this);
@@ -40,20 +60,7 @@ namespace TOI_MobileClient.Droid.Services
             var ble = await ScanBle(filter, configuration.UseBle);
             var tags = ble.Select(b => b.Address).Where(filter.Contains).ToList();
 
-            if (TagsFound != null)
-                TagsFound.Invoke(this, new TagsFoundsEventArgs(tags));
-//            else
-//            {
-            var lang = DependencyManager.Get<ILanguage>();
-            if(tags.Count == 0)
-                DependencyManager.Get<NotifierBase>().DisplayNewToi(ServiceId, lang.Scanning,
-                    lang.ScanningExplanation,
-                    Resource.Drawable.TagSyncIcon, Resource.Drawable.Icon);
-            else
-                DependencyManager.Get<NotifierBase>().DisplayNewToi(ServiceId, lang.NewToi,
-                    lang.NewToiExplanation,
-                    Resource.Drawable.TagFoundIcon, Resource.Drawable.Icon, true);
-//            }
+            TagsFound?.Invoke(this, new TagsFoundsEventArgs(tags));
         }
 
         public event EventHandler<TagsFoundsEventArgs> TagsFound;

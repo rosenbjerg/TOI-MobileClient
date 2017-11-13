@@ -37,7 +37,7 @@ namespace TOI_MobileClient.Droid
 
             DependencyManager.Register<BleScannerBase, AndroidBleScanner>(new AndroidBleScanner());
 		    DependencyManager.Register<NotifierBase, AndroidNotifier>(new AndroidNotifier(GetSystemService(Context.NotificationService) as NotificationManager));
-		    DependencyManager.Register<ILanguage, EnglishLanguage>(new EnglishLanguage());
+//		    DependencyManager.Register<ILanguage, EnglishLanguage>(new EnglishLanguage());
 
             global::Xamarin.Forms.Forms.Init (this, bundle);
 		    Plugin.Iconize.Iconize.With(new Plugin.Iconize.Fonts.FontAwesomeModule());

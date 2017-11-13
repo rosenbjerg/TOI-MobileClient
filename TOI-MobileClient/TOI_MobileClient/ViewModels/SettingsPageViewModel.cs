@@ -16,15 +16,6 @@ namespace TOI_MobileClient.ViewModels
             get => SettingsManager.BleEnabled;
             set
             {
-                if (!DependencyManager.IsRegistered<BleScannerBase>() ||
-                    !DependencyManager.Get<BleScannerBase>().IsEnabled)
-                {
-                    DependencyManager.Get<NotifierBase>()
-                        .DisplayToast(SettingsManager.Language.EnableToast + BleEnabledTitle, false);
-                    OnPropertyChanged();
-                    return;
-                }
-
                 SettingsManager.BleEnabled = value;
                 OnPropertyChanged();
             }
@@ -37,15 +28,6 @@ namespace TOI_MobileClient.ViewModels
             get => SettingsManager.WiFiEnabled;
             set
             {
-                if (!DependencyManager.IsRegistered<WiFiScannerBase>() ||
-                    !DependencyManager.Get<WiFiScannerBase>().IsEnabled)
-                {
-                    DependencyManager.Get<NotifierBase>()
-                        .DisplayToast(SettingsManager.Language.EnableToast + WiFiEnabledTitle, false);
-                    OnPropertyChanged();
-                    return;
-                }
-
                 SettingsManager.WiFiEnabled = value;
                 OnPropertyChanged();
             }
@@ -58,15 +40,6 @@ namespace TOI_MobileClient.ViewModels
             get => SettingsManager.GpsEnabled;
             set
             {
-                if (!DependencyManager.IsRegistered<GpsLocatorBase>() ||
-                    !DependencyManager.Get<GpsLocatorBase>().IsEnabled)
-                {
-                    DependencyManager.Get<NotifierBase>()
-                        .DisplayToast(SettingsManager.Language.EnableToast + GpsEnabledTitle, false);
-                    OnPropertyChanged();
-                    return;
-                }
-
                 SettingsManager.GpsEnabled = value;
                 OnPropertyChanged();
             }
@@ -79,15 +52,6 @@ namespace TOI_MobileClient.ViewModels
             get => SettingsManager.NfcEnabled;
             set
             {
-                if (!DependencyManager.IsRegistered<NfcScannerBase>() ||
-                    !DependencyManager.Get<NfcScannerBase>().IsEnabled)
-                {
-                    DependencyManager.Get<NotifierBase>()
-                        .DisplayToast(SettingsManager.Language.EnableToast + NfcEnabledTitle, false);
-                    OnPropertyChanged();
-                    return;
-                }
-
                 SettingsManager.WiFiEnabled = value;
                 OnPropertyChanged();
             }
@@ -106,18 +70,6 @@ namespace TOI_MobileClient.ViewModels
         }
 
         public List<string> ScanFrequencyOptions => SettingsManager.ScanFrequencyOptions;
-
-        public SettingsPageViewModel()
-        {
-            SettingsManager.BleEnabled = DependencyManager.IsRegistered<BleScannerBase>() &&
-                                         DependencyManager.Get<BleScannerBase>().IsEnabled;
-            SettingsManager.WiFiEnabled = DependencyManager.IsRegistered<WiFiScannerBase>() &&
-                                         DependencyManager.Get<WiFiScannerBase>().IsEnabled;
-            SettingsManager.GpsEnabled = DependencyManager.IsRegistered<GpsLocatorBase>() &&
-                                         DependencyManager.Get<GpsLocatorBase>().IsEnabled;
-            SettingsManager.NfcEnabled = DependencyManager.IsRegistered<NfcScannerBase>() &&
-                                         DependencyManager.Get<NfcScannerBase>().IsEnabled;
-        }
     }
     
 }
