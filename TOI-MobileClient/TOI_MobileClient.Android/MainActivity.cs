@@ -4,6 +4,7 @@ using Android.App;
 using Android.Content;
 using Android.Content.PM;
 using Android.Graphics;
+using Android.Nfc;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
@@ -19,8 +20,8 @@ namespace TOI_MobileClient.Droid
 	public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
 	{
 	    public static ScannerServiceConnection ServiceConnection;
-
-		protected override void OnCreate (Bundle bundle)
+	    private NfcAdapter _nfcAdapter;
+        protected override void OnCreate (Bundle bundle)
 		{
 			TabLayoutResource = Resource.Layout.Tabbar;
 			ToolbarResource = Resource.Layout.Toolbar;
@@ -46,9 +47,31 @@ namespace TOI_MobileClient.Droid
 		    ServiceConnection = new ScannerServiceConnection();
 		    DependencyManager.Register<IScannerServiceProvider, ScannerServiceConnection>(ServiceConnection);
 
+            _nfcAdapter = NfcAdapter.GetDefaultAdapter(this);
+
             LoadApplication(new App());
         }
-        
+
+	    protected override void OnResume()
+	    {
+            base.OnResume();
+
+	        var tagDetected = new IntentFilter(NfcAdapter.ActionTagDiscovered);
+	        var filters = new[] { tagDetected };
+
+	        var intent = new Intent(this, this.GetType()).AddFlags(ActivityFlags.SingleTop);
+
+	        var pendingIntent = PendingIntent.GetActivity(this, 0, intent, 0);
+
+	        _nfcAdapter.EnableForegroundDispatch(this, pendingIntent, filters, null);
+
+        }
+
+        protected override void OnNewIntent(Intent intent)
+	    {
+	        DependencyManager.Get<NfcScannerBase>().ScanNfc(intent);
+	    }
+
 	    protected override void OnDestroy()
 	    {
 	        base.OnDestroy();

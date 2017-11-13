@@ -18,27 +18,19 @@ namespace TOI_MobileClient.Droid
 
         public override Guid ScanNfc(Intent intent)
         {
-            if (intent.Action == NfcAdapter.ActionTagDiscovered)
-            {
-                var tag = intent.GetParcelableExtra(NfcAdapter.ExtraTag) as Tag;
-                if (tag != null)
-                {
-                    var rawMessage = intent.GetParcelableArrayExtra(NfcAdapter.ExtraNdefMessages);
-                    if (rawMessage != null)
-                    {
-                        var message = (NdefMessage)rawMessage[0];
+            if (intent.Action != NfcAdapter.ActionTagDiscovered) return Guid.ParseExact("".PadLeft(32, '0'), "N");
+            if (!(intent.GetParcelableExtra(NfcAdapter.ExtraTag) is Tag tag))
+                return Guid.ParseExact("".PadLeft(32, '0'), "N");
 
-                        var record = message.GetRecords()[0];
-                        if (record != null)
-                        {
-                            return Guid.ParseExact(Encoding.ASCII.GetString(record.GetPayload()), "N");
-                        }
-                        
-                    }
-                }
-            }
-            return Guid.ParseExact("-1".PadLeft(32,'0'), "N");
+            var result = Guid.ParseExact(ByteArrayToString(tag.GetId()).PadLeft(32, '0'), "N");
+            return Guid.ParseExact(ByteArrayToString(tag.GetId()).PadLeft(32, '0'), "N");
         }
-
+        public static string ByteArrayToString(byte[] ba)
+        {
+            StringBuilder hex = new StringBuilder(ba.Length * 2);
+            foreach (byte b in ba)
+                hex.AppendFormat("{0:x2}", b);
+            return hex.ToString();
+        }
     }
 }

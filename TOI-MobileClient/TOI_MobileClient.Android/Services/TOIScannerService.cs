@@ -8,7 +8,7 @@ using Android.Content;
 using Android.Graphics;
 using Android.OS;
 using Android.Locations;
-using Android.Support.V7.App;
+using Android.Support.V4.App;
 using DepMan;
 using TOI_MobileClient.Dependencies;
 using TOI_MobileClient.Managers;
@@ -41,9 +41,9 @@ namespace TOI_MobileClient.Droid.Services
         public async void ScanForToi(HashSet<Guid> filter)
         {
             var ble = await ScanBle(filter);
-            var gps = await ScanGps(10);
+            var gps =  ScanGps(10);
             var tags = ble.Select(b => b.Address).Where(filter.Contains).ToList();
-
+            //hvordan skal vi tilføje nfc tags her?
             TagsFound?.Invoke(this, new TagsFoundsEventArgs(tags));
         }
 
@@ -62,7 +62,7 @@ namespace TOI_MobileClient.Droid.Services
         //}
 
         //public async Task<IReadOnlyList<Position>> ScanGps(double radius)
-        public async Task<Location> ScanGps(double radius)
+        public Location ScanGps(double radius)
         {
             //tjek om gps er slået til
             var scanner = DependencyManager.Get<GpsLocatorBase>();
@@ -91,7 +91,6 @@ namespace TOI_MobileClient.Droid.Services
         }
         public Notification BuildNotification()
         {
-
             return new NotificationCompat.Builder(Forms.Context.ApplicationContext)
                 .SetTicker("TOI Scanner")
                 .SetContentTitle("TOI Scanner")

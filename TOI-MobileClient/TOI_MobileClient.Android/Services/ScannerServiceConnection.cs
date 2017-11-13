@@ -47,20 +47,20 @@ namespace TOI_MobileClient.Droid.Services
         public Intent CreateServiceIntent()
         {
             var serviceIntent = new Intent(Forms.Context.ApplicationContext, typeof(ToiScannerService));
-            if (!IsServiceRunning())
-            {
-                Forms.Context.ApplicationContext.StartService(serviceIntent);
-            }
+
+            Forms.Context.ApplicationContext.StartService(serviceIntent);
+
             return serviceIntent;
         }
 
-        private bool IsServiceRunning()
-        {
-            var manager = (ActivityManager)Forms.Context.ApplicationContext.GetSystemService(Context.ActivityService);
-            var runningServices = manager.GetRunningServices(int.MaxValue);
-            const string name = nameof(ToiScannerService);
-            return runningServices.Any(service => service.Service.ClassName.Contains(name));
-        }
+        //private bool IsServiceRunning()
+        //{
+        //    var manager = (ActivityManager)Forms.Context.ApplicationContext.GetSystemService(Context.ActivityService);
+        //    var runningServices = manager.GetRunningServices(int.MaxValue);
+            
+        //    string name = nameof(ToiScannerService);
+        //    return runningServices.Any(service => service.Service.ClassName.Contains(name));
+        //}
 
         public void UnbindFromService()
         {

@@ -17,7 +17,7 @@ namespace TOI_MobileClient.Droid
         Location _currentLocation;
         public AndroidGpsScanner()
         {
-            _client = new GoogleApiClient.Builder(Application.Context, this, this).AddApi(LocationServices.Api).Build();
+            _client = new GoogleApiClient.Builder(Application.Context, this, this).AddApi(LocationServices.API).Build();
             _client.Connect();
         }
 
@@ -40,6 +40,7 @@ namespace TOI_MobileClient.Droid
         public void OnConnected(Bundle connectionHint)
         {
             Console.WriteLine("connected to google play services");
+            IsEnabled = true;
         }
 
         public void OnConnectionFailed(ConnectionResult result)
