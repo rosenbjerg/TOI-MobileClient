@@ -65,10 +65,10 @@ namespace TOI_MobileClient.Droid
                 .SetSmallIcon(smallIcon)
                 .SetLargeIcon(_bitmaps[largeIcon])
                 .SetVisibility(1)
-                //.SetStyle();
+                .SetStyle(new NotificationCompat.BigTextStyle().BigText(content));
             ;
             if (makeNoice)
-                nb.SetDefaults((int) (NotificationDefaults.Sound | NotificationDefaults.Vibrate));
+                nb.SetDefaults((int) NotificationDefaults.All);
 
 
             var not = nb.Build();

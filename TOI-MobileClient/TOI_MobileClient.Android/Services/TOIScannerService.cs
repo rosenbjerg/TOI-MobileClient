@@ -1,18 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
-using Android.Graphics;
 using Android.OS;
-using Android.Support.V7.App;
 using DepMan;
 using TOI_MobileClient.Dependencies;
-using TOI_MobileClient.Managers;
-using TOI_MobileClient.Models;
-using Xamarin.Forms;
+
 
 namespace TOI_MobileClient.Droid.Services
 {
@@ -47,18 +42,18 @@ namespace TOI_MobileClient.Droid.Services
 
             if (TagsFound != null)
                 TagsFound.Invoke(this, new TagsFoundsEventArgs(tags));
+//            else
+//            {
+            var lang = DependencyManager.Get<ILanguage>();
+            if(tags.Count == 0)
+                DependencyManager.Get<NotifierBase>().DisplayNewToi(ServiceId, lang.Scanning,
+                    lang.ScanningExplanation,
+                    Resource.Drawable.TagSyncIcon, Resource.Drawable.Icon);
             else
-            {
-                var lang = DependencyManager.Get<ILanguage>();
-                if(tags.Count == 0)
-                    DependencyManager.Get<NotifierBase>().DisplayNewToi(ServiceId, lang.Scanning,
-                        lang.ScanningExplanation,
-                        Resource.Drawable.TagSyncIcon, Resource.Drawable.Icon, true);
-                else
-                    DependencyManager.Get<NotifierBase>().DisplayNewToi(ServiceId, lang.NewToi,
-                        lang.NewToiExplanation,
-                        Resource.Drawable.TagFoundIcon, Resource.Drawable.Icon, true);
-            }
+                DependencyManager.Get<NotifierBase>().DisplayNewToi(ServiceId, lang.NewToi,
+                    lang.NewToiExplanation,
+                    Resource.Drawable.TagFoundIcon, Resource.Drawable.Icon, true);
+//            }
         }
 
         public event EventHandler<TagsFoundsEventArgs> TagsFound;
