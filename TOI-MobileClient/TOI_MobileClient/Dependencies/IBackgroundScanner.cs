@@ -32,6 +32,7 @@ namespace TOI_MobileClient.Dependencies
         public bool UseGps;
         public bool UseWifi;
 
+        // TODO change values to true as implementation of each technology is completed.
         public ScanConfiguration(bool useBle = true, bool useNfc = false, bool useGps = false, bool useWifi = false)
         {
             UseBle = useBle;
