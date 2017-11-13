@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DepMan;
+using TOI_MobileClient.Localization;
 using Xamarin.Forms;
 
 namespace TOI_MobileClient
@@ -14,7 +15,8 @@ namespace TOI_MobileClient
             MainPage = new MainPage();
 		    Navigation = MainPage.Navigation;
 		    DependencyManager.Register<RestClient, RestClient>(new RestClient(new ToiHttpManager()));
-        }
+		    DependencyManager.Register<ILanguage, EnglishLanguage>(new EnglishLanguage());
+		}
 
         protected override void OnStart ()
 		{

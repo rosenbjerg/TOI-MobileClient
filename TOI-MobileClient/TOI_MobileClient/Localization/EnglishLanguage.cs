@@ -20,7 +20,7 @@ namespace TOI_MobileClient.Localization
         public string ScanForTags => "Scan for tags";
         public string Settings => "Settings";
         public string About => "About";
-
+        public string EnableToast => "Please enable ";
         public string Scanning => "Scanning...";
         public string ScanningExplanation => "Scanning in the background to find things of interest near you.";
 

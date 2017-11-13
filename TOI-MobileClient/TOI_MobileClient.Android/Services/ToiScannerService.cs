@@ -11,7 +11,6 @@ using Android.Support.V7.App;
 using DepMan;
 using TOI_MobileClient.Dependencies;
 using TOI_MobileClient.Managers;
-using TOI_MobileClient.Models;
 using Xamarin.Forms;
 
 namespace TOI_MobileClient.Droid.Services
