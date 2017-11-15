@@ -11,16 +11,14 @@ using Xamarin.Forms;
 
 namespace TOI_MobileClient.Droid
 {
-    class AndroidNotifier : NotifierBase
+    public class AndroidNotifier : NotifierBase
     {
         private readonly Dictionary<int, Bitmap> _bitmaps = new Dictionary<int, Bitmap>();
         private readonly NotificationManager _notificationManager;
 
         public AndroidNotifier(NotificationManager notificationManager)
         {
-            if (notificationManager == null)
-                throw new NullReferenceException("Notification manager was null!");
-            _notificationManager = notificationManager;
+            _notificationManager = notificationManager ?? throw new NullReferenceException("Notification manager was null!");
         }
 
         public override void DisplaySnackbar(string text, bool longDur = true)
@@ -65,7 +63,7 @@ namespace TOI_MobileClient.Droid
                 .SetSmallIcon(smallIcon)
                 .SetLargeIcon(_bitmaps[largeIcon])
                 .SetVisibility(1)
-                .SetStyle(new NotificationCompat.BigTextStyle().BigText(content));
+                .SetStyle(new NotificationCompat.BigTextStyle().BigText(content))
             ;
             if (makeNoice)
                 nb.SetDefaults((int) NotificationDefaults.All);

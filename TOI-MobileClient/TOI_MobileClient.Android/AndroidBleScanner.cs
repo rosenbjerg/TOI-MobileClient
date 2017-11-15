@@ -11,7 +11,7 @@ using Xamarin.Forms;
 
 namespace TOI_MobileClient.Droid
 {
-    class AndroidBleScanner : BleScannerBase
+    public class AndroidBleScanner : BleScannerBase
     {
         private bool _isScanning;
 
