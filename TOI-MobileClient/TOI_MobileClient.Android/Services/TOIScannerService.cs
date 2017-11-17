@@ -24,6 +24,7 @@ namespace TOI_MobileClient.Droid.Services
         public int ServiceId { get; } = 6969;
         public ScannerServiceBinder Binder { get; private set; }
         private NotificationBuilder _notificationBuilder = new NotificationBuilder();
+        public HashSet<string> Filter = new HashSet<string>();
 
         public override IBinder OnBind(Intent intent)
         {
@@ -34,14 +35,23 @@ namespace TOI_MobileClient.Droid.Services
         {
             var notification = _notificationBuilder.BuildNotification();
             StartForeground(ServiceId, notification);
+            DependencyManager.Get<NfcScannerBase>().NfcTagFound += OnNfcTagFound;
             //Logger.Instance.WriteToLog("MusicPlayerService", "Service started");
             return StartCommandResult.Sticky;
         }
 
-        public async void ScanForToi(HashSet<Guid> filter)
+        private void OnNfcTagFound(object sender, NfcEventArgs nfcEventArgs)
         {
+            TagsFound?.Invoke(this, new TagsFoundsEventArgs(new List<string> { nfcEventArgs.TagId }));
+            Console.WriteLine("NFC tag found: " + nfcEventArgs.TagId);
+        }
+
+        public async void ScanForToi(HashSet<string> filter)
+        {
+
             var ble = await ScanBle(filter);
             var gps =  ScanGps(10);
+            var wifi = await DependencyManager.Get<WiFiScannerBase>().ScanWifi();
             var tags = ble.Select(b => b.Address).Where(filter.Contains).ToList();
             //hvordan skal vi tilføje nfc tags her?
             TagsFound?.Invoke(this, new TagsFoundsEventArgs(tags));
@@ -49,16 +59,16 @@ namespace TOI_MobileClient.Droid.Services
 
         public event EventHandler<TagsFoundsEventArgs> TagsFound;
 
-        public async Task<IReadOnlyList<BleDevice>> ScanBle(HashSet<Guid> filter)
+        public async Task<IReadOnlyList<BleDevice>> ScanBle(HashSet<string> filter)
         {
             var scanner = DependencyManager.Get<BleScannerBase>();
             return await scanner.ScanDevices(filter);
         }
 
-        //public Guid ScanNfc()
+        //public Guid HandleNfcIntent()
         //{
             //var scanner = DependencyManager.Get<NfcScannerBase>();
-            //return scanner.ScanNfc(Application); Mangler at finde ud af hvordan man parser Intent
+            //return scanner.HandleNfcIntent(Application); Mangler at finde ud af hvordan man parser Intent
         //}
 
         //public async Task<IReadOnlyList<Position>> ScanGps(double radius)
@@ -68,14 +78,8 @@ namespace TOI_MobileClient.Droid.Services
             var scanner = DependencyManager.Get<GpsLocatorBase>();
             var position = scanner.GetLocation();
 
-
             return position;
         }
-
-        //public void ScanWifi()
-        //{
-
-        //}
     }
 
     internal class NotificationBuilder

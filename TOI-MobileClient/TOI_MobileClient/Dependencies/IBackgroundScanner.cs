@@ -7,7 +7,7 @@ namespace TOI_MobileClient.Dependencies
 {
     public interface IBackgroundScanner
     {
-        void ScanForToi(HashSet<Guid> filter);
+        void ScanForToi(HashSet<string> filter);
 
         event EventHandler<TagsFoundsEventArgs> TagsFound;
     }
@@ -15,12 +15,12 @@ namespace TOI_MobileClient.Dependencies
 
     public class TagsFoundsEventArgs : EventArgs
     {
-        public TagsFoundsEventArgs(List<Guid> addrs)
+        public TagsFoundsEventArgs(List<string> addrs)
         {
             Tags = addrs;
         }
 
-        public List<Guid> Tags { get; }
+        public List<string> Tags { get; }
         public bool Handled { get; set; } = false;
     }
 }

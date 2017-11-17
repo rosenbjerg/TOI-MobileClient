@@ -39,6 +39,7 @@ namespace TOI_MobileClient.Droid
 		    DependencyManager.Register<NotifierBase, AndroidNotifier>(new AndroidNotifier());
 		    DependencyManager.Register<GpsLocatorBase, AndroidGpsScanner>(new AndroidGpsScanner());
             DependencyManager.Register<NfcScannerBase, AndroidNfcScanner>(new AndroidNfcScanner());
+		    DependencyManager.Register<WiFiScannerBase, AndroidWifiScanner>(new AndroidWifiScanner());
 
             global::Xamarin.Forms.Forms.Init (this, bundle);
 		    Plugin.Iconize.Iconize.With(new Plugin.Iconize.Fonts.FontAwesomeModule());
@@ -69,7 +70,7 @@ namespace TOI_MobileClient.Droid
 
         protected override void OnNewIntent(Intent intent)
 	    {
-	        DependencyManager.Get<NfcScannerBase>().ScanNfc(intent);
+	        DependencyManager.Get<NfcScannerBase>().HandleNfcIntent(intent);
 	    }
 
 	    protected override void OnDestroy()

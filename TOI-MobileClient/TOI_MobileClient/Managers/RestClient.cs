@@ -42,7 +42,7 @@ namespace TOI_MobileClient
             }
         }
 
-        public async Task<IEnumerable<T>> GetMany<T>(string url, IEnumerable<Guid> ids)
+        public async Task<IEnumerable<T>> GetMany<T>(string url, IEnumerable<string> ids)
             where T : class, new()
         {
             var jArray = JsonConvert.SerializeObject(ids.ToList());
