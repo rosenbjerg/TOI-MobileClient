@@ -2381,26 +2381,26 @@ namespace TOI_MobileClient.Droid
 			// aapt resource value: 0x7f020053
 			public const int avd_hide_password = 2130837587;
 			
-			// aapt resource value: 0x7f020148
-			public const int avd_hide_password_1 = 2130837832;
-			
 			// aapt resource value: 0x7f020149
-			public const int avd_hide_password_2 = 2130837833;
+			public const int avd_hide_password_1 = 2130837833;
 			
 			// aapt resource value: 0x7f02014a
-			public const int avd_hide_password_3 = 2130837834;
+			public const int avd_hide_password_2 = 2130837834;
+			
+			// aapt resource value: 0x7f02014b
+			public const int avd_hide_password_3 = 2130837835;
 			
 			// aapt resource value: 0x7f020054
 			public const int avd_show_password = 2130837588;
 			
-			// aapt resource value: 0x7f02014b
-			public const int avd_show_password_1 = 2130837835;
-			
 			// aapt resource value: 0x7f02014c
-			public const int avd_show_password_2 = 2130837836;
+			public const int avd_show_password_1 = 2130837836;
 			
 			// aapt resource value: 0x7f02014d
-			public const int avd_show_password_3 = 2130837837;
+			public const int avd_show_password_2 = 2130837837;
+			
+			// aapt resource value: 0x7f02014e
+			public const int avd_show_password_3 = 2130837838;
 			
 			// aapt resource value: 0x7f020055
 			public const int common_full_open_on_phone = 2130837589;
@@ -2633,18 +2633,11 @@ namespace TOI_MobileClient.Droid
 			// aapt resource value: 0x7f0200a1
 			public const int ic_mr_button_connected_03_light = 2130837665;
 			
-			// aapt resource value: 0x7f0200a5
-			public const int notification_template_icon_bg = 2130837669;
-			
 			// aapt resource value: 0x7f0200a2
 			public const int ic_mr_button_connected_04_dark = 2130837666;
 			
 			// aapt resource value: 0x7f0200a3
-			public const int TagFoundIcon = 2130837667;
 			public const int ic_mr_button_connected_04_light = 2130837667;
-			
-			// aapt resource value: 0x7f0200a4
-			public const int TagSyncIcon = 2130837668;
 			
 			// aapt resource value: 0x7f0200a4
 			public const int ic_mr_button_connected_05_dark = 2130837668;
@@ -3115,7 +3108,10 @@ namespace TOI_MobileClient.Droid
 			public const int notification_icon_background = 2130837823;
 			
 			// aapt resource value: 0x7f020147
-			public const int notification_template_icon_low_bg = 2130837831;
+			public const int notification_template_icon_bg = 2130837831;
+			
+			// aapt resource value: 0x7f020148
+			public const int notification_template_icon_low_bg = 2130837832;
 			
 			// aapt resource value: 0x7f020140
 			public const int notification_tile_bg = 2130837824;
@@ -3126,12 +3122,17 @@ namespace TOI_MobileClient.Droid
 			// aapt resource value: 0x7f020142
 			public const int SyncIcon = 2130837826;
 			
+			// aapt resource value: 0x7f020143
+			public const int TagFoundIcon = 2130837827;
 			
 			// aapt resource value: 0x7f020144
-			public const int tooltip_frame_dark = 2130837828;
+			public const int TagSyncIcon = 2130837828;
 			
 			// aapt resource value: 0x7f020145
-			public const int tooltip_frame_light = 2130837829;
+			public const int tooltip_frame_dark = 2130837829;
+			
+			// aapt resource value: 0x7f020146
+			public const int tooltip_frame_light = 2130837830;
 			
 			static Drawable()
 			{

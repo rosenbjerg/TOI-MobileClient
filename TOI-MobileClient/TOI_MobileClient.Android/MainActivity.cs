@@ -37,7 +37,7 @@ namespace TOI_MobileClient.Droid
 		    }
 
             DependencyManager.Register<BleScannerBase, AndroidBleScanner>(new AndroidBleScanner());
-		    DependencyManager.Register<NotifierBase, AndroidNotifier>(new AndroidNotifier());
+		    DependencyManager.Register<NotifierBase, AndroidNotifier>(new AndroidNotifier(GetSystemService(Context.NotificationService) as NotificationManager));
 		    DependencyManager.Register<GpsLocatorBase, AndroidGpsScanner>(new AndroidGpsScanner());
             DependencyManager.Register<NfcScannerBase, AndroidNfcScanner>(new AndroidNfcScanner());
 		    DependencyManager.Register<WiFiScannerBase, AndroidWifiScanner>(new AndroidWifiScanner());
