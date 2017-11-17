@@ -50,7 +50,7 @@ namespace TOI_MobileClient.Droid.Services
         {
 
             var ble = await ScanBle(filter);
-            var gps =  ScanGps(10);
+            var gps =  ScanGps();
             var wifi = await DependencyManager.Get<WiFiScannerBase>().ScanWifi();
             var tags = ble.Select(b => b.Address).Where(filter.Contains).ToList();
             //hvordan skal vi tilføje nfc tags her?
@@ -72,7 +72,7 @@ namespace TOI_MobileClient.Droid.Services
         //}
 
         //public async Task<IReadOnlyList<Position>> ScanGps(double radius)
-        public Location ScanGps(double radius)
+        public Location ScanGps()
         {
             //tjek om gps er slået til
             var scanner = DependencyManager.Get<GpsLocatorBase>();

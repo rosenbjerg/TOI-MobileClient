@@ -45,21 +45,21 @@ namespace TOI_MobileClient.Droid
 
         public void OnConnectionFailed(ConnectionResult result)
         {
-            int queryResult = GoogleApiAvailability.Instance.IsGooglePlayServicesAvailable(Application.Context);
-            if(queryResult == ConnectionResult.Success)
-            {
-                //GooglePlayService er installereret så en anden fejl!
-            }
-            if (GoogleApiAvailability.Instance.IsUserResolvableError(queryResult))
-            {
-                string errorString = GoogleApiAvailability.Instance.GetErrorString(queryResult);
-
-                // error string viser hvad der er galt.
-            }
-            else
-            {
-                //Google play services er ikke instaleret
-            }
+//            int queryResult = GoogleApiAvailability.Instance.IsGooglePlayServicesAvailable(Application.Context);
+//            if(queryResult == ConnectionResult.Success)
+//            {
+//                //GooglePlayService er installereret så en anden fejl!
+//            }
+//            if (GoogleApiAvailability.Instance.IsUserResolvableError(queryResult))
+//            {
+//                string errorString = GoogleApiAvailability.Instance.GetErrorString(queryResult);
+//
+//                // error string viser hvad der er galt.
+//            }
+//            else
+//            {
+//                //Google play services er ikke installeret
+//            }
         }
 
         public void OnConnectionSuspended(int cause)
