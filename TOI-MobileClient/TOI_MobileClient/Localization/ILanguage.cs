@@ -22,11 +22,18 @@ namespace TOI_MobileClient
         string Bluetooth { get; }
         string Wifi { get; }
         string Nfc { get; }
+
+        string EnableToast { get; }
         #endregion
 
         string ScanForTags { get; }
         string Settings { get; }
         string About { get; }
+
+        string Scanning { get; }
+        string ScanningExplanation { get; }
+        string NewToi { get; }
+        string NewToiExplanation { get; }
 
     }
 }

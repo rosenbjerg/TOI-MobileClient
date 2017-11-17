@@ -11,7 +11,7 @@ using Xamarin.Forms;
 
 namespace TOI_MobileClient.Droid
 {
-    class AndroidBleScanner : BleScannerBase
+    public class AndroidBleScanner : BleScannerBase
     {
         private bool _isScanning;
 
@@ -21,7 +21,8 @@ namespace TOI_MobileClient.Droid
 
         public override async Task<IReadOnlyList<BleDevice>> ScanDevices(HashSet<string> deviceFilter, int scanTimeout = 2000)
         {
-            if (_isScanning || !IsEnabled)
+            if (_isScanning || !SettingsManager.BleEnabled) return _emptyListCache;
+            if (!IsEnabled)
             {
                 DependencyManager.Get<NotifierBase>().DisplayToast(SettingsManager.Language.BluetoothNotEnabled, true);
                 return _emptyListCache;

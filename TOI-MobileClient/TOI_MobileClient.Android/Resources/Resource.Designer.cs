@@ -2633,11 +2633,18 @@ namespace TOI_MobileClient.Droid
 			// aapt resource value: 0x7f0200a1
 			public const int ic_mr_button_connected_03_light = 2130837665;
 			
+			// aapt resource value: 0x7f0200a5
+			public const int notification_template_icon_bg = 2130837669;
+			
 			// aapt resource value: 0x7f0200a2
 			public const int ic_mr_button_connected_04_dark = 2130837666;
 			
 			// aapt resource value: 0x7f0200a3
+			public const int TagFoundIcon = 2130837667;
 			public const int ic_mr_button_connected_04_light = 2130837667;
+			
+			// aapt resource value: 0x7f0200a4
+			public const int TagSyncIcon = 2130837668;
 			
 			// aapt resource value: 0x7f0200a4
 			public const int ic_mr_button_connected_05_dark = 2130837668;
@@ -3107,9 +3114,6 @@ namespace TOI_MobileClient.Droid
 			// aapt resource value: 0x7f02013f
 			public const int notification_icon_background = 2130837823;
 			
-			// aapt resource value: 0x7f020146
-			public const int notification_template_icon_bg = 2130837830;
-			
 			// aapt resource value: 0x7f020147
 			public const int notification_template_icon_low_bg = 2130837831;
 			
@@ -3122,8 +3126,6 @@ namespace TOI_MobileClient.Droid
 			// aapt resource value: 0x7f020142
 			public const int SyncIcon = 2130837826;
 			
-			// aapt resource value: 0x7f020143
-			public const int TagSyncIcon = 2130837827;
 			
 			// aapt resource value: 0x7f020144
 			public const int tooltip_frame_dark = 2130837828;

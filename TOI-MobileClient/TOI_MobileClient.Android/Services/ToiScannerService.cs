@@ -1,19 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
-using Android.Graphics;
 using Android.OS;
 using Android.Locations;
 using Android.Support.V4.App;
 using DepMan;
 using TOI_MobileClient.Dependencies;
-using TOI_MobileClient.Managers;
-using TOI_MobileClient.Models;
-using Xamarin.Forms;
+
 
 namespace TOI_MobileClient.Droid.Services
 {
@@ -26,6 +22,26 @@ namespace TOI_MobileClient.Droid.Services
         private NotificationBuilder _notificationBuilder = new NotificationBuilder();
         public HashSet<string> Filter = new HashSet<string>();
 
+        public ToiScannerService()
+        {
+            TagsFound += async delegate(object sender, TagsFoundsEventArgs args)
+            {
+                await Task.Delay(1000);
+                if (args.Handled)
+                    return;
+
+                var lang = DependencyManager.Get<ILanguage>();
+
+                if (args.Tags.Count == 0)
+                    DependencyManager.Get<NotifierBase>().DisplayNewToi(ServiceId, lang.Scanning,
+                        lang.ScanningExplanation,
+                        Resource.Drawable.TagSyncIcon, Resource.Drawable.Icon);
+                else
+                    DependencyManager.Get<NotifierBase>().DisplayNewToi(ServiceId, lang.NewToi,
+                        lang.NewToiExplanation,
+                        Resource.Drawable.TagFoundIcon, Resource.Drawable.Icon, true);
+            };
+        }
         public override IBinder OnBind(Intent intent)
         {
             Binder = new ScannerServiceBinder(this);
@@ -33,6 +49,10 @@ namespace TOI_MobileClient.Droid.Services
         }
         public override StartCommandResult OnStartCommand(Intent intent, StartCommandFlags flags, int startId)
         {
+            var lang = DependencyManager.Get<ILanguage>();
+            DependencyManager.Get<NotifierBase>().DisplayNewToi(ServiceId, lang.Scanning,
+                lang.ScanningExplanation, 
+                Resource.Drawable.TagSyncIcon, Resource.Drawable.Icon);
             var notification = _notificationBuilder.BuildNotification();
             StartForeground(ServiceId, notification);
             DependencyManager.Get<NfcScannerBase>().NfcTagFound += OnNfcTagFound;
@@ -41,17 +61,19 @@ namespace TOI_MobileClient.Droid.Services
         }
 
         private void OnNfcTagFound(object sender, NfcEventArgs nfcEventArgs)
+        public async void ScanForToi(HashSet<string> filter, ScanConfiguration configuration = null)
         {
             TagsFound?.Invoke(this, new TagsFoundsEventArgs(new List<string> { nfcEventArgs.TagId }));
             Console.WriteLine("NFC tag found: " + nfcEventArgs.TagId);
         }
 
-        public async void ScanForToi(HashSet<string> filter)
         {
 
-            var ble = await ScanBle(filter);
             var gps =  ScanGps();
             var wifi = await DependencyManager.Get<WiFiScannerBase>().ScanWifi();
+            if(configuration == null) configuration = ScanConfiguration.DefaultScanConfiguration;
+            
+            var ble = await ScanBle(filter, configuration.UseBle);
             var tags = ble.Select(b => b.Address).Where(filter.Contains).ToList();
             //hvordan skal vi tilføje nfc tags her?
             TagsFound?.Invoke(this, new TagsFoundsEventArgs(tags));
@@ -59,8 +81,9 @@ namespace TOI_MobileClient.Droid.Services
 
         public event EventHandler<TagsFoundsEventArgs> TagsFound;
 
-        public async Task<IReadOnlyList<BleDevice>> ScanBle(HashSet<string> filter)
+        public async Task<IReadOnlyList<BleDevice>> ScanBle(HashSet<string> filter, bool useBle)
         {
+            if (!useBle) return new List<BleDevice>();
             var scanner = DependencyManager.Get<BleScannerBase>();
             return await scanner.ScanDevices(filter);
         }

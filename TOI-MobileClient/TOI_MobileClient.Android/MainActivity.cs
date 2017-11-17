@@ -12,6 +12,7 @@ using Android.OS;
 using DepMan;
 using TOI_MobileClient.Dependencies;
 using TOI_MobileClient.Droid.Services;
+using TOI_MobileClient.Localization;
 using Xamarin.Forms;
 
 namespace TOI_MobileClient.Droid

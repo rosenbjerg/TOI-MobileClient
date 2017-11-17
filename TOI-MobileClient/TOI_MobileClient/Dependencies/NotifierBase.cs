@@ -9,6 +9,6 @@ namespace TOI_MobileClient.Dependencies
     {
         public abstract void DisplaySnackbar(string text, bool longDuration);
         public abstract void DisplayToast(string text, bool longDuration);
-        public abstract void DisplayStatusNotification();
+        public abstract void DisplayNewToi(int bgId, string title, string content, int smallIcon, int largeIcon, bool makeNoice = false);
     }
 }
