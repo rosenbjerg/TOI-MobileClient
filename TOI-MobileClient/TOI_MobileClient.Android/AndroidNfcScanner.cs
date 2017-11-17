@@ -16,15 +16,15 @@ namespace TOI_MobileClient.Droid
             _nfcAdapter = NfcAdapter.GetDefaultAdapter(Application.Context);
         }
 
-        public override Guid ScanNfc(Intent intent)
-        {
-            if (intent.Action != NfcAdapter.ActionTagDiscovered) return Guid.ParseExact("".PadLeft(32, '0'), "N");
-            if (!(intent.GetParcelableExtra(NfcAdapter.ExtraTag) is Tag tag))
-                return Guid.ParseExact("".PadLeft(32, '0'), "N");
 
-            var result = Guid.ParseExact(ByteArrayToString(tag.GetId()).PadLeft(32, '0'), "N");
-            return Guid.ParseExact(ByteArrayToString(tag.GetId()).PadLeft(32, '0'), "N");
+        public override void HandleNfcIntent(Intent intent)
+        {
+            if (intent.Action != NfcAdapter.ActionTagDiscovered || !(intent.GetParcelableExtra(NfcAdapter.ExtraTag) is Tag tag))
+                return;
+
+            NfcTagFound?.Invoke(this, new NfcEventArgs(ByteArrayToString(tag.GetId())));
         }
+
         public static string ByteArrayToString(byte[] ba)
         {
             StringBuilder hex = new StringBuilder(ba.Length * 2);
@@ -33,4 +33,6 @@ namespace TOI_MobileClient.Droid
             return hex.ToString();
         }
     }
+
+
 }
