@@ -16,7 +16,7 @@
                 <ActivityIndicator Color="{x:Static managers:Styling.ActivityIndicatorColor}" IsRunning="True" VerticalOptions="Center" HorizontalOptions="Center"/>
             </ContentView>
             <StackLayout IsVisible="{Binding Loaded}">
-                <ListView IsVisible="{Binding FoundTags}" RowHeight="200" ItemsSource="{Binding NearbyTags}" x:Name="NearbyTags" >
+                <ListView IsVisible="{Binding FoundTags}" RowHeight="200" ItemsSource="{Binding NearbyTags}" x:Name="NearbyTags" RefreshCommand="{Binding SyncCommand}" IsPullToRefreshEnabled="True" IsRefreshing="{Binding Loading}" >
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <toiMobileClient:TapViewCell x:Key="TapViewCell" Command="{Binding CardTapped}">

@@ -32,6 +32,7 @@ namespace TOI_MobileClient
                 OnPropertyChanged();
             }
         }
+        
         public bool Loaded
         {
             get => !_loading;
@@ -102,7 +103,6 @@ namespace TOI_MobileClient
                     NotificationManager.NotificationType.Toast);
                 Console.WriteLine(e);
             }
-
             Loaded = true;
         }
 
@@ -111,12 +111,12 @@ namespace TOI_MobileClient
             if (Loading)
                 return;
             Loading = true;
-            _scanner.ScanForToi(new HashSet<Guid>
+            _scanner.ScanForToi(new HashSet<string>
             {
-                Guid.ParseExact("cc1454015282".PadLeft(32, '0'), "N"),
-                Guid.ParseExact("FAC4D1038D3D".PadLeft(32, '0'), "N"),
-                Guid.ParseExact("CBFFB96CA47D".PadLeft(32, '0'), "N"),
-                Guid.ParseExact("F4B415054205".PadLeft(32, '0'), "N")
+                "cc1454015282".PadLeft(32, '0'),
+                "FAC4D1038D3D".PadLeft(32, '0'),
+                "CBFFB96CA47D".PadLeft(32, '0'),
+                "F4B415054205".PadLeft(32, '0')
             });
         }
 

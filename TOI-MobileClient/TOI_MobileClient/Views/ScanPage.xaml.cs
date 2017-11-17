@@ -15,7 +15,6 @@ namespace TOI_MobileClient
         public ScanPage()
         {
             InitializeComponent();
-            //Remove the ugly orange border around the selected Card
             NearbyTags.ItemSelected += (sender, args) =>
             {
                 NearbyTags.SelectedItem = null;
