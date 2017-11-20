@@ -2,6 +2,7 @@
 using System.Linq;
 using DepMan;
 using TOI_MobileClient.Localization;
+using TOI_MobileClient.Managers;
 using Xamarin.Forms;
 
 namespace TOI_MobileClient

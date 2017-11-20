@@ -22,9 +22,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Localization\EnglishLanguage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Localization\ILanguage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Managers\IToiHttpManager.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Managers\NotificationManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Managers\SettingsManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Managers\Styling.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\ToiInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TapViewCell.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TOIWebView.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\SettingsPageViewModel.cs" />
@@ -92,8 +92,5 @@
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\TOIWebPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="$(MSBuildThisFileDirectory)Models\" />
   </ItemGroup>
 </Project>

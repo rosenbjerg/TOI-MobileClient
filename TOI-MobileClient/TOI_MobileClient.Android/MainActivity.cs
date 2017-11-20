@@ -37,7 +37,7 @@ namespace TOI_MobileClient.Droid
 		    }
 
             DependencyManager.Register<BleScannerBase, AndroidBleScanner>(new AndroidBleScanner());
-		    DependencyManager.Register<NotifierBase, AndroidNotifier>(new AndroidNotifier(GetSystemService(Context.NotificationService) as NotificationManager));
+		    DependencyManager.Register<NotifierBase, AndroidNotifier>(new AndroidNotifier(GetSystemService(NotificationService) as NotificationManager));
 		    DependencyManager.Register<GpsLocatorBase, AndroidGpsScanner>(new AndroidGpsScanner());
             DependencyManager.Register<NfcScannerBase, AndroidNfcScanner>(new AndroidNfcScanner());
 		    DependencyManager.Register<WiFiScannerBase, AndroidWifiScanner>(new AndroidWifiScanner());
@@ -64,10 +64,8 @@ namespace TOI_MobileClient.Droid
 	        var intent = new Intent(this, this.GetType()).AddFlags(ActivityFlags.SingleTop);
 
 	        var pendingIntent = PendingIntent.GetActivity(this, 0, intent, 0);
-
-	        _nfcAdapter.EnableForegroundDispatch(this, pendingIntent, filters, null);
-
-        }
+	        _nfcAdapter?.EnableForegroundDispatch(this, pendingIntent, filters, null);
+	    }
 
         protected override void OnNewIntent(Intent intent)
 	    {

@@ -13,8 +13,10 @@ namespace TOI_MobileClient
 
         public ToiHttpManager()
         {
-            _client = new HttpClient();
-            _client.Timeout = TimeSpan.FromSeconds(5);
+            _client = new HttpClient
+            {
+                Timeout = TimeSpan.FromSeconds(5)
+            };
         }
         public void Dispose()
         {
@@ -46,7 +48,7 @@ namespace TOI_MobileClient
                 var response = await _client.PostAsync(url, cont);
                 if (!response.IsSuccessStatusCode)
                     return null;
-
+                
                 return await response.Content.ReadAsStringAsync();
             }
             catch (WebException e)

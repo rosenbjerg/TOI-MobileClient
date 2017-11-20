@@ -87,7 +87,7 @@ namespace TOI_MobileClient.Droid.Services
         {
             if (!useBle) return new List<BleDevice>();
             var scanner = DependencyManager.Get<BleScannerBase>();
-            return await scanner.ScanDevices(filter);
+            return await scanner.ScanDevices(filter, 5000);
         }
 
         //public Guid HandleNfcIntent()

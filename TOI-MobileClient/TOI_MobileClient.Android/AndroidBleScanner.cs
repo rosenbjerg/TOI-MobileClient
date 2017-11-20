@@ -37,15 +37,21 @@ namespace TOI_MobileClient.Droid
                 deviceList.Add(new BleDevice
                 {
                     Rssi = a.Device.Rssi,
-                    Address = a.Device.Id.ToString("N")
+                    Address = a.Device.Id.ToString("N").TrimStart('0').ToUpper()
                 });
             }
 
             Adapter.DeviceDiscovered += ScanHandler;
-            await Adapter.StartScanningForDevicesAsync(null, device => deviceFilter?.Contains(device.Id.ToString("N")) ?? true);
+            await Adapter.StartScanningForDevicesAsync(null, device =>
+            {
+                var devId = device.Id.ToString("N").TrimStart('0').ToUpper();
+                return deviceFilter == null || deviceFilter.Contains(devId);
+            });
             Adapter.DeviceDisconnected -= ScanHandler;
             _isScanning = false;
             return deviceList;
         }
+
+
     }
 }

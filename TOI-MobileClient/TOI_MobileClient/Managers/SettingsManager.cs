@@ -13,7 +13,7 @@ namespace TOI_MobileClient.Managers
     {
         public static ILanguage Language { get; set; }
         public static ISettings AppSettings => CrossSettings.Current;
-        public static string Url => "http://ssh.windelborg.info:7474/tags/";
+        public static string Url => "http://ssh.windelborg.info:7474";
 
         private const bool Default = true;
 

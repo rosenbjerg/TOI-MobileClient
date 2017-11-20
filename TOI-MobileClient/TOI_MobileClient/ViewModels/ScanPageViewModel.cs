@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using TOIClasses;
 using TOI_MobileClient.Dependencies;
 using TOI_MobileClient.Managers;
+using TOI_MobileClient.Models;
 using TOI_MobileClient.ViewModels;
 using Xamarin.Forms;
 
@@ -81,26 +82,26 @@ namespace TOI_MobileClient
             var rc = DependencyManager.Get<RestClient>();
             try
             {
-                var tvms = await rc.GetMany<TagInfo>(SettingsManager.Url, tagsFoundsEventArgs.Tags);
+                var tvms = await rc.GetMany<ToiInfo>(SettingsManager.Url + "/toi/fromtags", tagsFoundsEventArgs.Tags);
                 if (tvms == null)
                 {
                     NearbyTags = new List<TagViewModel>();
-                    DependencyManager.Get<NotificationManager>().Display("Could not connect to server",
-                        NotificationManager.NotificationType.Toast);
+                    DependencyManager.Get<NotifierBase>().DisplayToast("No tags found", false);
+
                 }
                 else
+                {
                     NearbyTags = tvms.Select(t => new TagViewModel(t)).ToList();
+                }
             }
             catch (WebException e)
             {
-                DependencyManager.Get<NotificationManager>().Display("Could not connect to server",
-                    NotificationManager.NotificationType.Toast);
+                DependencyManager.Get<NotifierBase>().DisplayToast("Could not connect to server", false);
                 Console.WriteLine(e);
             }
             catch (JsonReaderException e)
             {
-                DependencyManager.Get<NotificationManager>().Display("Invalid data received from feed",
-                    NotificationManager.NotificationType.Toast);
+                DependencyManager.Get<NotifierBase>().DisplayToast("Invalid data received from feed", false);
                 Console.WriteLine(e);
             }
             Loaded = true;
@@ -111,12 +112,14 @@ namespace TOI_MobileClient
             if (Loading)
                 return;
             Loading = true;
+
+            // for debugging
             _scanner.ScanForToi(new HashSet<string>
             {
-                "cc1454015282".PadLeft(32, '0'),
-                "FAC4D1038D3D".PadLeft(32, '0'),
-                "CBFFB96CA47D".PadLeft(32, '0'),
-                "F4B415054205".PadLeft(32, '0')
+                "CC1454015282".TrimStart('0').ToUpper(),
+                "FAC4D1038D3D".TrimStart('0').ToUpper(),
+                "CBFFB96CA47D".TrimStart('0').ToUpper(),
+                "F4B415054205".TrimStart('0').ToUpper()
             });
         }
 
