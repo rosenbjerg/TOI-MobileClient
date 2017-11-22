@@ -8,7 +8,7 @@ namespace TOI_MobileClient.Dependencies
 {
     public interface IBackgroundScanner
     {
-        void ScanForToi(HashSet<string> filter, ScanConfiguration configuration = null);
+        Task ScanForToi(HashSet<string> filter, ScanConfiguration configuration = null);
 
         event EventHandler<TagsFoundsEventArgs> TagsFound;
     }

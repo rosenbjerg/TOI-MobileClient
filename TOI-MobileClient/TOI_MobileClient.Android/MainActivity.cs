@@ -17,11 +17,12 @@ using Xamarin.Forms;
 
 namespace TOI_MobileClient.Droid
 {
-	[Activity (Label = "TOI_MobileClient", Icon = "@drawable/icon", Theme="@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation, LaunchMode = LaunchMode.SingleInstance)]
+	[Activity (Label = "Things of Interest", Icon = "@drawable/icon", Theme="@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation, LaunchMode = LaunchMode.SingleTop)]
 	public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
 	{
 	    public static ScannerServiceConnection ServiceConnection;
 	    private NfcAdapter _nfcAdapter;
+
         protected override void OnCreate (Bundle bundle)
 		{
 			TabLayoutResource = Resource.Layout.Tabbar;
@@ -50,6 +51,8 @@ namespace TOI_MobileClient.Droid
 		    DependencyManager.Register<IScannerServiceProvider, ScannerServiceConnection>(ServiceConnection);
 
             _nfcAdapter = NfcAdapter.GetDefaultAdapter(this);
+
+		    new NotificationActionHandler(this);
 
             LoadApplication(new App());
         }

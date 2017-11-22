@@ -9,7 +9,7 @@ namespace TOI_MobileClient
 {
     public class TapViewCell : ViewCell
     {
-        public static readonly BindableProperty CommandProperty = BindableProperty.Create(nameof(Command), typeof(ICommand), typeof(TapViewCell), null);
+        public static readonly BindableProperty CommandProperty = BindableProperty.Create(nameof(Command), typeof(ICommand), typeof(TapViewCell));
 
         public ICommand Command
         {

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Android.App;
 using Android.Content;
+using Android.Content.Res;
 using Android.Graphics;
 using Android.Support.Design.Widget;
 using Android.Support.V4.App;
@@ -23,7 +24,7 @@ namespace TOI_MobileClient.Droid
 
         public override void DisplaySnackbar(string text, bool longDur = true)
         {
-            var activity = (Activity)Forms.Context;
+            var activity = (Activity)Android.App.Application.Context;
             var view = activity.FindViewById(Android.Resource.Id.Content);
 
             Device.BeginInvokeOnMainThread(() =>
@@ -36,27 +37,29 @@ namespace TOI_MobileClient.Droid
         {
             Device.BeginInvokeOnMainThread(() =>
             {
-                Toast.MakeText(Forms.Context, text, longDur ? ToastLength.Long : ToastLength.Short).Show();
+                Toast.MakeText(Android.App.Application.Context, text, longDur ? ToastLength.Long : ToastLength.Short).Show();
             });
             
         }
 
-        public override void DisplayNewToi(int bgId, string title, string content, int smallIcon, int largeIcon, bool makeNoice = false)
+        public override void UpdateAppNotification(int bgId, string title, string content, int smallIcon, int largeIcon, bool makeNoice = false)
         {
             // Create a PendingIntent that opens the app when it is tapped
             const int pendingIntentId = 0;
-            PendingIntent pendingIntent =
-                PendingIntent.GetActivity(Forms.Context, pendingIntentId, new Intent(Forms.Context, typeof(MainActivity)), PendingIntentFlags.UpdateCurrent);
+            var pendingIntent = 
+                PendingIntent.GetActivity(Android.App.Application.Context, pendingIntentId, new Intent(Android.App.Application.Context, typeof(MainActivity)), PendingIntentFlags.UpdateCurrent);
+            var pCloseIntent = PendingIntent.GetBroadcast(Android.App.Application.Context, 0, new Intent(NotificationActionHandler.KILL_APP_AND_SERVICE),
+                PendingIntentFlags.OneShot);
 
             if (!_bitmaps.ContainsKey(largeIcon))
             {
                 _bitmaps[largeIcon] = Bitmap.CreateScaledBitmap(
-                    BitmapFactory.DecodeResource(Forms.Context.ApplicationContext.Resources, largeIcon), 120,
+                    BitmapFactory.DecodeResource(Android.App.Application.Context.ApplicationContext.Resources, largeIcon), 120,
                     120, false);
             }
 
-            var nb = new NotificationCompat.Builder(Forms.Context.ApplicationContext)
-                .SetTicker("New thing of interest")
+            var nb = new NotificationCompat.Builder(Android.App.Application.Context.ApplicationContext)
+                .SetTicker("ToI Scanner Service")
                 .SetContentTitle(title)
                 .SetContentText(content)
                 .SetContentIntent(pendingIntent)
@@ -64,9 +67,11 @@ namespace TOI_MobileClient.Droid
                 .SetLargeIcon(_bitmaps[largeIcon])
                 .SetVisibility(1)
                 .SetStyle(new NotificationCompat.BigTextStyle().BigText(content))
+                .AddAction(Resource.Drawable.Cross, "Close app", pCloseIntent)
             ;
             if (makeNoice)
                 nb.SetDefaults((int) NotificationDefaults.All);
+            
 
 
             var not = nb.Build();

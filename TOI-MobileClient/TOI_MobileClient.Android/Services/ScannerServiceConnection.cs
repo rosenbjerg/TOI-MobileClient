@@ -34,7 +34,7 @@ namespace TOI_MobileClient.Droid.Services
                 return Binder.GetService();
             _tsc = new TaskCompletionSource<ToiScannerService>();
             var intent = CreateServiceIntent();
-            Forms.Context.ApplicationContext.BindService(intent, MainActivity.ServiceConnection, Bind.AboveClient);
+            Android.App.Application.Context.ApplicationContext.BindService(intent, MainActivity.ServiceConnection, Bind.AboveClient);
 
             return await _tsc.Task;
         }
@@ -46,9 +46,9 @@ namespace TOI_MobileClient.Droid.Services
 
         public Intent CreateServiceIntent()
         {
-            var serviceIntent = new Intent(Forms.Context.ApplicationContext, typeof(ToiScannerService));
+            var serviceIntent = new Intent(Android.App.Application.Context.ApplicationContext, typeof(ToiScannerService));
 
-            Forms.Context.ApplicationContext.StartService(serviceIntent);
+            Android.App.Application.Context.ApplicationContext.StartService(serviceIntent);
 
             return serviceIntent;
         }
@@ -66,14 +66,8 @@ namespace TOI_MobileClient.Droid.Services
         {
             if (Binder != null)
             {
-                Forms.Context.ApplicationContext.UnbindService(this);
+                Android.App.Application.Context.ApplicationContext.UnbindService(this);
             }
-            StopService();
-        }
-
-        private void StopService()
-        {
-
         }
     }
 }

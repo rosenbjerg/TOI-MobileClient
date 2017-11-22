@@ -8,7 +8,6 @@ using Newtonsoft.Json;
 using TOIClasses;
 using TOI_MobileClient.Dependencies;
 using TOI_MobileClient.Managers;
-using TOI_MobileClient.Models;
 using TOI_MobileClient.ViewModels;
 using Xamarin.Forms;
 
@@ -45,9 +44,9 @@ namespace TOI_MobileClient
             }
         }
 
-        private List<TagViewModel> _nearbyTags;
+        private List<ToiViewModel> _nearbyTags;
 
-        public List<TagViewModel> NearbyTags
+        public List<ToiViewModel> NearbyTags
         {
             get => _nearbyTags;
             set
@@ -72,7 +71,7 @@ namespace TOI_MobileClient
         public ScanPageViewModel()
         {
             SyncCommand = new Command(ScanForToi);
-            NearbyTags = new List<TagViewModel>();
+            NearbyTags = new List<ToiViewModel>();
         }
         
 
@@ -82,16 +81,16 @@ namespace TOI_MobileClient
             var rc = DependencyManager.Get<RestClient>();
             try
             {
-                var tvms = await rc.GetMany<ToiInfo>(SettingsManager.Url + "/toi/fromtags", tagsFoundsEventArgs.Tags);
+                var tvms = await rc.GetMany<ToiModel>(SettingsManager.Url + "/toi/fromtags", tagsFoundsEventArgs.Tags);
                 if (tvms == null)
                 {
-                    NearbyTags = new List<TagViewModel>();
+                    NearbyTags = new List<ToiViewModel>();
                     DependencyManager.Get<NotifierBase>().DisplayToast("No tags found", false);
 
                 }
                 else
                 {
-                    NearbyTags = tvms.Select(t => new TagViewModel(t)).ToList();
+                    NearbyTags = tvms.Select(t => new ToiViewModel(t)).ToList();
                 }
             }
             catch (WebException e)
@@ -131,9 +130,11 @@ namespace TOI_MobileClient
             _scanner.TagsFound += OnTagsFound;
         }
 
-        public override void OnViewDisappearing()
+        public override async void OnViewDisappearing()
         {
             base.OnViewDisappearing();
+            if (_scanner == null)
+                _scanner = await DependencyManager.Get<IScannerServiceProvider>().GetServiceAsync();
             _scanner.TagsFound -= OnTagsFound;
         }
     }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using TOIClasses;
 using TOI_MobileClient.ViewModels;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -10,12 +6,12 @@ using Xamarin.Forms.Xaml;
 namespace TOI_MobileClient.Views
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class TOIWebPage : ContentPage
+	public partial class ToiWebPage : ContentPage
 	{
-		public TOIWebPage (string url)
+		public ToiWebPage (ToiModel tm)
 		{
 			InitializeComponent ();
-		    BindingContext = new TOIWebViewModel(url);
+		    BindingContext = new ToiWebViewModel(tm);
 		}
 	}
 }

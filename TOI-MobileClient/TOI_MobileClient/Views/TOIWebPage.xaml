@@ -4,19 +4,13 @@
              xmlns:iconize="clr-namespace:FormsPlugin.Iconize;assembly=FormsPlugin.Iconize"
              xmlns:toiMobileClient="clr-namespace:TOI_MobileClient;assembly=TOI_MobileClient.Android"
              xmlns:viewModels="clr-namespace:TOI_MobileClient.ViewModels;assembly=TOI_MobileClient.Android"
-             x:Class="TOI_MobileClient.Views.TOIWebPage">
+             x:Class="TOI_MobileClient.Views.ToiWebPage">
     <ContentPage.ToolbarItems>
         <iconize:IconToolbarItem Icon="fa-angle-left" IconColor="{Binding BackColor}" Order="Primary" BindingContext="{x:Reference Browser}" Command="{Binding GoBackCommand}"/>
         <iconize:IconToolbarItem Icon="fa-angle-right" IconColor="{Binding ForwardColor}" Order="Primary" BindingContext="{x:Reference Browser}" Command="{Binding GoForwardCommand}"/>
-        <!--<iconize:IconToolbarItem Icon="fa-angle-left" IconColor="White" Order="Primary"/>
-        <iconize:IconToolbarItem Icon="fa-angle-right" IconColor="White" Order="Primary"/>-->
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
-        <!--<StackLayout>-->
-            <toiMobileClient:TOIWebView VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" Source="{Binding BrowserSource}" x:Name="Browser"></toiMobileClient:TOIWebView>
-            <!--<WebView Source="https://google.dk" HeightRequest="1000" WidthRequest="1000"></WebView>-->
-        <!--</StackLayout>-->
+        <toiMobileClient:TOIWebView VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" Source="{Binding BrowserSource}" x:Name="Browser"></toiMobileClient:TOIWebView>
     </ContentPage.Content>
-    <!--<WebView Source="https://google.dk" HeightRequest="1000" WidthRequest="1000"></WebView>-->
 
 </ContentPage>

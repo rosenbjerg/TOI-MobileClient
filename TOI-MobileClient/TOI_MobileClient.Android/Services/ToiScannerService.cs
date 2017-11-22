@@ -21,7 +21,6 @@ namespace TOI_MobileClient.Droid.Services
     {
         public int ServiceId { get; } = 6969;
         public ScannerServiceBinder Binder { get; private set; }
-        private NotificationBuilder _notificationBuilder = new NotificationBuilder();
         public HashSet<string> Filter = new HashSet<string>();
 
         public ToiScannerService()
@@ -35,11 +34,11 @@ namespace TOI_MobileClient.Droid.Services
                 var lang = DependencyManager.Get<ILanguage>();
 
                 if (args.Tags.Count == 0)
-                    DependencyManager.Get<NotifierBase>().DisplayNewToi(ServiceId, lang.Scanning,
+                    DependencyManager.Get<NotifierBase>().UpdateAppNotification(ServiceId, lang.Scanning,
                         lang.ScanningExplanation,
                         Resource.Drawable.TagSyncIcon, Resource.Drawable.Icon);
                 else
-                    DependencyManager.Get<NotifierBase>().DisplayNewToi(ServiceId, lang.NewToi,
+                    DependencyManager.Get<NotifierBase>().UpdateAppNotification(ServiceId, lang.NewToi,
                         lang.NewToiExplanation,
                         Resource.Drawable.TagFoundIcon, Resource.Drawable.Icon, true);
             };
@@ -52,11 +51,9 @@ namespace TOI_MobileClient.Droid.Services
         public override StartCommandResult OnStartCommand(Intent intent, StartCommandFlags flags, int startId)
         {
             var lang = DependencyManager.Get<ILanguage>();
-            DependencyManager.Get<NotifierBase>().DisplayNewToi(ServiceId, lang.Scanning,
+            DependencyManager.Get<NotifierBase>().UpdateAppNotification(ServiceId, lang.Scanning,
                 lang.ScanningExplanation, 
                 Resource.Drawable.TagSyncIcon, Resource.Drawable.Icon);
-            var notification = _notificationBuilder.BuildNotification();
-            StartForeground(ServiceId, notification);
             DependencyManager.Get<NfcScannerBase>().NfcTagFound += OnNfcTagFound;
             //Logger.Instance.WriteToLog("MusicPlayerService", "Service started");
             return StartCommandResult.Sticky;
@@ -68,7 +65,7 @@ namespace TOI_MobileClient.Droid.Services
             Console.WriteLine("NFC tag found: " + nfcEventArgs.TagId);
         }
 
-        public async void ScanForToi(HashSet<string> filter, ScanConfiguration configuration = null)
+        public async Task ScanForToi(HashSet<string> filter, ScanConfiguration configuration = null)
         {
             // TODO make gps scanning async, to avoid lag in loading animation
             var gps =  ScanGps();
@@ -79,6 +76,17 @@ namespace TOI_MobileClient.Droid.Services
             var tags = ble.Select(b => b.Address).Where(filter.Contains).ToList();
             //hvordan skal vi tilføje nfc tags her?
             TagsFound?.Invoke(this, new TagsFoundsEventArgs(tags));
+        }
+
+        private async void ScanLoop()
+        {
+            while (true)
+            {
+                //await ScanForToi(new HashSet<string>());
+
+                //TODO: This should depend on the settings
+                await Task.Delay(5000);
+            }
         }
 
         public event EventHandler<TagsFoundsEventArgs> TagsFound;
@@ -104,31 +112,6 @@ namespace TOI_MobileClient.Droid.Services
             var position = scanner.GetLocation();
 
             return position;
-        }
-    }
-
-    internal class NotificationBuilder
-    {
-        //Todo This class should probably have a platform-independent implementation
-        private readonly Bitmap _largeIcon;
-
-        public NotificationBuilder()
-        {
-            _largeIcon = Bitmap.CreateScaledBitmap(
-                BitmapFactory.DecodeResource(Forms.Context.ApplicationContext.Resources, Resource.Drawable.Icon), 120,
-                120, false);
-        }
-        public Notification BuildNotification()
-        {
-            return new NotificationCompat.Builder(Forms.Context.ApplicationContext)
-                .SetTicker("TOI Scanner")
-                .SetContentTitle("TOI Scanner")
-                .SetContentText("Scanning for TOIs in the background.")
-                .SetSmallIcon(Resource.Drawable.TagSyncIcon)
-                .SetLargeIcon(_largeIcon)
-                .SetVisibility(1)
-                //.SetStyle()
-                .Build();
         }
     }
 }

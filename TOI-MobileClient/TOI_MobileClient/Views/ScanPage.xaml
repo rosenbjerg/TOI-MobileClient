@@ -6,7 +6,7 @@
              xmlns:views="clr-namespace:TOI_MobileClient.Views;assembly=TOI_MobileClient.Android"
              xmlns:managers="clr-namespace:TOI_MobileClient.Managers;assembly=TOI_MobileClient.Android"
              x:Class="TOI_MobileClient.ScanPage"
-             Title="Scan for tags">
+             Title="Scan for ToI">
     <ContentPage.ToolbarItems>
         <iconize:IconToolbarItem Icon="fa-refresh" IconColor="{Binding SyncColor}" Order="Primary" Command="{Binding SyncCommand}" />
     </ContentPage.ToolbarItems>
