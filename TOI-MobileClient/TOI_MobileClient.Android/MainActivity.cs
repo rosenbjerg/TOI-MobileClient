@@ -3,16 +3,11 @@
 using Android.App;
 using Android.Content;
 using Android.Content.PM;
-using Android.Graphics;
 using Android.Nfc;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
 using Android.OS;
 using DepMan;
 using TOI_MobileClient.Dependencies;
 using TOI_MobileClient.Droid.Services;
-using TOI_MobileClient.Localization;
 using TOI_MobileClient.Managers;
 using Xamarin.Forms;
 

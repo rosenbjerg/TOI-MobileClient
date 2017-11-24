@@ -31,6 +31,7 @@ namespace TOI_MobileClient
 
         string ScanForTags { get; }
         string Settings { get; }
+        string Contexts { get; }
         string About { get; }
 
         string Scanning { get; }

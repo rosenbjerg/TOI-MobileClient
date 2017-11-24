@@ -23,7 +23,7 @@ namespace TOI_MobileClient
             _client.Dispose();
         }
 
-        public async Task<string> GetStringAsync(string url)
+        public async Task<string> GetAsync(string url)
         {
             try
             {
