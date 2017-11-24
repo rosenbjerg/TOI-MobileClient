@@ -7,6 +7,9 @@ namespace TOI_MobileClient.Localization
     public class EnglishLanguage : ILanguage
     {
         public string BluetoothNotEnabled => "Bluetooth is not enabled";
+        public string WifiNotEnabled => "WiFi is not enabled";
+        public string GpsNotEnabled => "Location not enabled";
+        public string NfcNotEnabled => "Nfc Not Enabled";
         public string NoNearbyTags => "No nearby ToI";
         public string ScanFrequency => "Scan Frequency";
         public string Often => "Often";

@@ -12,6 +12,8 @@ using Android.Views;
 using Android.Widget;
 using TOI_MobileClient.Dependencies;
 using Android.Net.Wifi;
+using DepMan;
+using TOI_MobileClient.Managers;
 
 namespace TOI_MobileClient.Droid
 {
@@ -20,7 +22,13 @@ namespace TOI_MobileClient.Droid
         public override async Task<IEnumerable<String>> ScanWifi()
         {
             var scanReceiver = new WifiScanReceiver();
-            
+            var wm = (WifiManager)Application.Context.GetSystemService(Context.WifiService);
+
+            if (!wm.IsWifiEnabled)
+            {
+                DependencyManager.Get<NotifierBase>().DisplayToast(SettingsManager.Language.WifiNotEnabled, true);
+                return null;
+            }
             Application.Context.RegisterReceiver(scanReceiver, new IntentFilter(WifiManager.ScanResultsAvailableAction));
             ((WifiManager) Application.Context.GetSystemService(Context.WifiService)).StartScan();
             var res = await scanReceiver.Task;

@@ -9,6 +9,9 @@ namespace TOI_MobileClient
         #region ScanPage
         string BluetoothNotEnabled { get; }
         string NoNearbyTags { get; }
+        string WifiNotEnabled { get; }
+        string GpsNotEnabled { get; }
+        string NfcNotEnabled { get; }
         #endregion
 
         #region Settings

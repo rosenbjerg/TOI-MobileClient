@@ -13,6 +13,7 @@ using DepMan;
 using TOI_MobileClient.Dependencies;
 using TOI_MobileClient.Droid.Services;
 using TOI_MobileClient.Localization;
+using TOI_MobileClient.Managers;
 using Xamarin.Forms;
 
 namespace TOI_MobileClient.Droid
@@ -55,13 +56,15 @@ namespace TOI_MobileClient.Droid
 		    new NotificationActionHandler(this);
 
             LoadApplication(new App());
+		    if (_nfcAdapter != null && !_nfcAdapter.IsEnabled)
+		        DependencyManager.Get<NotifierBase>().DisplayToast(SettingsManager.Language.NfcNotEnabled, true);
         }
 
 	    protected override void OnResume()
 	    {
             base.OnResume();
 
-	        var tagDetected = new IntentFilter(NfcAdapter.ActionTagDiscovered);
+            var tagDetected = new IntentFilter(NfcAdapter.ActionTagDiscovered);
 	        var filters = new[] { tagDetected };
 
 	        var intent = new Intent(this, this.GetType()).AddFlags(ActivityFlags.SingleTop);

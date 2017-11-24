@@ -9,11 +9,10 @@ namespace TOI_MobileClient.Droid
 {
     public class AndroidNfcScanner : NfcScannerBase
     {
-        private NfcAdapter _nfcAdapter;
         
         public AndroidNfcScanner()
         {
-            _nfcAdapter = NfcAdapter.GetDefaultAdapter(Application.Context);
+           
         }
 
 
