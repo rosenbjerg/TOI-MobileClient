@@ -14,6 +14,6 @@
             <ContentView VerticalOptions="FillAndExpand" IsVisible="{Binding Loading}">
                 <ActivityIndicator Color="{x:Static managers:Styling.ActivityIndicatorColor}" IsRunning="True" VerticalOptions="Center" HorizontalOptions="Center"/>
             </ContentView>
-        </StackLayout>
+        </StackLayout> 
     </ContentPage.Content>
 </ContentPage>
