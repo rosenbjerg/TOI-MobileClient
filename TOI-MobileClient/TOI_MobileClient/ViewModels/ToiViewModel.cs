@@ -10,11 +10,11 @@ namespace TOI_MobileClient.ViewModels
 {
     public class ToiViewModel : ViewModelBase
     {
-        private readonly ToiModel _info;
-        public string Title => _info.Title;
-        public string ShortDescription => _info.Description;
-        public string Image => _info.Image;
-        public string Url => _info.Url;
+        private readonly ToiModel _model;
+        public string Title => _model.Title;
+        public string ShortDescription => _model.Description;
+        public string Image => _model.Image;
+        public string Url => _model.Url;
 
         public ICommand CardTapped {
             get; private set; 
@@ -22,13 +22,13 @@ namespace TOI_MobileClient.ViewModels
 
         public ToiViewModel(ToiModel tf)
         {
-            _info = tf;
+            _model = tf;
             CardTapped = new Command(OpenTagCard);
         }
 
         private void OpenTagCard()
         {
-            MainPage.NavigateTo(new ToiWebPage(_info));
+            MainPage.NavigateTo(new ToiWebPage(_model));
         }
     }
 }

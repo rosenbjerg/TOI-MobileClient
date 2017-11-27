@@ -28,6 +28,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)TapViewCell.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TOIWebView.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ContextPageViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ContextViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\SettingsPageViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ToiViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\TOIWebViewModel.cs" />

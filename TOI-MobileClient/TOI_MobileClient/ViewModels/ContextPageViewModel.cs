@@ -16,8 +16,14 @@ namespace TOI_MobileClient.ViewModels
     class ContextPageViewModel : PageViewModelBase
     {
         public override string PageTitle => SettingsManager.Language.Contexts;
+
         public ICommand SyncCommand { get; }
+
         private bool _loading;
+        private List<ContextViewModel> _contexts;
+        public List<ContextViewModel> SelectedModels { get; set; }
+        public bool ContextFetched => _contexts.Count > 0;
+        public bool NoContexts => _contexts.Count == 0;
         public bool Loading
         {
             get => _loading;
@@ -27,11 +33,26 @@ namespace TOI_MobileClient.ViewModels
                     return;
                 _loading = value;
                 OnPropertyChanged(nameof(Loaded));
+                OnPropertyChanged(nameof(SyncColor));
                 OnPropertyChanged();
             }
         }
 
-        private List<ContextModel> _contexts;
+        public List<ContextViewModel> Contexts
+        {
+            get => _contexts;
+            set
+            {
+                if (value == _contexts)
+                    return;
+                _contexts = value;
+                OnPropertyChanged(nameof(ContextFetched));
+                OnPropertyChanged(nameof(NoContexts));
+                OnPropertyChanged();
+            }
+        }
+
+
         public bool Loaded
         {
             get => !_loading;
@@ -47,16 +68,20 @@ namespace TOI_MobileClient.ViewModels
         public ContextPageViewModel()
         {
             SyncCommand = new Command(FetchContexts);
+            _contexts = new List<ContextViewModel>();
 
         }
 
         private async void FetchContexts()
         {
+            if (Loading)
+                return;
+            Loading = true;
             try
             {
-                _contexts = (await DependencyManager.Get<RestClient>()
+                var cm = (await DependencyManager.Get<RestClient>()
                     .GetMany<ContextModel>(SettingsManager.Url + "/contexts")).ToList();
-                
+                Contexts = cm.Select(t => new ContextViewModel(t)).ToList();
             }
             catch (WebException e)
             {
@@ -70,5 +95,6 @@ namespace TOI_MobileClient.ViewModels
             }
             Loaded = true;
         }
+
     }
 }

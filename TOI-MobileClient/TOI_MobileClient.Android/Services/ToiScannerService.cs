@@ -98,16 +98,8 @@ namespace TOI_MobileClient.Droid.Services
             return await scanner.ScanDevices(filter, 5000);
         }
 
-        //public Guid HandleNfcIntent()
-        //{
-            //var scanner = DependencyManager.Get<NfcScannerBase>();
-            //return scanner.HandleNfcIntent(Application); Mangler at finde ud af hvordan man parser Intent
-        //}
-
-        //public async Task<IReadOnlyList<Position>> ScanGps(double radius)
         public Location ScanGps()
         {
-            //tjek om gps er slået til
             var scanner = DependencyManager.Get<GpsLocatorBase>();
             var position = scanner.GetLocation();
 

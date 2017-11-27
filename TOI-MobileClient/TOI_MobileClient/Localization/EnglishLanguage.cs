@@ -27,7 +27,7 @@ namespace TOI_MobileClient.Localization
         public string Scanning => "Scanning...";
         public string Contexts => "Contexts";
         public string ScanningExplanation => "Scanning in the background to find things of interest near you.";
-
+        public string NoContexts => "No Contexts Avaiable - Please refresh";
         public string NewToi => "ToI near you";
 
         public string NewToiExplanation =>
