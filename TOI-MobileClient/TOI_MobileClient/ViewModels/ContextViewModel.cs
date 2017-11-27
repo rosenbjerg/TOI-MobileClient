@@ -4,7 +4,7 @@ using Xamarin.Forms;
 
 namespace TOI_MobileClient.ViewModels
 {
-    class ContextViewModel : ViewModelBase
+    public class ContextViewModel : ViewModelBase
     {
         private readonly ContextModel _model;
         public string Title => _model.Title;

@@ -95,6 +95,16 @@ namespace TOI_MobileClient.ViewModels
             }
             Loaded = true;
         }
-
+        public override void OnViewAppearing()
+        {
+            base.OnViewDisappearing();
+            if(SettingsManager.Subscriptions.ContainsKey(SettingsManager.Url))
+                Contexts = SettingsManager.Subscriptions[SettingsManager.Url];       
+        }
+        public override void OnViewDisappearing()
+        {
+            base.OnViewDisappearing();
+            SettingsManager.Subscriptions[SettingsManager.Url] = Contexts.Where(t => t.Subscribed).ToList();
+        }
     }
 }
