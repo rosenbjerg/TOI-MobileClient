@@ -10,5 +10,6 @@ namespace TOI_MobileClient.Dependencies
         public abstract void DisplaySnackbar(string text, bool longDuration);
         public abstract void DisplayToast(string text, bool longDuration);
         public abstract void UpdateAppNotification(int bgId, string title, string content, int smallIcon, int largeIcon, bool makeNoice = false);
+        public abstract void CancelNotification(int id);
     }
 }
