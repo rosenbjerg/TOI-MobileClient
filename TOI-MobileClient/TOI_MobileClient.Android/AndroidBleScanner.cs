@@ -19,7 +19,8 @@ namespace TOI_MobileClient.Droid
         public override bool IsEnabled => Ble.IsOn && Ble.IsAvailable;
         private readonly IReadOnlyList<BleDevice> _emptyListCache = new List<BleDevice>();
 
-        public override async Task<IReadOnlyList<BleDevice>> ScanDevices(HashSet<string> deviceFilter, int scanTimeout = 2000)
+        public override async Task<IReadOnlyList<BleDevice>> ScanDevices(HashSet<string> deviceFilter,
+            int scanTimeout = 2000)
         {
             if (_isScanning || !SettingsManager.BleEnabled) return _emptyListCache;
             if (!IsEnabled)
@@ -28,30 +29,32 @@ namespace TOI_MobileClient.Droid
                 return _emptyListCache;
             }
             _isScanning = true;
-            
+
             Adapter.ScanTimeout = scanTimeout;
             var deviceList = new List<BleDevice>();
 
-            void ScanHandler(object s, DeviceEventArgs a)
+            void OnAdapterOnDeviceDiscovered(object sender, DeviceEventArgs args)
             {
-                deviceList.Add(new BleDevice
+                var dev = new BleDevice
                 {
-                    Rssi = a.Device.Rssi,
-                    Address = a.Device.Id.ToString("N").TrimStart('0').ToUpper()
-                });
+                    Rssi = args.Device.Rssi,
+                    Address = args.Device.Id.ToString("N").TrimStart('0').ToUpper()
+                };
+                DeviceFound?.Invoke(sender, new BleEventArgs(dev));
+                deviceList.Add(dev);
             }
 
-            Adapter.DeviceDiscovered += ScanHandler;
+            Adapter.DeviceDiscovered += OnAdapterOnDeviceDiscovered;
+
             await Adapter.StartScanningForDevicesAsync(null, device =>
             {
                 var devId = device.Id.ToString("N").TrimStart('0').ToUpper();
                 return deviceFilter == null || deviceFilter.Contains(devId);
             });
-            Adapter.DeviceDisconnected -= ScanHandler;
+            Adapter.DeviceDiscovered -= OnAdapterOnDeviceDiscovered;
+
             _isScanning = false;
             return deviceList;
         }
-
-
     }
 }

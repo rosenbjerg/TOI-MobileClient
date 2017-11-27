@@ -53,9 +53,10 @@ namespace TOI_MobileClient.Droid
             LoadApplication(new App());
 		    if (_nfcAdapter != null && !_nfcAdapter.IsEnabled)
 		        DependencyManager.Get<NotifierBase>().DisplayToast(SettingsManager.Language.NfcNotEnabled, true);
+
         }
 
-	    protected override void OnResume()
+        protected override void OnResume()
 	    {
             base.OnResume();
 
@@ -76,6 +77,7 @@ namespace TOI_MobileClient.Droid
 	    protected override void OnDestroy()
 	    {
 	        base.OnDestroy();
+            DependencyManager.Get<NotifierBase>().CancelNotification(DependencyManager.Get<IScannerServiceProvider>().GetServiceAsync().Id);
             ServiceConnection.UnbindFromService();
 	    }
 	}

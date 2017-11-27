@@ -8,9 +8,14 @@ namespace TOI_MobileClient
 {
     public abstract class PageViewModelBase : ViewModelBase
     {
-        public abstract string PageTitle
+        public abstract string PageTitle { get; }
+
+        public virtual void OnViewAppearing()
         {
-            get;
+        }
+
+        public virtual void OnViewDisappearing()
+        {
         }
     }
 }

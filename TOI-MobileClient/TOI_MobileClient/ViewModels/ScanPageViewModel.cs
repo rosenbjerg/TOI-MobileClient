@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net;
 using System.Windows.Input;
+using Android.Opengl;
+using Android.Views;
 using DepMan;
 using Newtonsoft.Json;
 using TOIClasses;
@@ -20,6 +23,7 @@ namespace TOI_MobileClient
         public ICommand SyncCommand { get; }
 
         private bool _loading;
+
         public bool Loading
         {
             get => _loading;
@@ -33,7 +37,7 @@ namespace TOI_MobileClient
                 OnPropertyChanged();
             }
         }
-        
+
         public bool Loaded
         {
             get => !_loading;
@@ -45,54 +49,55 @@ namespace TOI_MobileClient
             }
         }
 
-        private List<ToiViewModel> _nearbyTags;
 
-        public List<ToiViewModel> NearbyTags
-        {
-            get => _nearbyTags;
-            set
-            {
-                if (value == _nearbyTags)
-                    return;
-                _nearbyTags = value;
-                OnPropertyChanged(nameof(FoundTags));
-                OnPropertyChanged(nameof(NoTags));
-                OnPropertyChanged();
-            }
-        }
+        public ObservableCollection<ToiViewModel> ToiCollection { get; set; }
 
-        public bool FoundTags => _nearbyTags.Count > 0;
 
-        public bool NoTags => _nearbyTags.Count == 0;
+        public bool FoundTags => ToiCollection.Count > 0;
+
+        public bool NoTags => ToiCollection.Count == 0;
 
         public Color SyncColor => Loading ? Styling.DisabledIconColor : Styling.EnabledIconColor;
+
+        public ViewStates Visibility => SettingsManager.ScanFrequencyValue == SettingsManager.Language.Never ? ViewStates.Gone : ViewStates.Visible;
+
+        public bool PullToRefresh =>
+            SettingsManager.ScanFrequencyValue == SettingsManager.Language.Never;
 
         private IBackgroundScanner _scanner;
 
         public ScanPageViewModel()
         {
             SyncCommand = new Command(ScanForToi);
-            NearbyTags = new List<ToiViewModel>();
+            ToiCollection = new ObservableCollection<ToiViewModel>();
         }
-        
 
-        private async void OnTagsFound(object sender, TagsFoundsEventArgs tagsFoundsEventArgs)
+        private HashSet<string> TagCache { get; set; } = new HashSet<string>();
+        private HashSet<ToiModel> ToiCache { get; set; } = new HashSet<ToiModel>();
+
+        private async void TagFound(object sender, TagFoundEventArgs args)
         {
-            tagsFoundsEventArgs.Handled = true;
+            Loading = false;
+            if (TagCache.Contains(args.Tag)) return;
+
             var rc = DependencyManager.Get<RestClient>();
+
             try
             {
-                var tvms = await rc.GetMany<ToiModel>(SettingsManager.Url + "/toi/fromtags", tagsFoundsEventArgs.Tags);
-                if (tvms == null)
+                var tois = await rc.GetMany<ToiModel>(SettingsManager.Url + "/toi/fromtags",
+                    new List<string> {args.Tag});
+                tois?.ForEach(t =>
                 {
-                    NearbyTags = new List<ToiViewModel>();
-                    DependencyManager.Get<NotifierBase>().DisplayToast("No tags found", false);
+                    ToiCache.Add(t);
+                    var vm = new ToiViewModel(t);
+                    if (ToiCollection.All(v => v.Model.Id != vm.Model.Id))
+                    {
+                        ToiCollection.Insert(0, vm);
+                    }
+                    TagCache.Add(args.Tag);
+                });
 
-                }
-                else
-                {
-                    NearbyTags = tvms.Select(t => new ToiViewModel(t)).ToList();
-                }
+                OnPropertyChanged(null);
             }
             catch (WebException e)
             {
@@ -104,7 +109,6 @@ namespace TOI_MobileClient
                 DependencyManager.Get<NotifierBase>().DisplayToast("Invalid data received from feed", false);
                 Console.WriteLine(e);
             }
-            Loaded = true;
         }
 
         private void ScanForToi()
@@ -125,18 +129,20 @@ namespace TOI_MobileClient
 
         public override async void OnViewAppearing()
         {
-            base.OnViewAppearing();
-            if(_scanner == null)
-                _scanner = await DependencyManager.Get<IScannerServiceProvider>().GetServiceAsync();
-            _scanner.TagsFound += OnTagsFound;
-        }
+            OnPropertyChanged(null);
 
-        public override async void OnViewDisappearing()
-        {
-            base.OnViewDisappearing();
             if (_scanner == null)
                 _scanner = await DependencyManager.Get<IScannerServiceProvider>().GetServiceAsync();
-            _scanner.TagsFound -= OnTagsFound;
+
+            _scanner.TagFound += TagFound;
+        }
+        
+        public override async void OnViewDisappearing()
+        {
+            if (_scanner == null)
+                _scanner = await DependencyManager.Get<IScannerServiceProvider>().GetServiceAsync();
+
+            _scanner.TagFound -= TagFound;
         }
     }
 }
