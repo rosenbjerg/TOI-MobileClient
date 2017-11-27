@@ -71,7 +71,6 @@ namespace TOI_MobileClient.Droid.Services
                 lang.ScanningExplanation,
                 Resource.Drawable.TagSyncIcon, Resource.Drawable.Icon);
             DependencyManager.Get<NfcScannerBase>().NfcTagFound += OnNfcTagFound;
-            //Logger.Instance.WriteToLog("MusicPlayerService", "Service started");
             return StartCommandResult.Sticky;
         }
 

@@ -40,8 +40,12 @@ namespace TOI_MobileClient.Droid
             });
         }
 
-        public override void UpdateAppNotification(int bgId, string title, string content, int smallIcon, int largeIcon,
-            bool makeNoice = false)
+        public override void CancelNotification(int id)
+        {
+            _notificationManager.Cancel(id);
+        }
+
+        public override void UpdateAppNotification(int bgId, string title, string content, int smallIcon, int largeIcon, bool makeNoice = false)
         {
             // Create a PendingIntent that opens the app when it is tapped
             const int pendingIntentId = 0;
