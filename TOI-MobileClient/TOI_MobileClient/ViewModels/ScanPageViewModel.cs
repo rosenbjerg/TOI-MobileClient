@@ -19,7 +19,6 @@ namespace TOI_MobileClient
 {
     class ScanPageViewModel : PageViewModelBase
     {
-        private int NeverScan = 3;
         public override string PageTitle => "Scan for tags";
         public ICommand SyncCommand { get; }
 
@@ -60,10 +59,10 @@ namespace TOI_MobileClient
 
         public Color SyncColor => Loading ? Styling.DisabledIconColor : Styling.EnabledIconColor;
 
-        public ViewStates Visibility => SettingsManager.ScanFrequencyValue == SettingsManager.ScanFrequencyOptions[NeverScan] ? ViewStates.Gone : ViewStates.Visible;
+        public ViewStates Visibility => SettingsManager.ScanFrequencyValue == SettingsManager.Language.Never ? ViewStates.Gone : ViewStates.Visible;
 
         public bool PullToRefresh =>
-            SettingsManager.ScanFrequencyValue != SettingsManager.ScanFrequencyOptions[NeverScan];
+            SettingsManager.ScanFrequencyValue == SettingsManager.Language.Never;
 
         private IBackgroundScanner _scanner;
 
@@ -93,7 +92,7 @@ namespace TOI_MobileClient
                     var vm = new ToiViewModel(t);
                     if (ToiCollection.All(v => v.Model.Id != vm.Model.Id))
                     {
-                        ToiCollection.Add(vm);
+                        ToiCollection.Insert(0, vm);
                     }
                     TagCache.Add(args.Tag);
                 });

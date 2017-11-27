@@ -77,6 +77,7 @@ namespace TOI_MobileClient.Droid.Services
 
         private void OnNfcTagFound(object sender, NfcEventArgs nfcEventArgs)
         {
+            if (!SettingsManager.NfcEnabled) return;
             TagFound?.Invoke(this, new TagFoundEventArgs(nfcEventArgs.TagId.ToUpper()));
             Console.WriteLine("NFC tag found: " + nfcEventArgs.TagId);
         }
