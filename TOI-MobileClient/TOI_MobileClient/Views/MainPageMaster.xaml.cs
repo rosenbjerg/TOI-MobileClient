@@ -10,7 +10,7 @@ using Xamarin.Forms.Xaml;
 namespace TOI_MobileClient
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class MainPageMaster : ContentPage
+    public partial class MainPageMaster
     {
         public ListView ListView;
 
@@ -22,21 +22,12 @@ namespace TOI_MobileClient
             ListView = MenuItemsListView;
         }
 
-        class MainPageMasterViewModel : INotifyPropertyChanged
+        public class MainPageMasterViewModel : BindableObject
         {
             public ObservableCollection<MainPageMenuItem> MenuItems { get; set; }
             
             public MainPageMasterViewModel()
             {
-                try
-                {
-                    var lang_2 = SettingsManager.Language;
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                    throw;
-                }
                 var lang = SettingsManager.Language;
 
                 MenuItems = new ObservableCollection<MainPageMenuItem>(new[]
@@ -47,16 +38,6 @@ namespace TOI_MobileClient
                 });
             }
 
-            #region INotifyPropertyChanged Implementation
-            public event PropertyChangedEventHandler PropertyChanged;
-            void OnPropertyChanged([CallerMemberName] string propertyName = "")
-            {
-                if (PropertyChanged == null)
-                    return;
-
-                PropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
-            }
-            #endregion
         }
     }
 }

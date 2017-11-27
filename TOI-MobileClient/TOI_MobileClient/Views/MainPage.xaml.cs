@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using FormsPlugin.Iconize;
+using TOI_MobileClient.ViewModels;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -19,12 +20,26 @@ namespace TOI_MobileClient
             var firstPage = new IconNavigationPage(new ScanPage());
             _loadedPages.Add(typeof(ScanPage), firstPage);
             Detail = firstPage;
+            if (firstPage.CurrentPage.BindingContext is PageViewModelBase vm)
+            {
+                vm.OnViewAppearing();
+            }
 
             NavigateTo = delegate(Page page)
             {
                 Device.BeginInvokeOnMainThread(() =>
                 {
+                    if (Detail is IconNavigationPage iPage && iPage.CurrentPage.BindingContext is PageViewModelBase pvm)
+                    {
+                        pvm.OnViewDisappearing();
+                    }
+
                     (Detail as IconNavigationPage)?.PushAsync(page);
+
+                    if (page.BindingContext is PageViewModelBase pageViewModel)
+                    {
+                        pageViewModel.OnViewAppearing();
+                    }
                     //Detail = new IconNavigationPage(page);
                 });
             };
@@ -38,8 +53,8 @@ namespace TOI_MobileClient
             var item = (MainPageMenuItem) e.SelectedItem;
             if (item == null)
                 return;
-            IconNavigationPage page;
-            if (!_loadedPages.TryGetValue(item.TargetType, out page))
+
+            if (!_loadedPages.TryGetValue(item.TargetType, out var page))
             {
                 var innerPage = (Page) Activator.CreateInstance(item.TargetType);
                 innerPage.Title = item.Title;
@@ -48,6 +63,12 @@ namespace TOI_MobileClient
             }
 
             Detail = page;
+
+            if (page.CurrentPage.BindingContext is PageViewModelBase vm)
+            {
+                vm.OnViewAppearing();
+            }
+
             IsPresented = false;
 
             MasterPage.ListView.SelectedItem = null;

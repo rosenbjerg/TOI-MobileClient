@@ -16,14 +16,10 @@ namespace TOI_MobileClient
             };
         }
 
-        protected override void OnDisappearing()
-        {
-            (BindingContext as ViewModelBase).OnViewDisappearing();
-        }
-
         protected override void OnAppearing()
         {
-            (BindingContext as ViewModelBase).OnViewAppearing();
+            base.OnAppearing();
+            ((PageViewModelBase) BindingContext).OnViewAppearing();
         }
     }
 }

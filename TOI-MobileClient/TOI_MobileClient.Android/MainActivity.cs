@@ -58,9 +58,10 @@ namespace TOI_MobileClient.Droid
             LoadApplication(new App());
 		    if (_nfcAdapter != null && !_nfcAdapter.IsEnabled)
 		        DependencyManager.Get<NotifierBase>().DisplayToast(SettingsManager.Language.NfcNotEnabled, true);
+
         }
 
-	    protected override void OnResume()
+        protected override void OnResume()
 	    {
             base.OnResume();
 

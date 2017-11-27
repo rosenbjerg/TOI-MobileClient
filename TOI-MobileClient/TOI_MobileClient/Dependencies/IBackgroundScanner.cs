@@ -11,8 +11,18 @@ namespace TOI_MobileClient.Dependencies
         Task ScanForToi(HashSet<string> filter, ScanConfiguration configuration = null);
 
         event EventHandler<TagsFoundsEventArgs> TagsFound;
+        event EventHandler<TagFoundEventArgs> TagFound;
     }
-    
+
+    public class TagFoundEventArgs : EventArgs
+    {
+        public string Tag { get; }
+
+        public TagFoundEventArgs(string tag)
+        {
+            Tag = tag;
+        }
+    }
 
     public class TagsFoundsEventArgs : EventArgs
     {
