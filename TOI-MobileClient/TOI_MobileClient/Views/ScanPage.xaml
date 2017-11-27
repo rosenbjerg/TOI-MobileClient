@@ -8,15 +8,15 @@
              x:Class="TOI_MobileClient.ScanPage"
              Title="Scan for ToI">
     <ContentPage.ToolbarItems>
-        <iconize:IconToolbarItem Icon="fa-refresh" IconColor="{Binding SyncColor}" Order="Primary" Command="{Binding SyncCommand}" />
+        <iconize:IconToolbarItem Icon="fa-refresh" IconColor="{Binding SyncColor}" Order="Primary" Command="{Binding SyncCommand}" IsVisible="{Binding Visibility}" />
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <StackLayout >
             <ContentView VerticalOptions="FillAndExpand" IsVisible="{Binding Loading}">
                 <ActivityIndicator Color="{x:Static managers:Styling.ActivityIndicatorColor}" IsRunning="True" VerticalOptions="Center" HorizontalOptions="Center"/>
             </ContentView>
-            <StackLayout>
-                <ListView RowHeight="200" ItemsSource="{Binding ToiCollection}" x:Name="NearbyTags" RefreshCommand="{Binding SyncCommand}" IsPullToRefreshEnabled="True" IsRefreshing="{Binding Loading}" >
+            <StackLayout IsVisible="{Binding Loaded}">
+                <ListView IsVisible="{Binding FoundTags}" RowHeight="200" ItemsSource="{Binding ToiCollection}" x:Name="NearbyTags" RefreshCommand="{Binding SyncCommand}" IsPullToRefreshEnabled="{Binding PullToRefresh}" IsRefreshing="{Binding Loading}" >
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <toiMobileClient:TapViewCell x:Key="TapViewCell" Command="{Binding CardTapped}">

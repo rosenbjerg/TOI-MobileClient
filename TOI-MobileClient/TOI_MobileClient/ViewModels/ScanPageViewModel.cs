@@ -4,6 +4,8 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net;
 using System.Windows.Input;
+using Android.Opengl;
+using Android.Views;
 using DepMan;
 using Newtonsoft.Json;
 using TOIClasses;
@@ -17,6 +19,7 @@ namespace TOI_MobileClient
 {
     class ScanPageViewModel : PageViewModelBase
     {
+        private int NeverScan = 3;
         public override string PageTitle => "Scan for tags";
         public ICommand SyncCommand { get; }
 
@@ -56,6 +59,11 @@ namespace TOI_MobileClient
         public bool NoTags => ToiCollection.Count == 0;
 
         public Color SyncColor => Loading ? Styling.DisabledIconColor : Styling.EnabledIconColor;
+
+        public ViewStates Visibility => SettingsManager.ScanFrequencyValue == SettingsManager.ScanFrequencyOptions[NeverScan] ? ViewStates.Gone : ViewStates.Visible;
+
+        public bool PullToRefresh =>
+            SettingsManager.ScanFrequencyValue != SettingsManager.ScanFrequencyOptions[NeverScan];
 
         private IBackgroundScanner _scanner;
 

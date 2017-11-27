@@ -24,7 +24,7 @@ namespace TOI_MobileClient.Droid
             var scanReceiver = new WifiScanReceiver();
             var wm = (WifiManager)Application.Context.GetSystemService(Context.WifiService);
 
-            if (!wm.IsWifiEnabled)
+            if (SettingsManager.WiFiEnabled && !wm.IsWifiEnabled)
             {
                 DependencyManager.Get<NotifierBase>().DisplayToast(SettingsManager.Language.WifiNotEnabled, true);
                 return null;
