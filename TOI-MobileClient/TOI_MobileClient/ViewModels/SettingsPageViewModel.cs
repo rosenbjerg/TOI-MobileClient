@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using DepMan;
-using TOI_MobileClient.Dependencies;
 using TOI_MobileClient.Managers;
 
 namespace TOI_MobileClient.ViewModels
@@ -52,7 +50,7 @@ namespace TOI_MobileClient.ViewModels
             get => SettingsManager.NfcEnabled;
             set
             {
-                SettingsManager.WiFiEnabled = value;
+                SettingsManager.NfcEnabled = value;
                 OnPropertyChanged();
             }
         }

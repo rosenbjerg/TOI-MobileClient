@@ -9,12 +9,10 @@ namespace TOI_MobileClient.Droid
 {
     public class AndroidNfcScanner : NfcScannerBase
     {
-        
-        public AndroidNfcScanner()
+        public AndroidNfcScanner(NfcAdapter adapter)
         {
-           
+            NfcAdapter = adapter;
         }
-
 
         public override void HandleNfcIntent(Intent intent)
         {
@@ -26,11 +24,14 @@ namespace TOI_MobileClient.Droid
 
         public static string ByteArrayToString(byte[] ba)
         {
-            StringBuilder hex = new StringBuilder(ba.Length * 2);
-            foreach (byte b in ba)
+            var hex = new StringBuilder(ba.Length * 2);
+            foreach (var b in ba)
                 hex.AppendFormat("{0:x2}", b);
             return hex.ToString();
         }
+
+        public bool IsEnabled => NfcAdapter?.IsEnabled ?? false;
+        public NfcAdapter NfcAdapter { get; protected set; }
     }
 
 
