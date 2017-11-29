@@ -40,10 +40,17 @@ namespace TOI_MobileClient.Droid
         public void OnConnectionFailed(ConnectionResult result)
         {
             var queryResult = GoogleApiAvailability.Instance.IsGooglePlayServicesAvailable(Application.Context);
+<<<<<<< HEAD
 
             if (!GoogleApiAvailability.Instance.IsUserResolvableError(queryResult))
                 throw new Exception($"Google Play Services hasn't been installed: {queryResult}");
 
+=======
+
+            if (!GoogleApiAvailability.Instance.IsUserResolvableError(queryResult))
+                throw new Exception($"Google Play Services hasn't been installed: {queryResult}");
+
+>>>>>>> 207b48dd3d1251186a73a439e57f75f586cfee95
             var errorString = GoogleApiAvailability.Instance.GetErrorString(queryResult);
             throw new Exception(errorString);
         }
@@ -77,6 +84,5 @@ namespace TOI_MobileClient.Droid
         }
 
         public new bool IsEnabled => _locationManager.IsProviderEnabled(LocationManager.GpsProvider) && _enabled;
-        
     }
 }
