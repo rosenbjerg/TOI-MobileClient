@@ -26,7 +26,7 @@ namespace TOI_MobileClient.Droid
             _scanner = new WifiScanReceiver();
         }
 
-        public bool IsEnabled => _scanner.IsEnabled;
+        public new bool IsEnabled => _scanner.IsEnabled;
    
         public override async Task<IEnumerable<string>> ScanWifi()
         {

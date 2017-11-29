@@ -15,7 +15,7 @@ namespace TOI_MobileClient.Droid
     {
         private bool _isScanning;
 
-        public bool IsEnabled => Ble.IsOn && Ble.IsAvailable;
+        public new bool IsEnabled => Ble.IsOn && Ble.IsAvailable;
 
         private readonly IReadOnlyList<BleDevice> _emptyListCache = new List<BleDevice>();
 

@@ -139,11 +139,13 @@ namespace TOI_MobileClient.Droid.Services
                     continue;
                 }
 
-                Console.WriteLine(
-                    $"Found {(await DependencyManager.Get<BleScannerBase>().ScanDevices(BleFilter)).Count} BLE devices");
-                Console.WriteLine($"Location: {await DependencyManager.Get<GpsLocatorBase>().GetLocationAsync()}");
+                var ble = DependencyManager.Get<BleScannerBase>().ScanDevices(BleFilter);
+                var gps = DependencyManager.Get<GpsScannerBase>().GetLocationAsync();
+                var wifi = DependencyManager.Get<WiFiScannerBase>().ScanWifi();
 
-
+                Console.WriteLine($"BLE: {(await ble).Count} devices");
+                Console.WriteLine($"GPS: {await gps}");
+                Console.WriteLine($"WIFI: {(await wifi).Count()}");
                 await Task.Delay(GetDelay());
             }
         }
@@ -160,7 +162,7 @@ namespace TOI_MobileClient.Droid.Services
 
         public async Task<Location> ScanGps()
         {
-            var scanner = DependencyManager.Get<GpsLocatorBase>();
+            var scanner = DependencyManager.Get<GpsScannerBase>();
             return await scanner.GetLocationAsync();
         }
     }

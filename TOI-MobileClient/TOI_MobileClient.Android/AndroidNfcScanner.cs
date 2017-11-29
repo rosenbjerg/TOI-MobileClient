@@ -30,7 +30,7 @@ namespace TOI_MobileClient.Droid
             return hex.ToString();
         }
 
-        public bool IsEnabled => NfcAdapter?.IsEnabled ?? false;
+        public new bool IsEnabled => NfcAdapter?.IsEnabled ?? false;
         public NfcAdapter NfcAdapter { get; protected set; }
     }
 
