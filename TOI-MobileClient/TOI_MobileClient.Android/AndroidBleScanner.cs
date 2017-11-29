@@ -15,8 +15,8 @@ namespace TOI_MobileClient.Droid
     {
         private bool _isScanning;
 
+        public bool IsEnabled => Ble.IsOn && Ble.IsAvailable;
 
-        public override bool IsEnabled => Ble.IsOn && Ble.IsAvailable;
         private readonly IReadOnlyList<BleDevice> _emptyListCache = new List<BleDevice>();
 
         public override async Task<IReadOnlyList<BleDevice>> ScanDevices(HashSet<string> deviceFilter,

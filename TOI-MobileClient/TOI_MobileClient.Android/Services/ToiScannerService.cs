@@ -23,7 +23,8 @@ namespace TOI_MobileClient.Droid.Services
         public int ServiceId { get; } = 6969;
         public ScannerServiceBinder Binder { get; private set; }
         public HashSet<string> Filter = new HashSet<string>();
-        public CancellationTokenSource ScanTask { get; } = new CancellationTokenSource();
+        public CancellationTokenSource ScanLoopToken { get; } = new CancellationTokenSource();
+        public Task ScanLoopTask { get; private set; }
 
         public ToiScannerService()
         {
@@ -54,8 +55,27 @@ namespace TOI_MobileClient.Droid.Services
                 Console.WriteLine($"Found BleDevice: {args.Device.Address}");
             };
 
-            Console.WriteLine("Starting ScanLoop Task");
-            Task.Factory.StartNew(ScanLoop, ScanTask.Token);
+            StartLoop();
+        }
+
+        public void StartLoop()
+        {
+            if (ScanLoopTask?.IsCanceled ?? false)
+            {
+                return;
+            }
+
+            ScanLoopTask = Task.Factory.StartNew(ScanLoop, ScanLoopToken.Token);
+        }
+
+        public void StopLoop()
+        {
+            if (ScanLoopTask?.IsCanceled ?? true)
+            {
+                return;
+            }
+
+            ScanLoopToken.Cancel();
         }
 
         public override IBinder OnBind(Intent intent)
@@ -101,6 +121,14 @@ namespace TOI_MobileClient.Droid.Services
             return SettingsManager.ScanFrequencyValue == SettingsManager.Language.Rarely ? 60000 : 10000;
         }
 
+        private static readonly HashSet<string> BleFilter = new HashSet<string>
+        {
+            "CC1454015282".TrimStart('0').ToUpper(),
+            "FAC4D1038D3D".TrimStart('0').ToUpper(),
+            "CBFFB96CA47D".TrimStart('0').ToUpper(),
+            "F4B415054205".TrimStart('0').ToUpper()
+        };
+
         private static async Task ScanLoop()
         {
             while (true)
@@ -111,15 +139,11 @@ namespace TOI_MobileClient.Droid.Services
                     continue;
                 }
 
-                await DependencyManager.Get<BleScannerBase>().ScanDevices(new HashSet<string>
-                {
-                    "CC1454015282".TrimStart('0').ToUpper(),
-                    "FAC4D1038D3D".TrimStart('0').ToUpper(),
-                    "CBFFB96CA47D".TrimStart('0').ToUpper(),
-                    "F4B415054205".TrimStart('0').ToUpper()
-                });
+                Console.WriteLine(
+                    $"Found {(await DependencyManager.Get<BleScannerBase>().ScanDevices(BleFilter)).Count} BLE devices");
+                Console.WriteLine($"Location: {await DependencyManager.Get<GpsLocatorBase>().GetLocationAsync()}");
 
-                
+
                 await Task.Delay(GetDelay());
             }
         }
@@ -134,12 +158,10 @@ namespace TOI_MobileClient.Droid.Services
             return await scanner.ScanDevices(filter, 5000);
         }
 
-        public Location ScanGps()
+        public async Task<Location> ScanGps()
         {
             var scanner = DependencyManager.Get<GpsLocatorBase>();
-            var position = scanner.GetLocation();
-
-            return position;
+            return await scanner.GetLocationAsync();
         }
     }
 }
