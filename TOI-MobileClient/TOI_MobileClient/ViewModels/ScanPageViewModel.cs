@@ -72,8 +72,8 @@ namespace TOI_MobileClient
             ToiCollection = new ObservableCollection<ToiViewModel>();
         }
 
-        private HashSet<string> TagCache { get; set; } = new HashSet<string>();
-        private HashSet<ToiModel> ToiCache { get; set; } = new HashSet<ToiModel>();
+        private HashSet<string> TagCache { get; } = new HashSet<string>();
+        private HashSet<ToiModel> ToiCache { get; } = new HashSet<ToiModel>();
 
         private async void TagFound(object sender, TagFoundEventArgs args)
         {

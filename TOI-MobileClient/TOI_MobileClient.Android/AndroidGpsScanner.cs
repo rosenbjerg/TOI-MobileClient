@@ -21,9 +21,11 @@ namespace TOI_MobileClient.Droid
         Android.Gms.Location.ILocationListener
     {
         private readonly GoogleApiClient _client;
-        public Location CurrentLocation { get; private set; }
+        public override Location CurrentLocation { get; protected set; }
         private readonly LocationManager _locationManager;
         private bool _enabled;
+
+        public new bool IsEnabled => _locationManager.IsProviderEnabled(LocationManager.GpsProvider) && _enabled;
 
         public AndroidGpsScanner()
         {
@@ -73,9 +75,13 @@ namespace TOI_MobileClient.Droid
 
         public override async Task<Location> GetLocationAsync()
         {
-            return await Task.Run(() => GetLocation());
+            return await Task.Run(() =>
+            {
+                var loc = GetLocation();
+                LocationFound?.Invoke(this, new LocationFoundEventArgs($"lat:{loc.Latitude}-long:{loc.Longitude}"));
+                return loc;
+            });
         }
 
-        public new bool IsEnabled => _locationManager.IsProviderEnabled(LocationManager.GpsProvider) && _enabled;
     }
 }

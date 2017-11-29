@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -22,7 +23,28 @@ namespace TOI_MobileClient.Droid.Services
     {
         public int ServiceId { get; } = 6969;
         public ScannerServiceBinder Binder { get; private set; }
-        public HashSet<string> Filter = new HashSet<string>();
+
+        private static string PrepId(string id)
+        {
+            return id.TrimStart('0').ToUpperInvariant().Replace(":", "");
+        }
+
+        // TODO: Change this shit up to the SettingsManager
+        public static HashSet<string> Filter = new HashSet<string>
+        {
+            PrepId("84:16:f9:ae:a4:3a"),
+            PrepId("90:A4:DE:E8:29:AC")
+        };
+
+        // TODO: Change this shit up to the SettingsManager
+        private static readonly HashSet<string> BleFilter = new HashSet<string>
+        {
+            PrepId("CC1454015282"),
+            PrepId("FAC4D1038D3D"),
+            PrepId("CBFFB96CA47D"),
+            PrepId("F4B415054205"),
+        };
+
         public CancellationTokenSource ScanLoopToken { get; } = new CancellationTokenSource();
         public Task ScanLoopTask { get; private set; }
 
@@ -49,10 +71,20 @@ namespace TOI_MobileClient.Droid.Services
                 }
             };
 
-            DependencyManager.Get<BleScannerBase>().DeviceFound += (sender, args) =>
+
+            DependencyManager.Get<BleScannerBase>().BleDeviceFound += (sender, arg) =>
             {
-                TagFound?.Invoke(sender, new TagFoundEventArgs(args.Device.Address));
-                Console.WriteLine($"Found BleDevice: {args.Device.Address}");
+                TagFound?.Invoke(sender, new TagFoundEventArgs(arg.Device.Address));
+            };
+
+            DependencyManager.Get<WiFiScannerBase>().WifiApFound += (sender, arg) =>
+            {
+                TagFound?.Invoke(sender, new TagFoundEventArgs(PrepId(arg.Bssid)));
+            };
+
+            DependencyManager.Get<NfcScannerBase>().NfcTagFound += (sender, arg) =>
+            {
+                TagFound?.Invoke(this, new TagFoundEventArgs(PrepId(arg.TagId)));
             };
 
             StartLoop();
@@ -65,7 +97,7 @@ namespace TOI_MobileClient.Droid.Services
                 return;
             }
 
-            ScanLoopTask = Task.Factory.StartNew(ScanLoop, ScanLoopToken.Token);
+            ScanLoopTask = Task.Run(ScanLoop, ScanLoopToken.Token);
         }
 
         public void StopLoop()
@@ -90,16 +122,10 @@ namespace TOI_MobileClient.Droid.Services
             DependencyManager.Get<NotifierBase>().UpdateAppNotification(ServiceId, lang.Scanning,
                 lang.ScanningExplanation,
                 Resource.Drawable.TagSyncIcon, Resource.Drawable.Icon);
-            DependencyManager.Get<NfcScannerBase>().NfcTagFound += OnNfcTagFound;
+
             return StartCommandResult.Sticky;
         }
 
-        private void OnNfcTagFound(object sender, NfcEventArgs nfcEventArgs)
-        {
-            if (!SettingsManager.NfcEnabled) return;
-            TagFound?.Invoke(this, new TagFoundEventArgs(nfcEventArgs.TagId.ToUpper()));
-            Console.WriteLine("NFC tag found: " + nfcEventArgs.TagId);
-        }
 
         public async Task ScanForToi(HashSet<string> filter, ScanConfiguration configuration = null)
         {
@@ -121,13 +147,6 @@ namespace TOI_MobileClient.Droid.Services
             return SettingsManager.ScanFrequencyValue == SettingsManager.Language.Rarely ? 60000 : 10000;
         }
 
-        private static readonly HashSet<string> BleFilter = new HashSet<string>
-        {
-            "CC1454015282".TrimStart('0').ToUpper(),
-            "FAC4D1038D3D".TrimStart('0').ToUpper(),
-            "CBFFB96CA47D".TrimStart('0').ToUpper(),
-            "F4B415054205".TrimStart('0').ToUpper()
-        };
 
         private static async Task ScanLoop()
         {
@@ -140,12 +159,10 @@ namespace TOI_MobileClient.Droid.Services
                 }
 
                 var ble = DependencyManager.Get<BleScannerBase>().ScanDevices(BleFilter);
-                var gps = DependencyManager.Get<GpsScannerBase>().GetLocationAsync();
-                var wifi = DependencyManager.Get<WiFiScannerBase>().ScanWifi();
+                var wifi = DependencyManager.Get<WiFiScannerBase>().ScanWifi(Filter);
 
-                Console.WriteLine($"BLE: {(await ble).Count} devices");
-                Console.WriteLine($"GPS: {await gps}");
-                Console.WriteLine($"WIFI: {(await wifi).Count()}");
+                await ble;
+                await wifi;
                 await Task.Delay(GetDelay());
             }
         }

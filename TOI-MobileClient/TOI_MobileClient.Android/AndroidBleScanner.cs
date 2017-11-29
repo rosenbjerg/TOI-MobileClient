@@ -40,7 +40,7 @@ namespace TOI_MobileClient.Droid
                     Rssi = args.Device.Rssi,
                     Address = args.Device.Id.ToString("N").TrimStart('0').ToUpper()
                 };
-                DeviceFound?.Invoke(sender, new BleEventArgs(dev));
+                BleDeviceFound?.Invoke(sender, new BleDeviceFoundEventArgs(dev));
                 deviceList.Add(dev);
             }
 

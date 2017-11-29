@@ -23,16 +23,16 @@ namespace TOI_MobileClient
         public abstract Task<IReadOnlyList<BleDevice>>
             ScanDevices(HashSet<string> deviceFilter, int scanTimeout = 2000);
 
-        public EventHandler<BleEventArgs> DeviceFound;
+        public EventHandler<BleDeviceFoundEventArgs> BleDeviceFound;
 
         public bool IsEnabled => false;
     }
 
-    public class BleEventArgs : EventArgs
+    public class BleDeviceFoundEventArgs : EventArgs
     {
         public readonly BleDevice Device;
 
-        public BleEventArgs(BleDevice device)
+        public BleDeviceFoundEventArgs(BleDevice device)
         {
             Device = device;
         }

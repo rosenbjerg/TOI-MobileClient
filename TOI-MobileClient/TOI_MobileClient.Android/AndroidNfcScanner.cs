@@ -4,6 +4,7 @@ using Android.App;
 using TOI_MobileClient.Dependencies;
 using Android.Content;
 using System.Text;
+using TOI_MobileClient.Managers;
 
 namespace TOI_MobileClient.Droid
 {
@@ -16,6 +17,7 @@ namespace TOI_MobileClient.Droid
 
         public override void HandleNfcIntent(Intent intent)
         {
+            if (!SettingsManager.NfcEnabled) return;
             if (intent.Action != NfcAdapter.ActionTagDiscovered || !(intent.GetParcelableExtra(NfcAdapter.ExtraTag) is Tag tag))
                 return;
 
