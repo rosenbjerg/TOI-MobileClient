@@ -43,7 +43,7 @@ namespace TOI_MobileClient.Droid
 
             if (!GoogleApiAvailability.Instance.IsUserResolvableError(queryResult))
                 throw new Exception($"Google Play Services hasn't been installed: {queryResult}");
-
+            
             var errorString = GoogleApiAvailability.Instance.GetErrorString(queryResult);
             throw new Exception(errorString);
         }
@@ -77,6 +77,5 @@ namespace TOI_MobileClient.Droid
         }
 
         public new bool IsEnabled => _locationManager.IsProviderEnabled(LocationManager.GpsProvider) && _enabled;
-        
     }
 }
