@@ -28,10 +28,7 @@ namespace TOI_MobileClient.Droid
             Console.WriteLine($"Received a broadcast: {intent.Action}");
             if (intent.Action != KillAppAndService) return;
 
-            var act = context as Activity;
-            Console.WriteLine($"Context as Activity: {act}");
-            context.StopService(new Intent(context, typeof(ToiScannerService)));
-            act?.FinishActivity(0);
+            Process.KillProcess(Process.MyPid());
         }
     }
 }
