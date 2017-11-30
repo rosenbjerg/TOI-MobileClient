@@ -18,12 +18,13 @@ namespace TOI_MobileClient
                 Timeout = TimeSpan.FromSeconds(5)
             };
         }
+
         public void Dispose()
         {
             _client.Dispose();
         }
 
-        public async Task<string> GetStringAsync(string url)
+        public async Task<string> GetAsync(string url)
         {
             try
             {
@@ -48,7 +49,7 @@ namespace TOI_MobileClient
                 var response = await _client.PostAsync(url, cont);
                 if (!response.IsSuccessStatusCode)
                     return null;
-                
+
                 return await response.Content.ReadAsStringAsync();
             }
             catch (WebException e)
@@ -56,11 +57,16 @@ namespace TOI_MobileClient
                 Console.WriteLine(e);
                 throw;
             }
+            catch (HttpRequestException ex)
+            {
+                Console.WriteLine(ex);
+                throw;
+            }
             catch (Exception exception)
             {
                 Console.WriteLine(exception);
+                throw;
             }
-            return "";
         }
     }
 }

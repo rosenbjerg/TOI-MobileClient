@@ -15,22 +15,22 @@ namespace TOI_MobileClient
 
         public RestClient(IToiHttpManager manager)
         {
-            this._manager = manager;
+            _manager = manager;
         }
 
         public async Task<T> Get<T>(string url)
             where T : class, new()
         {
-            var jsonString = await _manager.GetStringAsync(url);
+            var jsonString = await _manager.GetAsync(url);
             if (string.IsNullOrEmpty(jsonString))
                 return null;
 
             try
             {
-                T obj = JsonConvert.DeserializeObject<T>(jsonString);
+                var obj = JsonConvert.DeserializeObject<T>(jsonString);
                 return obj;
             }
-            catch (Newtonsoft.Json.JsonReaderException e)
+            catch (JsonReaderException e)
             {
                 Console.WriteLine(e);
                 throw new FormatException(e.Message);
@@ -42,15 +42,21 @@ namespace TOI_MobileClient
             }
         }
 
-        public async Task<IEnumerable<T>> GetMany<T>(string url, IEnumerable<string> ids)
+        public async Task<IEnumerable<T>> GetMany<T>(string url, IEnumerable<string> ids = null)
             where T : class, new()
         {
-            var jArray = JsonConvert.SerializeObject(ids.ToList());
-            var res = await _manager.PostAsync(url, jArray);
-
+            string res;
+            if (ids != null)
+            {
+                var jArray = JsonConvert.SerializeObject(ids.ToList());
+                res = await _manager.PostAsync(url, jArray);
+            }
+            else
+            {
+                res = await _manager.GetAsync(url);
+            }
             if (string.IsNullOrEmpty(res))
                 return null;
-            
             var tagList = JsonConvert.DeserializeObject<List<T>>(res);
             return tagList;
         }

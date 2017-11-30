@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Plugin.Settings;
 using Plugin.Settings.Abstractions;
+using TOIClasses;
 using TOI_MobileClient.Dependencies;
 using TOI_MobileClient.Localization;
 using TOI_MobileClient.ViewModels;
@@ -56,10 +57,22 @@ namespace TOI_MobileClient.Managers
         };
 
         public static string ScanFrequencyValue => ScanFrequencyOptions[ScanFrequency];
-      
+
+        public static Dictionary<string, List<ContextViewModel>> Subscriptions { get; set; }
+
+        public static List<ContextViewModel> CurrentContext => Subscriptions[Url];
+
+
+        public static string PrepId(string id)
+        {
+            return id.ToUpperInvariant().Replace(":", "");
+        }
+
+
         static SettingsManager()
         {
             Language = new EnglishLanguage();
+            Subscriptions = new Dictionary<string, List<ContextViewModel>>();
         }
     }
 }

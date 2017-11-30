@@ -1,17 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using FormsPlugin.Iconize;
-using TOI_MobileClient.ViewModels;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
 namespace TOI_MobileClient
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class MainPage : MasterDetailPage
+    public partial class MainPage
     {
 
         public static Action<Page> NavigateTo;
+
+        public static Action<string, string> DisplayPopup;
+
         public MainPage()
         {
             InitializeComponent();
@@ -43,6 +45,10 @@ namespace TOI_MobileClient
                     //Detail = new IconNavigationPage(page);
                 });
             };
+            DisplayPopup = delegate(string title, string msg)
+            {
+                Detail.DisplayAlert(title, msg, "OK");
+            };
         }
 
         // Page cache
@@ -53,7 +59,6 @@ namespace TOI_MobileClient
             var item = (MainPageMenuItem) e.SelectedItem;
             if (item == null)
                 return;
-
             if (!_loadedPages.TryGetValue(item.TargetType, out var page))
             {
                 var innerPage = (Page) Activator.CreateInstance(item.TargetType);

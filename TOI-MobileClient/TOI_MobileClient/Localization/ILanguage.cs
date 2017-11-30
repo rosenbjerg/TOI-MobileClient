@@ -28,9 +28,10 @@ namespace TOI_MobileClient
 
         string EnableToast { get; }
         #endregion
-
+        string NoContexts { get; }
         string ScanForTags { get; }
         string Settings { get; }
+        string Contexts { get; }
         string About { get; }
 
         string Scanning { get; }

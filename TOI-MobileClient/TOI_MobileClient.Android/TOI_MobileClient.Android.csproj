@@ -73,7 +73,6 @@
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Mono.Android" />
-    <Reference Include="mscorlib" />
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.10.0.3\lib\netstandard1.3\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -195,7 +194,6 @@
     <Compile Include="AndroidNfcScanner.cs" />
     <Compile Include="AndroidNotifier.cs" />
     <Compile Include="AndroidWifiScanner.cs" />
-    <Compile Include="Helpers\Settings.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="NotificationActionHandler.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />

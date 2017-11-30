@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -22,8 +23,25 @@ namespace TOI_MobileClient.Droid.Services
     {
         public int ServiceId { get; } = 6969;
         public ScannerServiceBinder Binder { get; private set; }
-        public HashSet<string> Filter = new HashSet<string>();
-        public CancellationTokenSource ScanTask { get; } = new CancellationTokenSource();
+
+        // TODO: Change this shit up to the SettingsManager
+        public static HashSet<string> Filter = new HashSet<string>
+        {
+            SettingsManager.PrepId("84:16:f9:ae:a4:3a"),
+            SettingsManager.PrepId("90:A4:DE:E8:29:AC")
+        };
+
+        // TODO: Change this shit up to the SettingsManager
+        private static readonly HashSet<string> BleFilter = new HashSet<string>
+        {
+            SettingsManager.PrepId("CC1454015282"),
+            SettingsManager.PrepId("FAC4D1038D3D"),
+            SettingsManager.PrepId("CBFFB96CA47D"),
+            SettingsManager.PrepId("F4B415054205"),
+        };
+
+        public CancellationTokenSource ScanLoopToken { get; } = new CancellationTokenSource();
+        public Task ScanLoopTask { get; private set; }
 
         public ToiScannerService()
         {
@@ -48,14 +66,48 @@ namespace TOI_MobileClient.Droid.Services
                 }
             };
 
-            DependencyManager.Get<BleScannerBase>().DeviceFound += (sender, args) =>
+
+            DependencyManager.Get<BleScannerBase>().BleDeviceFound += (sender, args) =>
             {
                 TagFound?.Invoke(sender, new TagFoundEventArgs(args.Device.Address));
-                Console.WriteLine($"Found BleDevice: {args.Device.Address}");
             };
 
-            Console.WriteLine("Starting ScanLoop Task");
-            Task.Factory.StartNew(ScanLoop, ScanTask.Token);
+            DependencyManager.Get<WiFiScannerBase>().WifiApFound += (sender, args) =>
+            {
+                TagFound?.Invoke(sender, new TagFoundEventArgs(SettingsManager.PrepId(args.Bssid)));
+            };
+
+            DependencyManager.Get<NfcScannerBase>().NfcTagFound += (sender, args) =>
+            {
+                TagFound?.Invoke(this, new TagFoundEventArgs(SettingsManager.PrepId(args.TagId)));
+            };
+
+            DependencyManager.Get<GpsScannerBase>().LocationFound += (sender, args) =>
+            {
+                TagFound?.Invoke(this, new TagFoundEventArgs(args.Location, true));
+            };
+
+            StartLoop();
+        }
+
+        public void StartLoop()
+        {
+            if (ScanLoopTask?.IsCanceled ?? false)
+            {
+                return;
+            }
+
+            ScanLoopTask = Task.Run(ScanLoop, ScanLoopToken.Token);
+        }
+
+        public void StopLoop()
+        {
+            if (ScanLoopTask?.IsCanceled ?? true)
+            {
+                return;
+            }
+
+            ScanLoopToken.Cancel();
         }
 
         public override IBinder OnBind(Intent intent)
@@ -67,31 +119,25 @@ namespace TOI_MobileClient.Droid.Services
         public override StartCommandResult OnStartCommand(Intent intent, StartCommandFlags flags, int startId)
         {
             var lang = DependencyManager.Get<ILanguage>();
-            DependencyManager.Get<NotifierBase>().UpdateAppNotification(ServiceId, lang.Scanning,
+            DependencyManager.Get<NotifierBase>().UpdateAppNotification(
+                ServiceId,
+                lang.Scanning,
                 lang.ScanningExplanation,
-                Resource.Drawable.TagSyncIcon, Resource.Drawable.Icon);
-            DependencyManager.Get<NfcScannerBase>().NfcTagFound += OnNfcTagFound;
+                Resource.Drawable.TagSyncIcon,
+                Resource.Drawable.Icon);
+
             return StartCommandResult.Sticky;
         }
 
-        private void OnNfcTagFound(object sender, NfcEventArgs nfcEventArgs)
-        {
-            if (!SettingsManager.NfcEnabled) return;
-            TagFound?.Invoke(this, new TagFoundEventArgs(nfcEventArgs.TagId.ToUpper()));
-            Console.WriteLine("NFC tag found: " + nfcEventArgs.TagId);
-        }
 
-        public async Task ScanForToi(HashSet<string> filter, ScanConfiguration configuration = null)
+        public async Task StartScan()
         {
-            // TODO make gps scanning async, to avoid lag in loading animation
-            var gps = ScanGps();
-            var wifi = await DependencyManager.Get<WiFiScannerBase>().ScanWifi();
-            if (configuration == null) configuration = ScanConfiguration.DefaultScanConfiguration;
+            if (Looping) return;
 
-            var ble = await ScanBle(filter, configuration.UseBle);
-            var tags = ble.Select(b => b.Address).Where(filter.Contains).ToList();
-            //hvordan skal vi tilføje nfc tags her?
-            TagsFound?.Invoke(this, new TagsFoundsEventArgs(tags));
+            //await DependencyManager.Get<GpsScannerBase>().GetLocationAsync();
+            //await DependencyManager.Get<BleScannerBase>().ScanBle(BleFilter);
+            //await DependencyManager.Get<WiFiScannerBase>().ScanWifi(Filter);
+            return;
         }
 
         private static int GetDelay()
@@ -101,53 +147,30 @@ namespace TOI_MobileClient.Droid.Services
             return SettingsManager.ScanFrequencyValue == SettingsManager.Language.Rarely ? 60000 : 10000;
         }
 
+
         private static async Task ScanLoop()
         {
             while (true)
             {
                 if (SettingsManager.ScanFrequencyValue == SettingsManager.Language.Never)
                 {
+                    Looping = false;
                     await Task.Delay(10000);
                     continue;
                 }
 
-                await DependencyManager.Get<BleScannerBase>().ScanDevices(new HashSet<string>
-                {
-                    "CC1454015282".TrimStart('0').ToUpper(),
-                    "FAC4D1038D3D".TrimStart('0').ToUpper(),
-                    "CBFFB96CA47D".TrimStart('0').ToUpper(),
-                    "F4B415054205".TrimStart('0').ToUpper()
-                });
-
-                
+                Looping = true;
+                await DependencyManager.Get<BleScannerBase>().ScanBle(BleFilter);
+                await DependencyManager.Get<WiFiScannerBase>().ScanWifi(Filter);
+                var gps = await DependencyManager.Get<GpsScannerBase>().GetLocationAsync();
+                Console.WriteLine(gps);
                 await Task.Delay(GetDelay());
             }
         }
 
+        public static bool Looping { get; set; }
+
         public event EventHandler<TagsFoundsEventArgs> TagsFound;
         public event EventHandler<TagFoundEventArgs> TagFound;
-
-        public async Task<IReadOnlyList<BleDevice>> ScanBle(HashSet<string> filter, bool useBle)
-        {
-            if (!useBle) return new List<BleDevice>();
-            var scanner = DependencyManager.Get<BleScannerBase>();
-            return await scanner.ScanDevices(filter, 5000);
-        }
-
-        //public Guid HandleNfcIntent()
-        //{
-        //var scanner = DependencyManager.Get<NfcScannerBase>();
-        //return scanner.HandleNfcIntent(Application); Mangler at finde ud af hvordan man parser Intent
-        //}
-
-        //public async Task<IReadOnlyList<Position>> ScanGps(double radius)
-        public Location ScanGps()
-        {
-            //tjek om gps er slået til
-            var scanner = DependencyManager.Get<GpsLocatorBase>();
-            var position = scanner.GetLocation();
-
-            return position;
-        }
     }
 }

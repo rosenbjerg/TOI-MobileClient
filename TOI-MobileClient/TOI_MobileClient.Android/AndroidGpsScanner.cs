@@ -1,5 +1,6 @@
 ﻿using System;
-
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Android.OS;
 using Android.Gms.Common.Apis;
 using TOI_MobileClient.Dependencies;
@@ -9,76 +10,82 @@ using Android.App;
 using Android.Content;
 using Android.Locations;
 using DepMan;
+using Newtonsoft.Json;
 using TOI_MobileClient.Managers;
 
 
 namespace TOI_MobileClient.Droid
 {
-    class AndroidGpsScanner : GpsLocatorBase, GoogleApiClient.IConnectionCallbacks, GoogleApiClient.IOnConnectionFailedListener, Android.Gms.Location.ILocationListener
+    public class AndroidGpsScanner :
+        GpsScannerBase,
+        GoogleApiClient.IConnectionCallbacks,
+        GoogleApiClient.IOnConnectionFailedListener,
+        Android.Gms.Location.ILocationListener
     {
-        GoogleApiClient _client;
-        Location _currentLocation;
+        private readonly GoogleApiClient _client;
+        public override Location CurrentLocation { get; protected set; }
+        private readonly LocationManager _locationManager;
+        private bool _enabled;
+
+        public new bool IsEnabled => _locationManager.IsProviderEnabled(LocationManager.GpsProvider) && _enabled;
+
         public AndroidGpsScanner()
         {
             _client = new GoogleApiClient.Builder(Application.Context, this, this).AddApi(LocationServices.API).Build();
             _client.Connect();
-        }
-
-        public override Location GetLocation()
-        {
-            if (_client.IsConnected)
-            {
-                var lm = (LocationManager) Application.Context.GetSystemService(Context.LocationService);
-                if (!lm.IsProviderEnabled(LocationManager.GpsProvider))
-                    {
-                        DependencyManager.Get<NotifierBase>().DisplayToast(SettingsManager.Language.GpsNotEnabled, true);
-                        return null;
-                    }
-                LocationRequest locationRequest = new LocationRequest();
-                locationRequest.SetPriority(100);
-                locationRequest.SetInterval(10000);
-                locationRequest.SetFastestInterval(5000);
-
-                var fused = LocationServices.FusedLocationApi;
-                _currentLocation = LocationServices.FusedLocationApi.GetLastLocation(_client);
-                
-                return _currentLocation;
-            }
-            return null;
+            _locationManager = (LocationManager) Application.Context.GetSystemService(Context.LocationService);
         }
 
         public void OnConnected(Bundle connectionHint)
         {
-            IsEnabled = true;
+            _enabled = true;
         }
 
         public void OnConnectionFailed(ConnectionResult result)
         {
-            int queryResult = GoogleApiAvailability.Instance.IsGooglePlayServicesAvailable(Application.Context);
-            if (queryResult == ConnectionResult.Success)
-            {
-                //GooglePlayService er installereret så en anden fejl!
-            }
-            if (GoogleApiAvailability.Instance.IsUserResolvableError(queryResult))
-            {
-                string errorString = GoogleApiAvailability.Instance.GetErrorString(queryResult);
+            var queryResult = GoogleApiAvailability.Instance.IsGooglePlayServicesAvailable(Application.Context);
 
-                // error string viser hvad der er galt.
-            }
-            else
-            {
-                //Google play services er ikke installeret
-            }
+            if (!GoogleApiAvailability.Instance.IsUserResolvableError(queryResult))
+                throw new Exception($"Google Play Services hasn't been installed: {queryResult}");
+
+            var errorString = GoogleApiAvailability.Instance.GetErrorString(queryResult);
+            throw new Exception(errorString);
         }
 
         public void OnConnectionSuspended(int cause)
         {
-
+            _enabled = false;
         }
 
         public void OnLocationChanged(Location location)
         {
-            _currentLocation = location;
+            CurrentLocation = location;
+        }
+
+        public override Location GetLocation()
+        {
+            if (!_client.IsConnected) return null;
+            if (!SettingsManager.GpsEnabled) return null;
+            if (!IsEnabled) return null;
+
+            var locationRequest = new LocationRequest();
+            locationRequest.SetPriority(100);
+            locationRequest.SetInterval(10000);
+            locationRequest.SetFastestInterval(5000);
+            return LocationServices.FusedLocationApi.GetLastLocation(_client);
+        }
+
+        public override async Task<Location> GetLocationAsync()
+        {
+            return await Task.Run(() =>
+            {
+                var loc = GetLocation();
+                var locationDict =
+                    new Dictionary<string, double> {{"Latitude", loc.Latitude}, {"Longitude", loc.Longitude}};
+
+                LocationFound?.Invoke(this, new LocationFoundEventArgs(JsonConvert.SerializeObject(locationDict)));
+                return loc;
+            });
         }
     }
 }
