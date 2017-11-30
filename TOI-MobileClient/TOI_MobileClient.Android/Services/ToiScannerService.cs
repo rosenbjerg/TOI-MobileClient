@@ -24,25 +24,20 @@ namespace TOI_MobileClient.Droid.Services
         public int ServiceId { get; } = 6969;
         public ScannerServiceBinder Binder { get; private set; }
 
-        private static string PrepId(string id)
-        {
-            return id.TrimStart('0').ToUpperInvariant().Replace(":", "");
-        }
-
         // TODO: Change this shit up to the SettingsManager
         public static HashSet<string> Filter = new HashSet<string>
         {
-            PrepId("84:16:f9:ae:a4:3a"),
-            PrepId("90:A4:DE:E8:29:AC")
+            SettingsManager.PrepId("84:16:f9:ae:a4:3a"),
+            SettingsManager.PrepId("90:A4:DE:E8:29:AC")
         };
 
         // TODO: Change this shit up to the SettingsManager
         private static readonly HashSet<string> BleFilter = new HashSet<string>
         {
-            PrepId("CC1454015282"),
-            PrepId("FAC4D1038D3D"),
-            PrepId("CBFFB96CA47D"),
-            PrepId("F4B415054205"),
+            SettingsManager.PrepId("CC1454015282"),
+            SettingsManager.PrepId("FAC4D1038D3D"),
+            SettingsManager.PrepId("CBFFB96CA47D"),
+            SettingsManager.PrepId("F4B415054205"),
         };
 
         public CancellationTokenSource ScanLoopToken { get; } = new CancellationTokenSource();
@@ -72,19 +67,24 @@ namespace TOI_MobileClient.Droid.Services
             };
 
 
-            DependencyManager.Get<BleScannerBase>().BleDeviceFound += (sender, arg) =>
+            DependencyManager.Get<BleScannerBase>().BleDeviceFound += (sender, args) =>
             {
-                TagFound?.Invoke(sender, new TagFoundEventArgs(arg.Device.Address));
+                TagFound?.Invoke(sender, new TagFoundEventArgs(args.Device.Address));
             };
 
-            DependencyManager.Get<WiFiScannerBase>().WifiApFound += (sender, arg) =>
+            DependencyManager.Get<WiFiScannerBase>().WifiApFound += (sender, args) =>
             {
-                TagFound?.Invoke(sender, new TagFoundEventArgs(PrepId(arg.Bssid)));
+                TagFound?.Invoke(sender, new TagFoundEventArgs(SettingsManager.PrepId(args.Bssid)));
             };
 
-            DependencyManager.Get<NfcScannerBase>().NfcTagFound += (sender, arg) =>
+            DependencyManager.Get<NfcScannerBase>().NfcTagFound += (sender, args) =>
             {
-                TagFound?.Invoke(this, new TagFoundEventArgs(PrepId(arg.TagId)));
+                TagFound?.Invoke(this, new TagFoundEventArgs(SettingsManager.PrepId(args.TagId)));
+            };
+
+            DependencyManager.Get<GpsScannerBase>().LocationFound += (sender, args) =>
+            {
+                TagFound?.Invoke(this, new TagFoundEventArgs(args.Location, true));
             };
 
             StartLoop();
@@ -119,25 +119,25 @@ namespace TOI_MobileClient.Droid.Services
         public override StartCommandResult OnStartCommand(Intent intent, StartCommandFlags flags, int startId)
         {
             var lang = DependencyManager.Get<ILanguage>();
-            DependencyManager.Get<NotifierBase>().UpdateAppNotification(ServiceId, lang.Scanning,
+            DependencyManager.Get<NotifierBase>().UpdateAppNotification(
+                ServiceId,
+                lang.Scanning,
                 lang.ScanningExplanation,
-                Resource.Drawable.TagSyncIcon, Resource.Drawable.Icon);
+                Resource.Drawable.TagSyncIcon,
+                Resource.Drawable.Icon);
 
             return StartCommandResult.Sticky;
         }
 
 
-        public async Task ScanForToi(HashSet<string> filter, ScanConfiguration configuration = null)
+        public async Task StartScan()
         {
-            // TODO make gps scanning async, to avoid lag in loading animation
-            var gps = ScanGps();
-            var wifi = await DependencyManager.Get<WiFiScannerBase>().ScanWifi();
-            if (configuration == null) configuration = ScanConfiguration.DefaultScanConfiguration;
+            if (Looping) return;
 
-            var ble = await ScanBle(filter, configuration.UseBle);
-            var tags = ble.Select(b => b.Address).Where(filter.Contains).ToList();
-            //hvordan skal vi tilføje nfc tags her?
-            TagsFound?.Invoke(this, new TagsFoundsEventArgs(tags));
+            //await DependencyManager.Get<GpsScannerBase>().GetLocationAsync();
+            //await DependencyManager.Get<BleScannerBase>().ScanBle(BleFilter);
+            //await DependencyManager.Get<WiFiScannerBase>().ScanWifi(Filter);
+            return;
         }
 
         private static int GetDelay()
@@ -154,33 +154,23 @@ namespace TOI_MobileClient.Droid.Services
             {
                 if (SettingsManager.ScanFrequencyValue == SettingsManager.Language.Never)
                 {
+                    Looping = false;
                     await Task.Delay(10000);
                     continue;
                 }
 
-                var ble = DependencyManager.Get<BleScannerBase>().ScanDevices(BleFilter);
-                var wifi = DependencyManager.Get<WiFiScannerBase>().ScanWifi(Filter);
-
-                await ble;
-                await wifi;
+                Looping = true;
+                await DependencyManager.Get<BleScannerBase>().ScanBle(BleFilter);
+                await DependencyManager.Get<WiFiScannerBase>().ScanWifi(Filter);
+                var gps = await DependencyManager.Get<GpsScannerBase>().GetLocationAsync();
+                Console.WriteLine(gps);
                 await Task.Delay(GetDelay());
             }
         }
 
+        public static bool Looping { get; set; }
+
         public event EventHandler<TagsFoundsEventArgs> TagsFound;
         public event EventHandler<TagFoundEventArgs> TagFound;
-
-        public async Task<IReadOnlyList<BleDevice>> ScanBle(HashSet<string> filter, bool useBle)
-        {
-            if (!useBle) return new List<BleDevice>();
-            var scanner = DependencyManager.Get<BleScannerBase>();
-            return await scanner.ScanDevices(filter, 5000);
-        }
-
-        public async Task<Location> ScanGps()
-        {
-            var scanner = DependencyManager.Get<GpsScannerBase>();
-            return await scanner.GetLocationAsync();
-        }
     }
 }

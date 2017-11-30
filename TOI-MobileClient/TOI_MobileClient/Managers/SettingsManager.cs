@@ -62,6 +62,13 @@ namespace TOI_MobileClient.Managers
 
         public static List<ContextViewModel> CurrentContext => Subscriptions[Url];
 
+
+        public static string PrepId(string id)
+        {
+            return id.ToUpperInvariant().Replace(":", "");
+        }
+
+
         static SettingsManager()
         {
             Language = new EnglishLanguage();

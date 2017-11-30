@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using FormsPlugin.Iconize;
-using TOI_MobileClient.ViewModels;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
 namespace TOI_MobileClient
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class MainPage : MasterDetailPage
+    public partial class MainPage
     {
 
         public static Action<Page> NavigateTo;

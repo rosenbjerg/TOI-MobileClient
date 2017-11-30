@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Android.OS;
 using Android.Gms.Common.Apis;
@@ -9,15 +10,16 @@ using Android.App;
 using Android.Content;
 using Android.Locations;
 using DepMan;
+using Newtonsoft.Json;
 using TOI_MobileClient.Managers;
 
 
 namespace TOI_MobileClient.Droid
 {
     public class AndroidGpsScanner :
-        GpsScannerBase, 
+        GpsScannerBase,
         GoogleApiClient.IConnectionCallbacks,
-        GoogleApiClient.IOnConnectionFailedListener, 
+        GoogleApiClient.IOnConnectionFailedListener,
         Android.Gms.Location.ILocationListener
     {
         private readonly GoogleApiClient _client;
@@ -45,7 +47,7 @@ namespace TOI_MobileClient.Droid
 
             if (!GoogleApiAvailability.Instance.IsUserResolvableError(queryResult))
                 throw new Exception($"Google Play Services hasn't been installed: {queryResult}");
-            
+
             var errorString = GoogleApiAvailability.Instance.GetErrorString(queryResult);
             throw new Exception(errorString);
         }
@@ -78,10 +80,12 @@ namespace TOI_MobileClient.Droid
             return await Task.Run(() =>
             {
                 var loc = GetLocation();
-                LocationFound?.Invoke(this, new LocationFoundEventArgs($"lat:{loc.Latitude}-long:{loc.Longitude}"));
+                var locationDict =
+                    new Dictionary<string, double> {{"Latitude", loc.Latitude}, {"Longitude", loc.Longitude}};
+
+                LocationFound?.Invoke(this, new LocationFoundEventArgs(JsonConvert.SerializeObject(locationDict)));
                 return loc;
             });
         }
-
     }
 }
