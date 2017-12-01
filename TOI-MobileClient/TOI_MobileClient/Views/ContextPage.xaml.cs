@@ -15,21 +15,20 @@ namespace TOI_MobileClient.Views
     {
         public ContextPage()
         {
-            InitializeComponent();
             BindingContext = new ContextPageViewModel();
-            Contexts.ItemSelected += (sender, args) =>
+            InitializeComponent();
+            ContextList.ItemSelected += (sender, args) =>
             {
-                Contexts.SelectedItem = null;
+                ContextList.SelectedItem = null;
             };
         }
         public ContextPage(ContextPageViewModelBase cp)
         {
-            
-            InitializeComponent();
             BindingContext = cp;
-            Contexts.ItemSelected += (sender, args) =>
+            InitializeComponent();
+            ContextList.ItemSelected += (sender, args) =>
             {
-                Contexts.SelectedItem = null;
+                ContextList.SelectedItem = null;
             };
         }
 

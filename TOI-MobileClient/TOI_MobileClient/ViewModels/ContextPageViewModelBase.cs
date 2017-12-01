@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Input;
+using Android.Views;
 using DepMan;
 using Newtonsoft.Json;
 using TOIClasses;
@@ -18,12 +20,12 @@ namespace TOI_MobileClient.ViewModels
     {
         public override string PageTitle => SettingsManager.Language.Contexts;
         
-        public ICommand SyncCommand { get; }
         private bool _loading;
         private List<ContextViewModel> _contexts;
-        public List<ContextViewModel> SelectedModels { get; set; }
+        private IEnumerable<Tuple<string, bool>> _startContexts;
         public bool ContextFetched => _contexts.Count > 0;
         public bool NoContexts => _contexts.Count == 0;
+        private bool _allToggled;
         public bool Loading
         {
             get => _loading;
@@ -38,7 +40,33 @@ namespace TOI_MobileClient.ViewModels
             }
         }
 
-        private bool _allToggled;
+
+        public bool Loaded
+        {
+            get => !_loading;
+            private set
+            {
+                if (_loading != value)
+                    return;
+                Loading = !value;
+            }
+        }
+
+        private bool _unsavedChanges;
+        public bool UnsavedChanges
+        {
+            get => _unsavedChanges;
+            set
+            {
+                if (_unsavedChanges == value)
+                    return;
+                _unsavedChanges = value;
+                SaveContext = value ? new Command(SaveContexts) : null;
+                OnPropertyChanged();
+
+            }
+        }
+        
 
         public bool AllToggled
         {
@@ -64,22 +92,17 @@ namespace TOI_MobileClient.ViewModels
         }
 
         public abstract void SaveContexts();
-        public bool Loaded
-        {
-            get => !_loading;
-            private set
-            {
-                if (_loading != value)
-                    return;
-                Loading = !value;
-            }
-        }
+
         public Color SyncColor => Loading ? Styling.DisabledIconColor : Styling.EnabledIconColor;
 
-        public ContextPageViewModelBase()
+        protected ContextPageViewModelBase()
         {
             FetchContexts();
-            _contexts = new List<ContextViewModel>();
+            _contexts = new List<ContextViewModel>(); //asyncront kald gør programmet ked af det hvis ikke jeg har en liste at arbejde på
+            if (SettingsManager.Subscriptions.TryGetValue(SettingsManager.Url, out var savedContexts))
+            {
+                _allToggled = savedContexts.All(c => c.Subscribed);
+            }
         }
 
         private async void FetchContexts()
@@ -92,6 +115,20 @@ namespace TOI_MobileClient.ViewModels
                 var cm = (await DependencyManager.Get<RestClient>()
                     .GetMany<ContextModel>(SettingsManager.Url + "/contexts")).ToList();
                 Contexts = cm.Select(t => new ContextViewModel(t)).ToList();
+                Contexts.ForEach(c => c.Changed += CtxVmOnChanged);
+                _startContexts = Contexts.Select(ctx => new Tuple<string, bool>(ctx.Id, ctx.Subscribed)).ToList();
+                if (SettingsManager.Subscriptions.TryGetValue(SettingsManager.Url, out var savedContexts))
+                {
+                    foreach (var sCtxVm in savedContexts)
+                    {
+                        var ctxVm = Contexts.FirstOrDefault(c => c.Id == sCtxVm.Id);
+                        if (ctxVm != null)
+                        {
+                            ctxVm.Subscribed = sCtxVm.Subscribed;
+                        }
+                    }
+                }
+                _startContexts = Contexts.Select(ctx => new Tuple<string, bool>(ctx.Id, ctx.Subscribed)).ToList();
             }
             catch (WebException e)
             {
@@ -105,16 +142,39 @@ namespace TOI_MobileClient.ViewModels
             }
             Loaded = true;
         }
+
+        private void CtxVmOnChanged(object sender, EventArgs eventArgs)
+        {
+            var now = Contexts.Select(ctx => new Tuple<string, bool>(ctx.Id, ctx.Subscribed));
+            UnsavedChanges =
+                !_startContexts.All(sCtx => now.Any(ctx => ctx.Item1 == sCtx.Item1 && ctx.Item2 == sCtx.Item2));
+
+
+        }
+
         public override void OnViewAppearing()
         {
-            base.OnViewDisappearing();
+            base.OnViewAppearing();
             if(SettingsManager.Subscriptions.ContainsKey(SettingsManager.Url))
-                Contexts = SettingsManager.Subscriptions[SettingsManager.Url];       
+                Contexts = SettingsManager.Subscriptions[SettingsManager.Url];
+            
         }
         public override void OnViewDisappearing()
         {
             base.OnViewDisappearing();
-            SettingsManager.Subscriptions[SettingsManager.Url] = Contexts.Where(t => t.Subscribed).ToList();
+            SettingsManager.Subscriptions[SettingsManager.Url] = Contexts;
+        }
+
+        private ICommand _saveContext;
+
+        public ICommand SaveContext
+        {
+            get => _saveContext;
+            protected set
+            {
+                _saveContext = value;
+                OnPropertyChanged();
+            }
         }
     }
 
@@ -122,15 +182,15 @@ namespace TOI_MobileClient.ViewModels
     {
         public ContextPageViewModelFirstTime()
         {
-            SaveContext = new Command(SaveContexts);
+            
         }
-
-        public ICommand SaveContext { get; }
+        
 
         public override void SaveContexts()
         {
             App.Current.MainPage = new MainPage();
             App.Navigation = App.Current.MainPage.Navigation;
+            SettingsManager.Subscriptions[SettingsManager.Url] = Contexts;
         }
     }
 }

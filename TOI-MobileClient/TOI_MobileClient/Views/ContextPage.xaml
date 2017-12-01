@@ -26,7 +26,7 @@
                             <Switch Grid.Column="1" IsToggled="{Binding AllToggled}"></Switch>
                         </Grid>
                     </Frame>
-                    <ListView RowHeight="100" ItemsSource="{Binding Contexts}" x:Name="Contexts" RefreshCommand="{Binding SyncCommand}" IsPullToRefreshEnabled="True" IsRefreshing="{Binding Loading}">
+                    <ListView RowHeight="100" ItemsSource="{Binding Contexts}" x:Name="ContextList">
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <toiMobileClient:TapViewCell Command="{Binding CardTapped}">
@@ -48,7 +48,7 @@
                     </ListView>
                 </StackLayout>
                 <StackLayout IsVisible="{Binding ContextFetched}">
-                    <Button BackgroundColor="#2196F3" Text="Save" Command="{Binding SaveContext}"></Button>
+                    <Button BackgroundColor="#2196F3" Text="Save" Command="{Binding SaveContext}" IsEnabled="{Binding UnsavedChanges}"></Button>
                 </StackLayout>
                 <StackLayout VerticalOptions="FillAndExpand" IsVisible="{Binding NoContexts}">
                     <iconize:IconLabel Text="fa-search"  FontSize="160" HorizontalTextAlignment="Center" VerticalOptions="Center" TextColor="{x:Static managers:Styling.WaterMarkColor}" />

@@ -1,4 +1,5 @@
-﻿using System.Windows.Input;
+﻿using System;
+using System.Windows.Input;
 using TOIClasses;
 using Xamarin.Forms;
 
@@ -22,6 +23,7 @@ namespace TOI_MobileClient.ViewModels
                     return;
                 _subscribed = value;
                 OnPropertyChanged();
+                Changed?.Invoke(this, EventArgs.Empty);
             }
         }
 
@@ -40,5 +42,7 @@ namespace TOI_MobileClient.ViewModels
         {
             get; private set;
         }
+
+        public event EventHandler Changed;
     }
 }
