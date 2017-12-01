@@ -35,12 +35,12 @@ namespace TOI_MobileClient.Views
 
         protected override void OnDisappearing()
         {
-            (BindingContext as PageViewModelBase).OnViewDisappearing();
+            ((PageViewModelBase) BindingContext).OnViewDisappearing();
         }
 
         protected override void OnAppearing()
         {
-            (BindingContext as PageViewModelBase).OnViewAppearing();
+            ((PageViewModelBase) BindingContext).OnViewAppearing();
         }
 
     }
