@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using FormsPlugin.Iconize;
+using TOI_MobileClient.Managers;
 using TOI_MobileClient.ViewModels;
+using TOI_MobileClient.Views;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 

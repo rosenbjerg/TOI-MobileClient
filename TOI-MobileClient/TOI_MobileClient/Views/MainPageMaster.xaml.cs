@@ -13,7 +13,6 @@ namespace TOI_MobileClient
     public partial class MainPageMaster
     {
         public ListView ListView;
-
         public MainPageMaster()
         {
             InitializeComponent();
@@ -25,7 +24,7 @@ namespace TOI_MobileClient
         public class MainPageMasterViewModel : BindableObject
         {
             public ObservableCollection<MainPageMenuItem> MenuItems { get; set; }
-            
+
             public MainPageMasterViewModel()
             {
                 var lang = SettingsManager.Language;
