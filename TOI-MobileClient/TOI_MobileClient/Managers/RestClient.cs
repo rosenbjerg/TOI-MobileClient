@@ -62,7 +62,7 @@ namespace TOI_MobileClient
             where T : class, new()
         {
             var jArray = JsonConvert.SerializeObject(ids.ToList());
-            var res = await _manager.GetAsync(url, jArray);
+            var res = await _manager.PostAsync(url, jArray);
             if (string.IsNullOrEmpty(res))
                 return null;
             var tagList = JsonConvert.DeserializeObject<List<T>>(res);
