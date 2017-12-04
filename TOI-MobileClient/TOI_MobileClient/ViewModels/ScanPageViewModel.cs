@@ -84,7 +84,7 @@ namespace TOI_MobileClient
 
             try
             {
-                var tois = await rc.GetMany<ToiModel>(SettingsManager.Url + "/toi/fromtags",
+                var tois = await rc.PostMany<ToiModel>(SettingsManager.Url + "/toi/fromtags",
                     new List<string> {args.Tag});
                 tois?.ForEach(t =>
                 {

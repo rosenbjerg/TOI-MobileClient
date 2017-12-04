@@ -177,20 +177,4 @@ namespace TOI_MobileClient.ViewModels
             }
         }
     }
-
-    public class ContextPageViewModelFirstTime : ContextPageViewModelBase
-    {
-        public ContextPageViewModelFirstTime()
-        {
-            
-        }
-        
-
-        public override void SaveContexts()
-        {
-            App.Current.MainPage = new MainPage();
-            App.Navigation = App.Current.MainPage.Navigation;
-            SettingsManager.Subscriptions[SettingsManager.Url] = Contexts;
-        }
-    }
 }
