@@ -3,11 +3,13 @@ using System;
 
 namespace TOI_MobileClient.Dependencies
 {
-    public abstract class NfcScannerBase
+    public abstract class NfcScannerBase : IHardware
     {
-        public bool IsEnabled => false;
         public abstract void HandleNfcIntent(Intent intent);
         public EventHandler<NfcEventArgs> NfcTagFound;
+
+        public bool IsEnabled => false;
+
     }
 
     public class NfcEventArgs : EventArgs
@@ -19,4 +21,6 @@ namespace TOI_MobileClient.Dependencies
 
         public string TagId { get; set; }
     }
+
+
 }

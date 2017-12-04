@@ -13,8 +13,8 @@
         }
         
         public TagType Type { get; set; }
-        public decimal Latitude { get; set; }
-        public decimal Longitude { get; set; }
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
         public int Radius { get; set; }
 
         public override bool Equals(object obj)

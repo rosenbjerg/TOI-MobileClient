@@ -15,11 +15,11 @@ namespace TOI_MobileClient.Droid
     {
         private bool _isScanning;
 
+        public new bool IsEnabled => Ble.IsOn && Ble.IsAvailable;
 
-        public override bool IsEnabled => Ble.IsOn && Ble.IsAvailable;
         private readonly IReadOnlyList<BleDevice> _emptyListCache = new List<BleDevice>();
 
-        public override async Task<IReadOnlyList<BleDevice>> ScanDevices(HashSet<string> deviceFilter,
+        public override async Task<IReadOnlyList<BleDevice>> ScanBle(HashSet<string> deviceFilter,
             int scanTimeout = 2000)
         {
             if (_isScanning || !SettingsManager.BleEnabled) return _emptyListCache;
@@ -31,6 +31,7 @@ namespace TOI_MobileClient.Droid
             _isScanning = true;
 
             Adapter.ScanTimeout = scanTimeout;
+
             var deviceList = new List<BleDevice>();
 
             void OnAdapterOnDeviceDiscovered(object sender, DeviceEventArgs args)
@@ -38,9 +39,9 @@ namespace TOI_MobileClient.Droid
                 var dev = new BleDevice
                 {
                     Rssi = args.Device.Rssi,
-                    Address = args.Device.Id.ToString("N").TrimStart('0').ToUpper()
+                    Address = SettingsManager.PrepId(args.Device.Id.ToString("N")).TrimStart('0')
                 };
-                DeviceFound?.Invoke(sender, new BleEventArgs(dev));
+                BleDeviceFound?.Invoke(sender, new BleDeviceFoundEventArgs(dev));
                 deviceList.Add(dev);
             }
 
@@ -48,7 +49,7 @@ namespace TOI_MobileClient.Droid
 
             await Adapter.StartScanningForDevicesAsync(null, device =>
             {
-                var devId = device.Id.ToString("N").TrimStart('0').ToUpper();
+                var devId = SettingsManager.PrepId(device.Id.ToString("N")).TrimStart('0');
                 return deviceFilter == null || deviceFilter.Contains(devId);
             });
             Adapter.DeviceDiscovered -= OnAdapterOnDeviceDiscovered;

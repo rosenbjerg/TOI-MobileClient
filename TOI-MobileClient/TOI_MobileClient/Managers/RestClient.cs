@@ -15,7 +15,7 @@ namespace TOI_MobileClient
 
         public RestClient(IToiHttpManager manager)
         {
-            this._manager = manager;
+            _manager = manager;
         }
 
         public async Task<T> Get<T>(string url)
@@ -27,10 +27,10 @@ namespace TOI_MobileClient
 
             try
             {
-                T obj = JsonConvert.DeserializeObject<T>(jsonString);
+                var obj = JsonConvert.DeserializeObject<T>(jsonString);
                 return obj;
             }
-            catch (Newtonsoft.Json.JsonReaderException e)
+            catch (JsonReaderException e)
             {
                 Console.WriteLine(e);
                 throw new FormatException(e.Message);
@@ -47,6 +47,7 @@ namespace TOI_MobileClient
         {
             var q = "";
             if (query != null)
+
             {
                 q = "?" + string.Join("&", query.Keys.Select(key => $"{key}={query[key]}"));
             }

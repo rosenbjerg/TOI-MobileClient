@@ -9,6 +9,8 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
+using DepMan;
+using TOI_MobileClient.Dependencies;
 using TOI_MobileClient.Droid.Services;
 
 namespace TOI_MobileClient.Droid
@@ -17,21 +19,29 @@ namespace TOI_MobileClient.Droid
     {
         public NotificationActionHandler(Context activity)
         {
-            var iFilter = new IntentFilter(KillAppAndService);
-            activity.RegisterReceiver(this, iFilter);
+            var killAppIntentFilter = new IntentFilter(PauseScanningFromBackground);
+            var startScanningIntentFilter = new IntentFilter(StartScanningFromBackground);
+            activity.RegisterReceiver(this, killAppIntentFilter);
+            activity.RegisterReceiver(this, startScanningIntentFilter);
         }
-        
-        public const string KillAppAndService = "android.toi.CLOSE_APP";
 
-        public override void OnReceive(Context context, Intent intent)
+        public const string PauseScanningFromBackground = "android.toi.PAUSE_SCAN_NOTIFIER";
+        public const string StartScanningFromBackground = "android.toi.START_SCAN_NOTIFIER";
+
+        public override async void OnReceive(Context context, Intent intent)
         {
             Console.WriteLine($"Received a broadcast: {intent.Action}");
-            if (intent.Action != KillAppAndService) return;
+            if (intent.Action == PauseScanningFromBackground)
+            {
+                Console.WriteLine("Pause scanning --- Just kidding do nothing");
+                (await DependencyManager.Get<IScannerServiceProvider>().GetServiceAsync()).StopLoop();
+            }
 
-            var act = context as Activity;
-            Console.WriteLine($"Context as Activity: {act}");
-            context.StopService(new Intent(context, typeof(ToiScannerService)));
-            act?.FinishActivity(0);
+            if (intent.Action == StartScanningFromBackground)
+            {
+                Console.WriteLine("Start scanning --- Just kidding do nothing");
+                (await DependencyManager.Get<IScannerServiceProvider>().GetServiceAsync()).StartLoop();
+            }
         }
     }
 }

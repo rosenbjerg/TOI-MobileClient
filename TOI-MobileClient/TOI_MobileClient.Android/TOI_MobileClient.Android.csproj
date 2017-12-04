@@ -194,7 +194,6 @@
     <Compile Include="AndroidNfcScanner.cs" />
     <Compile Include="AndroidNotifier.cs" />
     <Compile Include="AndroidWifiScanner.cs" />
-    <Compile Include="Helpers\Settings.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="NotificationActionHandler.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />

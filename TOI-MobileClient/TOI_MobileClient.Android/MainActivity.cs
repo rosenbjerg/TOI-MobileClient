@@ -17,7 +17,8 @@ namespace TOI_MobileClient.Droid
 	public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
 	{
 	    public static ScannerServiceConnection ServiceConnection;
-	    private NfcAdapter _nfcAdapter;
+	    public NotificationActionHandler NotificationActionHandler { get; private set; }
+	    private AndroidNfcScanner _nfcScanner;
 
         protected override void OnCreate (Bundle bundle)
 		{
@@ -35,24 +36,21 @@ namespace TOI_MobileClient.Droid
 
             DependencyManager.Register<BleScannerBase, AndroidBleScanner>(new AndroidBleScanner());
 		    DependencyManager.Register<NotifierBase, AndroidNotifier>(new AndroidNotifier(GetSystemService(NotificationService) as NotificationManager));
-		    DependencyManager.Register<GpsLocatorBase, AndroidGpsScanner>(new AndroidGpsScanner());
-            DependencyManager.Register<NfcScannerBase, AndroidNfcScanner>(new AndroidNfcScanner());
+		    DependencyManager.Register<GpsScannerBase, AndroidGpsScanner>(new AndroidGpsScanner());
 		    DependencyManager.Register<WiFiScannerBase, AndroidWifiScanner>(new AndroidWifiScanner());
+            _nfcScanner = new AndroidNfcScanner(NfcAdapter.GetDefaultAdapter(this));
+		    DependencyManager.Register<NfcScannerBase, AndroidNfcScanner>(_nfcScanner);
 
-            global::Xamarin.Forms.Forms.Init (this, bundle);
+            Forms.Init (this, bundle);
 		    Plugin.Iconize.Iconize.With(new Plugin.Iconize.Fonts.FontAwesomeModule());
             FormsPlugin.Iconize.Droid.IconControls.Init(Resource.Id.toolbar, Resource.Id.sliding_tabs);
             
 		    ServiceConnection = new ScannerServiceConnection();
 		    DependencyManager.Register<IScannerServiceProvider, ScannerServiceConnection>(ServiceConnection);
 
-            _nfcAdapter = NfcAdapter.GetDefaultAdapter(this);
+		    NotificationActionHandler = new NotificationActionHandler(this);
 
-		    new NotificationActionHandler(this);
-
-            LoadApplication(new App());
-		    if (_nfcAdapter != null && !_nfcAdapter.IsEnabled)
-		        DependencyManager.Get<NotifierBase>().DisplayToast(SettingsManager.Language.NfcNotEnabled, true);
+		    LoadApplication(new App());
 
         }
 
@@ -66,7 +64,7 @@ namespace TOI_MobileClient.Droid
 	        var intent = new Intent(this, this.GetType()).AddFlags(ActivityFlags.SingleTop);
 
 	        var pendingIntent = PendingIntent.GetActivity(this, 0, intent, 0);
-	        _nfcAdapter?.EnableForegroundDispatch(this, pendingIntent, filters, null);
+	        _nfcScanner.NfcAdapter?.EnableForegroundDispatch(this, pendingIntent, filters, null);
 	    }
 
         protected override void OnNewIntent(Intent intent)

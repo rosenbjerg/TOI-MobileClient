@@ -19,37 +19,67 @@ namespace TOI_MobileClient.Droid
 {
     public class AndroidWifiScanner : WiFiScannerBase
     {
-        public override async Task<IEnumerable<String>> ScanWifi()
-        {
-            var scanReceiver = new WifiScanReceiver();
-            var wm = (WifiManager)Application.Context.GetSystemService(Context.WifiService);
+        private readonly WifiScanReceiver _scanner;
 
-            if (SettingsManager.WiFiEnabled && !wm.IsWifiEnabled)
-            {
-                DependencyManager.Get<NotifierBase>().DisplayToast(SettingsManager.Language.WifiNotEnabled, true);
-                return null;
-            }
-            Application.Context.RegisterReceiver(scanReceiver, new IntentFilter(WifiManager.ScanResultsAvailableAction));
-            ((WifiManager) Application.Context.GetSystemService(Context.WifiService)).StartScan();
-            var res = await scanReceiver.Task;
-            Application.Context.UnregisterReceiver(scanReceiver);
-            return res;
+        public AndroidWifiScanner()
+        {
+            _scanner = new WifiScanReceiver(this);
         }
 
+        public new bool IsEnabled =>
+            ((WifiManager) Application.Context.GetSystemService(Context.WifiService)).IsWifiEnabled;
+
+
+        public override async Task<IEnumerable<string>> ScanWifi(HashSet<string> filter = null)
+        {
+            if (!SettingsManager.WiFiEnabled) return null;
+            if (!IsEnabled) return null;
+
+            var scanner = new WifiScanReceiver(this) {BssidFilter = filter};
+
+            Application.Context.RegisterReceiver(scanner,
+                new IntentFilter(WifiManager.ScanResultsAvailableAction));
+
+            scanner.StartScan();
+            var res = await scanner.Task;
+            Application.Context.UnregisterReceiver(scanner);
+
+            return res;
+        }
     }
 
     internal class WifiScanReceiver : BroadcastReceiver
     {
-        private TaskCompletionSource<IEnumerable<String>> tcs = new TaskCompletionSource<IEnumerable<String>>();
+        private readonly AndroidWifiScanner _androidWifi;
+        private readonly TaskCompletionSource<List<string>> _tcs = new TaskCompletionSource<List<string>>();
         private static WifiManager _wifiMan;
-        public Task<IEnumerable<String>> Task => tcs.Task;
+        public Task<List<string>> Task => _tcs.Task;
+        public HashSet<string> BssidFilter { get; set; }
+
+        public WifiScanReceiver(AndroidWifiScanner androidWifi)
+        {
+            _androidWifi = androidWifi;
+            _wifiMan = (WifiManager) Application.Context.GetSystemService(Context.WifiService);
+        }
 
         public override void OnReceive(Context context, Intent intent)
         {
-            _wifiMan = (WifiManager) Application.Context.GetSystemService(Context.WifiService);
+            var res = _wifiMan.ScanResults
+                .Where(r => BssidFilter?.Contains(SettingsManager.PrepId(r.Bssid)) ?? true)
+                .Select(r =>
+                {
+                    Console.WriteLine($"AP: {r.Ssid} + {r.Bssid}");
+                    _androidWifi.WifiApFound?.Invoke(this, new WifiApFoundEventArg(r.Bssid));
+                    return r.Bssid;
+                });
+            _tcs.SetResult(res.ToList());
+        }
 
-            var res = _wifiMan.ScanResults.Select(r => r.Bssid);
-            tcs.SetResult(res);
+        public bool IsEnabled => _wifiMan.IsWifiEnabled;
+
+        public bool StartScan()
+        {
+            return _wifiMan.StartScan();
         }
     }
 }
