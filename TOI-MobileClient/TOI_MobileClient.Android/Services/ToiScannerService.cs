@@ -40,7 +40,7 @@ namespace TOI_MobileClient.Droid.Services
             SettingsManager.PrepId("F4B415054205"),
         };
 
-        public CancellationTokenSource ScanLoopToken { get; } = new CancellationTokenSource();
+        public CancellationTokenSource ScanLoopToken { get; private set; }
         public Task ScanLoopTask { get; private set; }
 
         public ToiScannerService()
@@ -92,11 +92,11 @@ namespace TOI_MobileClient.Droid.Services
 
         public void StartLoop()
         {
-            if (ScanLoopTask?.IsCanceled ?? false)
-            {
-                return;
-            }
 
+            if (ScanLoopTask?.IsCanceled == true)
+                return;
+
+            ScanLoopToken = new CancellationTokenSource();
             ScanLoopTask = Task.Run(ScanLoop, ScanLoopToken.Token);
         }
 
@@ -147,10 +147,9 @@ namespace TOI_MobileClient.Droid.Services
             return SettingsManager.ScanFrequencyValue == SettingsManager.Language.Rarely ? 60000 : 10000;
         }
 
-
-        private static async Task ScanLoop()
+        private async Task ScanLoop()
         {
-            while (true)
+            while (!ScanLoopToken.IsCancellationRequested)
             {
                 if (SettingsManager.ScanFrequencyValue == SettingsManager.Language.Never)
                 {

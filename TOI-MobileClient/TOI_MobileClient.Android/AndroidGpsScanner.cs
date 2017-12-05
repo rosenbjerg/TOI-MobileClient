@@ -80,6 +80,7 @@ namespace TOI_MobileClient.Droid
             return await Task.Run(() =>
             {
                 var loc = GetLocation();
+                if (loc == null) return null;
                 var locationDict =
                     new Dictionary<string, double> {{"Latitude", loc.Latitude}, {"Longitude", loc.Longitude}};
 

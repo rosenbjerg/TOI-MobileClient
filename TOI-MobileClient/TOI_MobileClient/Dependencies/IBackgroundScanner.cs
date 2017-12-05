@@ -9,6 +9,8 @@ namespace TOI_MobileClient.Dependencies
     public interface IBackgroundScanner
     {
         Task StartScan();
+        void StopLoop();
+        void StartLoop();
 
         event EventHandler<TagsFoundsEventArgs> TagsFound;
         event EventHandler<TagFoundEventArgs> TagFound;

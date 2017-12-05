@@ -24,11 +24,11 @@ namespace TOI_MobileClient
             _client.Dispose();
         }
 
-        public async Task<string> GetAsync(string url)
+        public async Task<string> GetAsync(string url, string query = "")
         {
             try
             {
-                var response = await _client.GetAsync(url);
+                var response = await _client.GetAsync(url + query);
                 if (!response.IsSuccessStatusCode)
                     throw new ArgumentException($"The request to {url} did not succeed.");
 

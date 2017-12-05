@@ -26,15 +26,17 @@ namespace TOI_MobileClient.Droid
             _scanner = new WifiScanReceiver(this);
         }
 
-        public new bool IsEnabled => _scanner.IsEnabled;
-   
+        public new bool IsEnabled =>
+            ((WifiManager) Application.Context.GetSystemService(Context.WifiService)).IsWifiEnabled;
+
+
         public override async Task<IEnumerable<string>> ScanWifi(HashSet<string> filter = null)
         {
             if (!SettingsManager.WiFiEnabled) return null;
             if (!IsEnabled) return null;
 
             var scanner = new WifiScanReceiver(this) {BssidFilter = filter};
-            
+
             Application.Context.RegisterReceiver(scanner,
                 new IntentFilter(WifiManager.ScanResultsAvailableAction));
 
@@ -44,7 +46,6 @@ namespace TOI_MobileClient.Droid
 
             return res;
         }
-
     }
 
     internal class WifiScanReceiver : BroadcastReceiver
@@ -73,7 +74,7 @@ namespace TOI_MobileClient.Droid
                 });
             _tcs.SetResult(res.ToList());
         }
-        
+
         public bool IsEnabled => _wifiMan.IsWifiEnabled;
 
         public bool StartScan()
@@ -81,6 +82,4 @@ namespace TOI_MobileClient.Droid
             return _wifiMan.StartScan();
         }
     }
-
 }
- 

@@ -15,6 +15,7 @@ namespace TOI_MobileClient.Managers
         public static ILanguage Language { get; set; }
         public static ISettings AppSettings => CrossSettings.Current;
         public static string Url => "http://ssh.windelborg.info:7474";
+        //public static string Url => "http://192.168.0.105:7474";
 
         private const bool Default = true;
 
@@ -62,12 +63,12 @@ namespace TOI_MobileClient.Managers
 
         public static List<ContextViewModel> CurrentContext => Subscriptions[Url];
 
+        public static HashSet<string> ToiFilter { get; set; }
 
         public static string PrepId(string id)
         {
             return id.ToUpperInvariant().Replace(":", "");
         }
-
 
         static SettingsManager()
         {

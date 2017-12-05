@@ -95,7 +95,7 @@ namespace TOI_MobileClient
 
             try
             {
-                var tois = await rc.GetMany<ToiModel>(
+                var tois = await rc.PostMany<ToiModel>(
                     SettingsManager.Url + (args.Gps ? "/toi/fromgps" : "/toi/fromtags"), new List<string> {args.Tag});
 
                 tois?.ForEach(t =>

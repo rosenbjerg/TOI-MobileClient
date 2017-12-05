@@ -53,9 +53,11 @@ namespace TOI_MobileClient.Droid
                 PendingIntent.GetActivity(Android.App.Application.Context, pendingIntentId,
                     new Intent(Android.App.Application.Context, typeof(MainActivity)),
                     PendingIntentFlags.UpdateCurrent);
-            var pCloseIntent = PendingIntent.GetBroadcast(Android.App.Application.Context, 0,
-                new Intent(NotificationActionHandler.KillAppAndService),
-                PendingIntentFlags.OneShot);
+            var pPauseScanIntent = PendingIntent.GetBroadcast(Android.App.Application.Context, 0,
+                new Intent(NotificationActionHandler.PauseScanningFromBackground),
+                PendingIntentFlags.CancelCurrent);
+            var pScanIntent = PendingIntent.GetBroadcast(Android.App.Application.Context, 0,
+                new Intent(NotificationActionHandler.StartScanningFromBackground), PendingIntentFlags.CancelCurrent);
 
             if (!_bitmaps.ContainsKey(largeIcon))
             {
@@ -74,7 +76,8 @@ namespace TOI_MobileClient.Droid
                 .SetLargeIcon(_bitmaps[largeIcon])
                 .SetVisibility(1)
                 .SetStyle(new NotificationCompat.BigTextStyle().BigText(content))
-                .AddAction(Resource.Drawable.Cross, "Close app", pCloseIntent);
+                .AddAction(Resource.Drawable.Cross, "Start Scan", pScanIntent)
+                .AddAction(Resource.Drawable.Cross, "Pause Scan", pPauseScanIntent);
 
             if (makeNoice)
                 nb.SetDefaults((int) NotificationDefaults.All);
