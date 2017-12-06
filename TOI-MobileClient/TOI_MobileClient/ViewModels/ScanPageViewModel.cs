@@ -107,9 +107,10 @@ namespace TOI_MobileClient
                         ToiCollection.Add(vm);
                     }
                     TagCache.Add(args.Tag);
-                });
 
-                OnPropertyChanged(null);
+                    OnPropertyChanged(nameof(FoundTags));
+                    OnPropertyChanged(nameof(NoTags));
+                });
             }
             catch (WebException e)
             {
