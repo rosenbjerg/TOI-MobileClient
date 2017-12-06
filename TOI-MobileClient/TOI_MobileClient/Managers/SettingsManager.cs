@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using Plugin.Settings;
 using Plugin.Settings.Abstractions;
-using TOIClasses;
-using TOI_MobileClient.Dependencies;
 using TOI_MobileClient.Localization;
 using TOI_MobileClient.ViewModels;
 
@@ -68,6 +64,17 @@ namespace TOI_MobileClient.Managers
         public static string PrepId(string id)
         {
             return id.ToUpperInvariant().Replace(":", "");
+        }
+
+        /// <summary>
+        /// Hardcoded values for scan delay, depending on the Scan Frequency setting.
+        /// </summary>
+        /// <returns>Scan delay in ms</returns>
+        public static int ScanDelay()
+        {
+            if (ScanFrequencyValue == Language.Often) return 5000;
+            if (ScanFrequencyValue == Language.Normal) return 15000;
+            return ScanFrequencyValue == Language.Rarely ? 60000 : 10000;
         }
 
         static SettingsManager()

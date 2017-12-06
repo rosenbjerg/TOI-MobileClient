@@ -92,22 +92,28 @@ namespace TOI_MobileClient.Droid.Services
 
         public void StartLoop()
         {
-
-            if (ScanLoopTask?.IsCanceled == true)
-                return;
+            if (ScanLoopTask?.IsCanceled == true) return;
 
             ScanLoopToken = new CancellationTokenSource();
             ScanLoopTask = Task.Run(ScanLoop, ScanLoopToken.Token);
+            Looping = true;
+            var lang = DependencyManager.Get<ILanguage>();
+            DependencyManager.Get<NotifierBase>().UpdateAppNotification(ServiceId, lang.Scanning,
+                lang.ScanningExplanation,
+                Resource.Drawable.TagSyncIcon, Resource.Drawable.Icon);
         }
 
         public void StopLoop()
         {
-            if (ScanLoopTask?.IsCanceled ?? true)
-            {
-                return;
-            }
+            if (ScanLoopTask?.IsCanceled ?? true) return;
 
             ScanLoopToken.Cancel();
+            Looping = false;
+
+            var lang = DependencyManager.Get<ILanguage>();
+            DependencyManager.Get<NotifierBase>().UpdateAppNotification(ServiceId, lang.ScanningPaused,
+                lang.NotScanningExplanation,
+                Resource.Drawable.TagSyncIcon, Resource.Drawable.Icon);
         }
 
         public override IBinder OnBind(Intent intent)
@@ -118,14 +124,6 @@ namespace TOI_MobileClient.Droid.Services
 
         public override StartCommandResult OnStartCommand(Intent intent, StartCommandFlags flags, int startId)
         {
-            var lang = DependencyManager.Get<ILanguage>();
-            DependencyManager.Get<NotifierBase>().UpdateAppNotification(
-                ServiceId,
-                lang.Scanning,
-                lang.ScanningExplanation,
-                Resource.Drawable.TagSyncIcon,
-                Resource.Drawable.Icon);
-
             return StartCommandResult.Sticky;
         }
 
@@ -140,12 +138,7 @@ namespace TOI_MobileClient.Droid.Services
             return;
         }
 
-        private static int GetDelay()
-        {
-            if (SettingsManager.ScanFrequencyValue == SettingsManager.Language.Often) return 5000;
-            if (SettingsManager.ScanFrequencyValue == SettingsManager.Language.Normal) return 15000;
-            return SettingsManager.ScanFrequencyValue == SettingsManager.Language.Rarely ? 60000 : 10000;
-        }
+        
 
         private async Task ScanLoop()
         {
@@ -154,16 +147,15 @@ namespace TOI_MobileClient.Droid.Services
                 if (SettingsManager.ScanFrequencyValue == SettingsManager.Language.Never)
                 {
                     Looping = false;
-                    await Task.Delay(10000);
+                    await Task.Delay(SettingsManager.ScanDelay());
                     continue;
                 }
 
                 Looping = true;
-                await DependencyManager.Get<BleScannerBase>().ScanBle(BleFilter);
-                await DependencyManager.Get<WiFiScannerBase>().ScanWifi(Filter);
-                var gps = await DependencyManager.Get<GpsScannerBase>().GetLocationAsync();
-                Console.WriteLine(gps);
-                await Task.Delay(GetDelay());
+                await DependencyManager.Get<BleScannerBase>().ScanBle();
+                await DependencyManager.Get<WiFiScannerBase>().ScanWifi();
+                await DependencyManager.Get<GpsScannerBase>().GetLocationAsync();
+                await Task.Delay(SettingsManager.ScanDelay());
             }
         }
 

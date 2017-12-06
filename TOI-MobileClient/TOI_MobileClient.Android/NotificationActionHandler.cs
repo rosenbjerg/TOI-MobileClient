@@ -31,16 +31,14 @@ namespace TOI_MobileClient.Droid
         public override async void OnReceive(Context context, Intent intent)
         {
             Console.WriteLine($"Received a broadcast: {intent.Action}");
-            if (intent.Action == PauseScanningFromBackground)
+            switch (intent.Action)
             {
-                Console.WriteLine("Pause scanning --- Just kidding do nothing");
-                (await DependencyManager.Get<IScannerServiceProvider>().GetServiceAsync()).StopLoop();
-            }
-
-            if (intent.Action == StartScanningFromBackground)
-            {
-                Console.WriteLine("Start scanning --- Just kidding do nothing");
-                (await DependencyManager.Get<IScannerServiceProvider>().GetServiceAsync()).StartLoop();
+                case PauseScanningFromBackground:
+                    (await DependencyManager.Get<IScannerServiceProvider>().GetServiceAsync()).StopLoop();
+                    break;
+                case StartScanningFromBackground:
+                    (await DependencyManager.Get<IScannerServiceProvider>().GetServiceAsync()).StartLoop();
+                    break;
             }
         }
     }
