@@ -3,7 +3,6 @@ using System.Linq;
 using DepMan;
 using TOIClasses;
 using TOI_MobileClient.Managers;
-using Xamarin.Forms.Internals;
 
 namespace TOI_MobileClient.ViewModels
 {
@@ -11,7 +10,7 @@ namespace TOI_MobileClient.ViewModels
     {
         public ContextPageViewModelFirstTime()
         {
-            
+
         }
 
         public override async void SaveContexts()

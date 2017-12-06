@@ -12,8 +12,6 @@ namespace TOI_MobileClient
 
         public static Action<Page> NavigateTo;
 
-        public static Action<string, string> DisplayPopup;
-
         public MainPage()
         {
             InitializeComponent();
@@ -44,10 +42,6 @@ namespace TOI_MobileClient
                     }
                     //Detail = new IconNavigationPage(page);
                 });
-            };
-            DisplayPopup = delegate(string title, string msg)
-            {
-                Detail.DisplayAlert(title, msg, "OK");
             };
         }
 

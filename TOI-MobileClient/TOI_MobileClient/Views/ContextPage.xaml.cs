@@ -26,6 +26,7 @@ namespace TOI_MobileClient.Views
         {
             BindingContext = cp;
             InitializeComponent();
+
             ContextList.ItemSelected += (sender, args) =>
             {
                 ContextList.SelectedItem = null;
@@ -41,6 +42,7 @@ namespace TOI_MobileClient.Views
         {
             ((PageViewModelBase) BindingContext).OnViewAppearing();
         }
+
 
     }
 }

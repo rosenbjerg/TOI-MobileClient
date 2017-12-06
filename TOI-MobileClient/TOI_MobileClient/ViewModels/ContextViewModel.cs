@@ -35,7 +35,7 @@ namespace TOI_MobileClient.ViewModels
 
         private void ShowDescription()
         {
-            MainPage.DisplayPopup(Title, Description);
+            App.Current.MainPage.DisplayAlert(Title, Description, "OK");
         }
         
         public ICommand CardTapped
