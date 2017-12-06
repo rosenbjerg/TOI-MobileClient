@@ -30,11 +30,13 @@ namespace TOI_MobileClient.Droid
             ((WifiManager) Application.Context.GetSystemService(Context.WifiService)).IsWifiEnabled;
 
 
-        public override async Task<IEnumerable<string>> ScanWifi(HashSet<string> filter = null)
+        public override async Task<IEnumerable<string>> ScanWifi(HashSet<string> deviceFilter = null)
         {
             if (!SettingsManager.WiFiEnabled) return null;
             if (!IsEnabled) return null;
 
+            // if deviceFilter is null, use ToiFilter from SettingsManager, unless the ToiFilter is empty
+            var filter = deviceFilter ?? (SettingsManager.ToiFilter?.Count == 0 ? null : SettingsManager.ToiFilter);
             var scanner = new WifiScanReceiver(this) {BssidFilter = filter};
 
             Application.Context.RegisterReceiver(scanner,

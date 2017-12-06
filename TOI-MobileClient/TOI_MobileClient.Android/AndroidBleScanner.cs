@@ -19,7 +19,7 @@ namespace TOI_MobileClient.Droid
 
         private readonly IReadOnlyList<BleDevice> _emptyListCache = new List<BleDevice>();
 
-        public override async Task<IReadOnlyList<BleDevice>> ScanBle(HashSet<string> deviceFilter,
+        public override async Task<IReadOnlyList<BleDevice>> ScanBle(HashSet<string> deviceFilter = null,
             int scanTimeout = 2000)
         {
             if (_isScanning || !SettingsManager.BleEnabled) return _emptyListCache;
@@ -29,6 +29,9 @@ namespace TOI_MobileClient.Droid
                 return _emptyListCache;
             }
             _isScanning = true;
+
+            // if deviceFilter is null, use ToiFilter from SettingsManager, unless the ToiFilter is empty
+            var filter = deviceFilter ?? (SettingsManager.ToiFilter?.Count == 0 ? null : SettingsManager.ToiFilter);
 
             Adapter.ScanTimeout = scanTimeout;
 
@@ -50,7 +53,7 @@ namespace TOI_MobileClient.Droid
             await Adapter.StartScanningForDevicesAsync(null, device =>
             {
                 var devId = SettingsManager.PrepId(device.Id.ToString("N")).TrimStart('0');
-                return deviceFilter == null || deviceFilter.Contains(devId);
+                return filter == null || filter.Contains(devId);
             });
             Adapter.DeviceDiscovered -= OnAdapterOnDeviceDiscovered;
 

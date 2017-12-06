@@ -92,9 +92,7 @@ namespace TOI_MobileClient.Droid.Services
 
         public void StartLoop()
         {
-
-            if (ScanLoopTask?.IsCanceled == true)
-                return;
+            if (ScanLoopTask?.IsCanceled == true) return;
 
             ScanLoopToken = new CancellationTokenSource();
             ScanLoopTask = Task.Run(ScanLoop, ScanLoopToken.Token);
@@ -102,10 +100,7 @@ namespace TOI_MobileClient.Droid.Services
 
         public void StopLoop()
         {
-            if (ScanLoopTask?.IsCanceled ?? true)
-            {
-                return;
-            }
+            if (ScanLoopTask?.IsCanceled ?? true) return;
 
             ScanLoopToken.Cancel();
         }
@@ -140,12 +135,7 @@ namespace TOI_MobileClient.Droid.Services
             return;
         }
 
-        private static int GetDelay()
-        {
-            if (SettingsManager.ScanFrequencyValue == SettingsManager.Language.Often) return 5000;
-            if (SettingsManager.ScanFrequencyValue == SettingsManager.Language.Normal) return 15000;
-            return SettingsManager.ScanFrequencyValue == SettingsManager.Language.Rarely ? 60000 : 10000;
-        }
+        
 
         private async Task ScanLoop()
         {
@@ -154,16 +144,15 @@ namespace TOI_MobileClient.Droid.Services
                 if (SettingsManager.ScanFrequencyValue == SettingsManager.Language.Never)
                 {
                     Looping = false;
-                    await Task.Delay(10000);
+                    await Task.Delay(SettingsManager.ScanDelay());
                     continue;
                 }
 
                 Looping = true;
-                await DependencyManager.Get<BleScannerBase>().ScanBle(BleFilter);
-                await DependencyManager.Get<WiFiScannerBase>().ScanWifi(Filter);
-                var gps = await DependencyManager.Get<GpsScannerBase>().GetLocationAsync();
-                Console.WriteLine(gps);
-                await Task.Delay(GetDelay());
+                await DependencyManager.Get<BleScannerBase>().ScanBle();
+                await DependencyManager.Get<WiFiScannerBase>().ScanWifi();
+                await DependencyManager.Get<GpsScannerBase>().GetLocationAsync();
+                await Task.Delay(SettingsManager.ScanDelay());
             }
         }
 
