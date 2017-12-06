@@ -21,7 +21,7 @@ namespace TOI_MobileClient
         protected IAdapter Adapter;
 
         public abstract Task<IReadOnlyList<BleDevice>>
-            ScanBle(HashSet<string> deviceFilter, int scanTimeout = 2000);
+            ScanBle(HashSet<string> deviceFilter = null, int scanTimeout = 2000);
 
         public EventHandler<BleDeviceFoundEventArgs> BleDeviceFound;
 
