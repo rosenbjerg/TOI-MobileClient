@@ -22,10 +22,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)Dependencies\WiFiScannerBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Localization\EnglishLanguage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Localization\ILanguage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Managers\SubscriptionManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Managers\HtmlViewBuilder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Managers\IToiHttpManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Managers\SettingsManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Managers\Styling.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Managers\ToiHttpClient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TapViewCell.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TOIWebView.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ContextPageViewModel.cs" />
