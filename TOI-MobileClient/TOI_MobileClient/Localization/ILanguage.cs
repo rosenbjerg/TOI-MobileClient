@@ -35,7 +35,9 @@ namespace TOI_MobileClient
         string About { get; }
 
         string Scanning { get; }
+        string ScanningPaused { get; }
         string ScanningExplanation { get; }
+        string NotScanningExplanation { get; }
         string NewToi { get; }
         string NewToiExplanation { get; }
 
