@@ -5,8 +5,6 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Windows.Input;
-using Android.Opengl;
-using Android.Views;
 using DepMan;
 using Newtonsoft.Json;
 using TOIClasses;
@@ -14,7 +12,6 @@ using TOI_MobileClient.Dependencies;
 using TOI_MobileClient.Managers;
 using TOI_MobileClient.ViewModels;
 using Xamarin.Forms;
-using Xamarin.Forms.Internals;
 
 namespace TOI_MobileClient
 {
@@ -57,13 +54,8 @@ namespace TOI_MobileClient
         public bool NoTags => ToiCollection.Count == 0;
         public Color SyncColor => Loading ? Styling.DisabledIconColor : Styling.EnabledIconColor;
 
-        public ViewStates SyncBtnVisibility => SettingsManager.ScanFrequencyValue == SettingsManager.Language.Never
-            ? ViewStates.Gone
-            : ViewStates.Visible;
-
-        public ViewStates ClearBtnVisibility => SettingsManager.ScanFrequencyValue == SettingsManager.Language.Never
-            ? ViewStates.Visible
-            : ViewStates.Gone;
+        public bool SyncBtnVisibility => SettingsManager.ScanFrequencyValue == SettingsManager.Language.Never;
+        public bool ClearBtnVisibility => SettingsManager.ScanFrequencyValue == SettingsManager.Language.Never;
 
         public bool PullToRefresh =>
             SettingsManager.ScanFrequencyValue == SettingsManager.Language.Never;
