@@ -13,7 +13,6 @@ namespace TOI_MobileClient.ViewModels
         {
             
         }
-        
 
         public override async void SaveContexts()
         {

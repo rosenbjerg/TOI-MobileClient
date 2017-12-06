@@ -11,8 +11,6 @@ namespace TOI_MobileClient.ViewModels
 {
     public class ContextPageViewModel : ContextPageViewModelBase
     {
-        
-
         public ContextPageViewModel()
         {
             SaveContext = null;
