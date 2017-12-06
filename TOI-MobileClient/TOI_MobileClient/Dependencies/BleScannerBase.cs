@@ -20,8 +20,7 @@ namespace TOI_MobileClient
         protected IBluetoothLE Ble;
         protected IAdapter Adapter;
 
-        public abstract Task<IReadOnlyList<BleDevice>>
-            ScanBle(HashSet<string> deviceFilter = null, int scanTimeout = 2000);
+        public abstract Task ScanAsync(int scanTimeout = 2000);
 
         public EventHandler<BleDeviceFoundEventArgs> BleDeviceFound;
 

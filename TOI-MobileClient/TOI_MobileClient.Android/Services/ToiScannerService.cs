@@ -92,7 +92,7 @@ namespace TOI_MobileClient.Droid.Services
 
         public void StartLoop()
         {
-            if (ScanLoopTask != null && !ScanLoopTask.IsCanceled) return;
+            if (ScanLoopTask?.IsCanceled == true) return;
 
             ScanLoopToken = new CancellationTokenSource();
             ScanLoopTask = Task.Run(ScanLoop, ScanLoopToken.Token);
@@ -138,7 +138,7 @@ namespace TOI_MobileClient.Droid.Services
 
             //await DependencyManager.Get<GpsScannerBase>().GetLocationAsync();
             //await DependencyManager.Get<BleScannerBase>().ScanBle(BleFilter);
-            //await DependencyManager.Get<WiFiScannerBase>().ScanWifi(Filter);
+            //await DependencyManager.Get<WiFiScannerBase>().ScanAsync(Filter);
             return;
         }
 
@@ -155,8 +155,10 @@ namespace TOI_MobileClient.Droid.Services
                 }
 
                 Looping = true;
-                await DependencyManager.Get<BleScannerBase>().ScanBle();
-                await DependencyManager.Get<WiFiScannerBase>().ScanWifi();
+                SubscriptionManager.Instance.RefreshTags();
+
+                await DependencyManager.Get<BleScannerBase>().ScanAsync();
+                await DependencyManager.Get<WiFiScannerBase>().ScanAsync();
                 await DependencyManager.Get<GpsScannerBase>().GetLocationAsync();
                 await Task.Delay(SettingsManager.ScanDelay());
             }

@@ -46,7 +46,7 @@ namespace TOI_MobileClient.Managers
                 var list = JsonConvert.DeserializeObject<List<TModel>>(await res.Content.ReadAsStringAsync());
                 return list;
             }
-            catch (JsonException e)
+            catch (JsonException)
             {
                 return null;
             }

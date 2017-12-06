@@ -6,8 +6,7 @@ namespace TOI_MobileClient.Dependencies
 {
     public abstract class WiFiScannerBase : IHardware
     {
-        public abstract Task<IEnumerable<string>> ScanWifi(HashSet<string> deviceFilter = null);
-
+        public abstract Task<IEnumerable<string>> ScanAsync();
         public bool IsEnabled => false;
 
         public EventHandler<WifiApFoundEventArg> WifiApFound;

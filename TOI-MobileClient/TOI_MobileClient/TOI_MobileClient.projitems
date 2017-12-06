@@ -31,8 +31,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)TapViewCell.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TOIWebView.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ContextPageViewModel.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ContextPageViewModelBase.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ContextPageViewModelFirstTime.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ContextViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\FeedSelectionViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\SettingsPageViewModel.cs" />

@@ -4,31 +4,79 @@ using System.Linq;
 using System.Threading.Tasks;
 using TOIClasses;
 
+#pragma warning disable 4014
+
 namespace TOI_MobileClient.Managers
 {
-    class SubscriptionManager
+    public class SubscriptionManager
     {
-        List<SubscribedServer> _subscribedServers = new List<SubscribedServer>();
+        private static SubscriptionManager _instance;
 
-        public IEnumerable<string> AllTags => _subscribedServers.SelectMany(ss => ss.TagCache);
-        
+        public static SubscriptionManager Instance => _instance ?? (_instance = new SubscriptionManager());
+
+        public readonly Dictionary<string, SubscribedServer> SubscribedServers =
+            new Dictionary<string, SubscribedServer>();
+
+        public void RefreshTags()
+        {
+            AllTags = SubscribedServers
+                .Values
+                .Where(ss => ss.Active && !ss.Hidden)
+                .SelectMany(ss => ss.TagCache).ToHashSet();
+        }
+
+        public HashSet<string> AllTags { get; private set; }
+
+        public void AddServer(string name, string url, List<string> contexts)
+        {
+            SubscribedServers.Add(url, new SubscribedServer(name, url, contexts));
+        }
+
+        /// <summary>
+        /// Remove url from SubscribedServers, if key exists
+        /// </summary>
+        /// <param name="url">BaseUrl of Server</param>
+        public void RemoveServer(string url)
+        {
+            if (!SubscribedServers.ContainsKey(url)) return;
+
+            SubscribedServers.Remove(url);
+        }
     }
 
-    class SubscribedServer
+    public class SubscribedServer
     {
         /// <summary>
         /// When inside radius of feed server
         /// </summary>
         public bool Active { get; set; } = true;
+
         /// <summary>
         /// When the servers tois should be hidden (inactive) e
         /// </summary>
-        public bool Hidden { get; set; } 
+        public bool Hidden { get; set; }
+
         public string Name { get; set; }
         public string BaseUrl { get; set; }
 
-        public List<string> Contexts = new List<string>();
-        
+        public List<string> Contexts
+        {
+            get => _contexts;
+            set
+            {
+                _contexts = value;
+                LoadTois();
+            }
+        }
+
+        public SubscribedServer(string name, string url, List<string> contexts)
+        {
+            Name = name;
+            BaseUrl = url;
+            Contexts = contexts;
+            LoadTois();
+        }
+
         public async Task LoadTois()
         {
             var url = $"{BaseUrl}/tois?contexts={string.Join(",", Contexts)}";
@@ -40,8 +88,8 @@ namespace TOI_MobileClient.Managers
 
         public Dictionary<string, List<ToiModel>> Index { get; set; }
 
-        public List<ToiModel> ToiCache { get; private set; } 
+        public List<ToiModel> ToiCache { get; private set; }
         public HashSet<string> TagCache = new HashSet<string>();
-        
+        private List<string> _contexts;
     }
 }

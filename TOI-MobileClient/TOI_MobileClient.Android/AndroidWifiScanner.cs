@@ -30,14 +30,13 @@ namespace TOI_MobileClient.Droid
             ((WifiManager) Application.Context.GetSystemService(Context.WifiService)).IsWifiEnabled;
 
 
-        public override async Task<IEnumerable<string>> ScanWifi(HashSet<string> deviceFilter = null)
+        public override async Task<IEnumerable<string>> ScanAsync()
         {
             if (!SettingsManager.WiFiEnabled) return null;
             if (!IsEnabled) return null;
 
             // if deviceFilter is null, use ToiFilter from SettingsManager, unless the ToiFilter is empty
-            var filter = deviceFilter ?? (SettingsManager.ToiFilter?.Count == 0 ? null : SettingsManager.ToiFilter);
-            var scanner = new WifiScanReceiver(this) {BssidFilter = filter};
+            var scanner = new WifiScanReceiver(this);
 
             Application.Context.RegisterReceiver(scanner,
                 new IntentFilter(WifiManager.ScanResultsAvailableAction));
@@ -56,7 +55,6 @@ namespace TOI_MobileClient.Droid
         private readonly TaskCompletionSource<List<string>> _tcs = new TaskCompletionSource<List<string>>();
         private static WifiManager _wifiMan;
         public Task<List<string>> Task => _tcs.Task;
-        public HashSet<string> BssidFilter { get; set; }
 
         public WifiScanReceiver(AndroidWifiScanner androidWifi)
         {
@@ -67,7 +65,7 @@ namespace TOI_MobileClient.Droid
         public override void OnReceive(Context context, Intent intent)
         {
             var res = _wifiMan.ScanResults
-                .Where(r => BssidFilter?.Contains(SettingsManager.PrepId(r.Bssid)) ?? true)
+                .Where(r => SubscriptionManager.Instance.AllTags?.Contains(SettingsManager.PrepId(r.Bssid)) ?? false)
                 .Select(r =>
                 {
                     Console.WriteLine($"AP: {r.Ssid} + {r.Bssid}");

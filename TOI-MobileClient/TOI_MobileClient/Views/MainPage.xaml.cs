@@ -9,7 +9,6 @@ namespace TOI_MobileClient
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class MainPage
     {
-
         public static Action<Page> NavigateTo;
 
         public MainPage()
@@ -20,6 +19,7 @@ namespace TOI_MobileClient
             var firstPage = new IconNavigationPage(new ScanPage());
             _loadedPages.Add(typeof(ScanPage), firstPage);
             Detail = firstPage;
+
             if (firstPage.CurrentPage.BindingContext is PageViewModelBase vm)
             {
                 vm.OnViewAppearing();

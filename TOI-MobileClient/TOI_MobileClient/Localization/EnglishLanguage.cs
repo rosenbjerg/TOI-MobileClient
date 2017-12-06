@@ -27,6 +27,7 @@ namespace TOI_MobileClient.Localization
         public string Scanning => "Scanning...";
         public string ScanningPaused => "Scanning paused";
         public string Contexts => "Contexts";
+        public string Feeds => "Feeds";
         public string ScanningExplanation => "Scanning in the background to find things of interest near you.";
         public string NotScanningExplanation => "Not scanning in the background, press start scan to start scanning.";
         public string NoContexts => "No Contexts Avaiable - Please refresh";
@@ -34,5 +35,10 @@ namespace TOI_MobileClient.Localization
 
         public string NewToiExplanation =>
             "There is something nearby that you might be interested in learning more about.";
+
+        public string SelectFeedServer =>
+            "Choose Feed Server";
+
+        public string ChangesSaved => "Changes Saved!";
     }
 }

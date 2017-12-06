@@ -32,6 +32,7 @@ namespace TOI_MobileClient
         string ScanForTags { get; }
         string Settings { get; }
         string Contexts { get; }
+        string Feeds { get; }
         string About { get; }
 
         string Scanning { get; }
@@ -40,6 +41,7 @@ namespace TOI_MobileClient
         string NotScanningExplanation { get; }
         string NewToi { get; }
         string NewToiExplanation { get; }
-
+        string SelectFeedServer { get; }
+        string ChangesSaved { get; }
     }
 }

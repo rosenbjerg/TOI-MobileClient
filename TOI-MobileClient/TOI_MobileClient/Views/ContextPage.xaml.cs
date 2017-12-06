@@ -13,18 +13,14 @@ namespace TOI_MobileClient.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class ContextPage : ContentPage
     {
-        public ContextPage()
+        public string Name { get; }
+        public string BaseUrl { get; }
+
+        public ContextPage(string name, string url)
         {
-            BindingContext = new ContextPageViewModel();
-            InitializeComponent();
-            ContextList.ItemSelected += (sender, args) =>
-            {
-                ContextList.SelectedItem = null;
-            };
-        }
-        public ContextPage(ContextPageViewModelBase cp)
-        {
-            BindingContext = cp;
+            Name = name;
+            BaseUrl = url;
+            BindingContext = new ContextPageViewModel(Name, BaseUrl);
             InitializeComponent();
 
             ContextList.ItemSelected += (sender, args) =>

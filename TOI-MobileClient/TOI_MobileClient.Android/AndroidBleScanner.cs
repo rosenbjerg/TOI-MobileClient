@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Android.Bluetooth;
 using Plugin.BLE.Abstractions.Contracts;
@@ -17,48 +18,40 @@ namespace TOI_MobileClient.Droid
 
         public new bool IsEnabled => Ble.IsOn && Ble.IsAvailable;
 
-        private readonly IReadOnlyList<BleDevice> _emptyListCache = new List<BleDevice>();
-
-        public override async Task<IReadOnlyList<BleDevice>> ScanBle(HashSet<string> deviceFilter = null,
-            int scanTimeout = 2000)
+        public override async Task ScanAsync(int scanTimeout = 2000)
         {
-            if (_isScanning || !SettingsManager.BleEnabled) return _emptyListCache;
+            if (_isScanning || !SettingsManager.BleEnabled) return;
             if (!IsEnabled)
             {
                 DependencyManager.Get<NotifierBase>().DisplayToast(SettingsManager.Language.BluetoothNotEnabled, true);
-                return _emptyListCache;
+                return;
             }
             _isScanning = true;
 
-            // if deviceFilter is null, use ToiFilter from SettingsManager, unless the ToiFilter is empty
-            var filter = deviceFilter ?? (SettingsManager.ToiFilter?.Count == 0 ? null : SettingsManager.ToiFilter);
-
             Adapter.ScanTimeout = scanTimeout;
-
-            var deviceList = new List<BleDevice>();
-
             void OnAdapterOnDeviceDiscovered(object sender, DeviceEventArgs args)
             {
+                if (!Filter(args.Device)) return;
+
                 var dev = new BleDevice
                 {
                     Rssi = args.Device.Rssi,
                     Address = SettingsManager.PrepId(args.Device.Id.ToString("N")).TrimStart('0')
                 };
                 BleDeviceFound?.Invoke(sender, new BleDeviceFoundEventArgs(dev));
-                deviceList.Add(dev);
             }
 
             Adapter.DeviceDiscovered += OnAdapterOnDeviceDiscovered;
-
-            await Adapter.StartScanningForDevicesAsync(null, device =>
-            {
-                var devId = SettingsManager.PrepId(device.Id.ToString("N")).TrimStart('0');
-                return filter == null || filter.Contains(devId);
-            });
+            await Adapter.StartScanningForDevicesAsync();
             Adapter.DeviceDiscovered -= OnAdapterOnDeviceDiscovered;
 
             _isScanning = false;
-            return deviceList;
+        }
+
+        private static bool Filter(IDevice dev)
+        {
+            var devId = SettingsManager.PrepId(dev.Id.ToString("N")).TrimStart('0');
+            return SubscriptionManager.Instance.AllTags?.Contains(devId) ?? false;
         }
     }
 }

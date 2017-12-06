@@ -7,10 +7,10 @@ namespace TOI_MobileClient.ViewModels
 {
     public class ContextViewModel : ViewModelBase
     {
-        private readonly ContextModel _model;
-        public string Title => _model.Title;
-        public string Id => _model.Id;
-        public string Description => _model.Description;
+        public readonly ContextModel Model;
+        public string Title => Model.Title;
+        public string Id => Model.Id;
+        public string Description => Model.Description;
 
         private bool _subscribed;
 
@@ -29,7 +29,7 @@ namespace TOI_MobileClient.ViewModels
 
         public ContextViewModel(ContextModel cm)
         {
-            _model = cm;
+            Model = cm;
             CardTapped = new Command(ShowDescription);
         }
 
@@ -37,11 +37,8 @@ namespace TOI_MobileClient.ViewModels
         {
             App.Current.MainPage.DisplayAlert(Title, Description, "OK");
         }
-        
-        public ICommand CardTapped
-        {
-            get; private set;
-        }
+
+        public ICommand CardTapped { get; }
 
         public event EventHandler Changed;
     }

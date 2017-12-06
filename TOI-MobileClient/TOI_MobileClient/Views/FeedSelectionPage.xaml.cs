@@ -15,6 +15,11 @@ namespace TOI_MobileClient.Views
 		public FeedSelectionPage ()
 		{
 			InitializeComponent ();
-		}
+
+		    FeedList.ItemSelected += (sender, args) =>
+		    {
+		        FeedList.SelectedItem = null;
+		    };
+        }
 	}
 }

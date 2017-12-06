@@ -16,9 +16,8 @@ namespace TOI_MobileClient
 		public App ()
 		{
 			InitializeComponent();
-		    MainPage = new FeedSelectionPage();
-            //MainPage = new MainPage();
-		    //Navigation = MainPage.Navigation;
+            MainPage = new MainPage();
+		    Navigation = MainPage.Navigation;
 		    DependencyManager.Register<RestClient, RestClient>(new RestClient(new ToiHttpManager()));
 		    DependencyManager.Register<ILanguage, EnglishLanguage>(new EnglishLanguage());
 		}

@@ -55,7 +55,7 @@ namespace TOI_MobileClient
         public Color SyncColor => Loading ? Styling.DisabledIconColor : Styling.EnabledIconColor;
 
         public bool SyncBtnVisibility => SettingsManager.ScanFrequencyValue == SettingsManager.Language.Never;
-        public bool ClearBtnVisibility => SettingsManager.ScanFrequencyValue == SettingsManager.Language.Never;
+        public bool ClearBtnVisibility => SettingsManager.ScanFrequencyValue != SettingsManager.Language.Never;
 
         public bool PullToRefresh =>
             SettingsManager.ScanFrequencyValue == SettingsManager.Language.Never;

@@ -9,7 +9,6 @@ namespace TOI_MobileClient.Dependencies
         public EventHandler<NfcEventArgs> NfcTagFound;
 
         public bool IsEnabled => false;
-
     }
 
     public class NfcEventArgs : EventArgs

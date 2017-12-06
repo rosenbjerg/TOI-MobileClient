@@ -1,4 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:iconize="clr-namespace:FormsPlugin.Iconize;assembly=FormsPlugin.Iconize"
@@ -9,53 +10,38 @@
              Title="Contexts">
     <ContentPage.Content>
         <StackLayout>
-            <ContentView VerticalOptions="FillAndExpand" IsVisible="{Binding Loading}" >
-                <ActivityIndicator Color="{x:Static managers:Styling.ActivityIndicatorColor}" IsRunning="True" VerticalOptions="Center" HorizontalOptions="Center"/>
-            </ContentView>
-            <StackLayout IsVisible="{Binding Loaded}">
-                <StackLayout IsVisible="{Binding ContextFetched}">
-                    <Frame>
-                        <Grid Padding="16,4">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="8*">
-                                </ColumnDefinition>
-                                <ColumnDefinition Width="2*">
-                                </ColumnDefinition>
-                            </Grid.ColumnDefinitions>
-                            <Label Grid.Column="0" Text="Subscribe to all" FontSize="20"></Label>
-                            <Switch Grid.Column="1" IsToggled="{Binding AllToggled}"></Switch>
-                        </Grid>
-                    </Frame>
-                    <ListView RowHeight="100" ItemsSource="{Binding Contexts}" x:Name="ContextList">
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <toiMobileClient:TapViewCell Command="{Binding CardTapped}">
-                                    <toiMobileClient:TapViewCell.View>
-                                        <Grid Padding="16,4">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="8*">
-                                                </ColumnDefinition>
-                                                <ColumnDefinition Width="2*">
-                                                </ColumnDefinition>
-                                            </Grid.ColumnDefinitions>
-                                            <Label Grid.Column="0" VerticalTextAlignment="Center"  Text="{Binding Title}" FontSize="20"></Label>
-                                            <Switch Grid.Column="1" IsToggled="{Binding Subscribed}" />
-                                        </Grid>
-                                    </toiMobileClient:TapViewCell.View>
-                                </toiMobileClient:TapViewCell>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
-                </StackLayout>
-                <StackLayout IsVisible="{Binding ContextFetched}">
-                    <Button BackgroundColor="#2196F3" Text="Save" Command="{Binding SaveContext}" IsEnabled="{Binding UnsavedChanges}"></Button>
-                </StackLayout>
-                <StackLayout VerticalOptions="FillAndExpand" IsVisible="{Binding NoContexts}">
-                    <iconize:IconLabel Text="fa-search"  FontSize="160" HorizontalTextAlignment="Center" VerticalOptions="Center" TextColor="{x:Static managers:Styling.WaterMarkColor}" />
-                    <Label Text="{Binding Language.NoContexts}" HorizontalTextAlignment="Center"></Label>
-                </StackLayout>
+            <StackLayout VerticalOptions="FillAndExpand">
+                <Frame>
+                    <Grid Padding="16,4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="8*" />
+                            <ColumnDefinition Width="2*" />
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Column="0" Text="Subscribe to all" FontSize="20" />
+                        <Switch Grid.Column="1" IsToggled="{Binding AllToggled}" />
+                    </Grid>
+                </Frame>
+                <ListView RowHeight="100" ItemsSource="{Binding Contexts}" x:Name="ContextList">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <toiMobileClient:TapViewCell Command="{Binding CardTapped}">
+                                <toiMobileClient:TapViewCell.View>
+                                    <Grid Padding="16,4">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="8*" />
+                                            <ColumnDefinition Width="2*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Label Grid.Column="0" VerticalTextAlignment="Center" Text="{Binding Title}"
+                                               FontSize="20" />
+                                        <Switch Grid.Column="1" IsToggled="{Binding Subscribed}" />
+                                    </Grid>
+                                </toiMobileClient:TapViewCell.View>
+                            </toiMobileClient:TapViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
             </StackLayout>
+            <Button BackgroundColor="#2196F3" Text="Save" Command="{Binding SaveContext}" />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
-

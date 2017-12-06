@@ -32,9 +32,8 @@ namespace TOI_MobileClient
                 MenuItems = new ObservableCollection<MainPageMenuItem>(new[]
                 {
                     new MainPageMenuItem {MenuItemId = 0, Title = lang.ScanForTags, TargetType = typeof(ScanPage)},
-                    new MainPageMenuItem {MenuItemId = 1, Title = lang.Settings, TargetType = typeof(SettingsPage)},
-                    new MainPageMenuItem {MenuItemId = 2, Title = lang.Contexts, TargetType = typeof(ContextPage)}, 
-                    new MainPageMenuItem {MenuItemId = 3, Title = lang.About}
+                    new MainPageMenuItem {MenuItemId = 1, Title = lang.Feeds, TargetType = typeof(FeedSelectionPage)},
+                    new MainPageMenuItem {MenuItemId = 2, Title = lang.Settings, TargetType = typeof(SettingsPage)},
                 });
             }
 
