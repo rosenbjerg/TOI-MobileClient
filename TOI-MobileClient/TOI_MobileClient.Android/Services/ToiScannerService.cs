@@ -92,7 +92,7 @@ namespace TOI_MobileClient.Droid.Services
 
         public void StartLoop()
         {
-            if (ScanLoopTask?.IsCanceled == true) return;
+            if (ScanLoopTask != null && !ScanLoopTask.IsCanceled) return;
 
             ScanLoopToken = new CancellationTokenSource();
             ScanLoopTask = Task.Run(ScanLoop, ScanLoopToken.Token);
