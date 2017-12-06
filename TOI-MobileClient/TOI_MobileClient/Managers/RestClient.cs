@@ -42,23 +42,32 @@ namespace TOI_MobileClient
             }
         }
 
-        public async Task<IEnumerable<T>> GetMany<T>(string url, IEnumerable<string> ids = null)
+        public async Task<IEnumerable<T>> GetMany<T>(string url, Dictionary<string, string> query = null)
             where T : class, new()
         {
-            string res;
-            if (ids != null)
+            var q = "";
+            if (query != null)
+
             {
-                var jArray = JsonConvert.SerializeObject(ids.ToList());
-                res = await _manager.PostAsync(url, jArray);
+                q = "?" + string.Join("&", query.Keys.Select(key => $"{key}={query[key]}"));
             }
-            else
-            {
-                res = await _manager.GetAsync(url);
-            }
+            var res = await _manager.GetAsync(url, q);
             if (string.IsNullOrEmpty(res))
                 return null;
             var tagList = JsonConvert.DeserializeObject<List<T>>(res);
             return tagList;
+        }
+
+        public async Task<IEnumerable<T>> PostMany<T>(string url, IEnumerable<string> ids)
+            where T : class, new()
+        {
+            var jArray = JsonConvert.SerializeObject(ids.ToList());
+            var res = await _manager.PostAsync(url, jArray);
+            if (string.IsNullOrEmpty(res))
+                return null;
+            var tagList = JsonConvert.DeserializeObject<List<T>>(res);
+            return tagList;
+
         }
     }
 }

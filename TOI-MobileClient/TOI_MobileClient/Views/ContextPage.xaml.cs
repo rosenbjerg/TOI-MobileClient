@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using TOI_MobileClient.ViewModels;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -12,14 +13,22 @@ namespace TOI_MobileClient.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class ContextPage : ContentPage
     {
-
         public ContextPage()
         {
+            BindingContext = new ContextPageViewModel();
             InitializeComponent();
-            
-            Contexts.ItemSelected += (sender, args) =>
+            ContextList.ItemSelected += (sender, args) =>
             {
-                Contexts.SelectedItem = null;
+                ContextList.SelectedItem = null;
+            };
+        }
+        public ContextPage(ContextPageViewModelBase cp)
+        {
+            BindingContext = cp;
+            InitializeComponent();
+            ContextList.ItemSelected += (sender, args) =>
+            {
+                ContextList.SelectedItem = null;
             };
         }
 

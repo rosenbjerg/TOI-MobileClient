@@ -75,7 +75,7 @@ namespace TOI_MobileClient.Droid
 	    protected override void OnDestroy()
 	    {
 	        base.OnDestroy();
-            DependencyManager.Get<NotifierBase>().CancelNotification(DependencyManager.Get<IScannerServiceProvider>().GetServiceAsync().Id);
+            DependencyManager.Get<NotifierBase>().CancelNotification(6969);
             ServiceConnection.UnbindFromService();
 	    }
 	}

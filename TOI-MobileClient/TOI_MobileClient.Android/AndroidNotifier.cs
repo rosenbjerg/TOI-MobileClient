@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using Android.App;
 using Android.Content;
-using Android.Content.Res;
 using Android.Graphics;
 using Android.Support.Design.Widget;
 using Android.Support.V4.App;
 using Android.Widget;
 using TOI_MobileClient.Dependencies;
+using TOI_MobileClient.Droid.Services;
 using Xamarin.Forms;
 
 namespace TOI_MobileClient.Droid
@@ -75,9 +75,16 @@ namespace TOI_MobileClient.Droid
                 .SetSmallIcon(smallIcon)
                 .SetLargeIcon(_bitmaps[largeIcon])
                 .SetVisibility(1)
-                .SetStyle(new NotificationCompat.BigTextStyle().BigText(content))
-                .AddAction(Resource.Drawable.Cross, "Start Scan", pScanIntent)
-                .AddAction(Resource.Drawable.Cross, "Pause Scan", pPauseScanIntent);
+                .SetStyle(new NotificationCompat.BigTextStyle().BigText(content));
+
+            if (ToiScannerService.Looping)
+            {
+                nb.AddAction(Resource.Drawable.Cross, "Pause Scan", pPauseScanIntent);
+                nb.SetOngoing(true);
+            }
+                
+            if(!ToiScannerService.Looping)
+                nb.AddAction(Resource.Drawable.Cross, "Start Scan", pScanIntent);
 
             if (makeNoice)
                 nb.SetDefaults((int) NotificationDefaults.All);

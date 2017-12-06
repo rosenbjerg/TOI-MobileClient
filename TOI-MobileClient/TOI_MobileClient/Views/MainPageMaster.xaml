@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TOI_MobileClient.MainPageMaster"
              Title="Master">
-  <StackLayout>
+  <StackLayout IsVisible="{Binding ContextSelected}">
     <ListView x:Name="MenuItemsListView"
               SeparatorVisibility="None"
               HasUnevenRows="true"

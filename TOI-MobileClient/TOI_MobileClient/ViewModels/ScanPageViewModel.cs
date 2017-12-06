@@ -51,7 +51,7 @@ namespace TOI_MobileClient
             }
         }
 
-        public ObservableCollection<ToiViewModel> ToiCollection { get; set; }
+        public ObservableCollection<ToiViewModel> ToiCollection { get; } = new ObservableCollection<ToiViewModel>();
 
         public bool FoundTags => ToiCollection.Count > 0;
         public bool NoTags => ToiCollection.Count == 0;
@@ -81,7 +81,6 @@ namespace TOI_MobileClient
                 OnPropertyChanged(nameof(FoundTags));
                 OnPropertyChanged(nameof(NoTags));
             });
-            ToiCollection = new ObservableCollection<ToiViewModel>();
         }
 
         private HashSet<string> TagCache { get; } = new HashSet<string>();
@@ -95,21 +94,39 @@ namespace TOI_MobileClient
 
             try
             {
-                var tois = await rc.GetMany<ToiModel>(
+                var tois = await rc.PostMany<ToiModel>(
                     SettingsManager.Url + (args.Gps ? "/toi/fromgps" : "/toi/fromtags"), new List<string> {args.Tag});
 
-                tois?.ForEach(t =>
+                if (tois == null) return;
+                foreach (var toi in tois)
                 {
-                    ToiCache.Add(t);
-                    var vm = new ToiViewModel(t);
+                    if (ToiCache.Contains(toi)) continue;
+
+                    ToiCache.Add(toi);
+                    var vm = new ToiViewModel(toi);
                     if (ToiCollection.All(v => v.Model.Id != vm.Model.Id))
                     {
                         ToiCollection.Add(vm);
                     }
                     TagCache.Add(args.Tag);
-                });
 
-                OnPropertyChanged(null);
+                    OnPropertyChanged(nameof(FoundTags));
+                    OnPropertyChanged(nameof(NoTags));
+                }
+
+                //tois?.ForEach(t =>
+                //{
+                //    ToiCache.Add(t);
+                //    var vm = new ToiViewModel(t);
+                //    if (ToiCollection.All(v => v.Model.Id != vm.Model.Id))
+                //    {
+                //        ToiCollection.Add(vm);
+                //    }
+                //    TagCache.Add(args.Tag);
+
+                //    OnPropertyChanged(nameof(FoundTags));
+                //    OnPropertyChanged(nameof(NoTags));
+                //});
             }
             catch (WebException e)
             {
