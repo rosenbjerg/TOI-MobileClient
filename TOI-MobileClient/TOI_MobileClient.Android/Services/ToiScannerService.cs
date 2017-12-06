@@ -98,9 +98,11 @@ namespace TOI_MobileClient.Droid.Services
             ScanLoopTask = Task.Run(ScanLoop, ScanLoopToken.Token);
             Looping = true;
             var lang = DependencyManager.Get<ILanguage>();
-            DependencyManager.Get<NotifierBase>().UpdateAppNotification(ServiceId, lang.Scanning,
-                lang.ScanningExplanation,
-                Resource.Drawable.TagSyncIcon, Resource.Drawable.Icon);
+            DependencyManager.Get<NotifierBase>()
+                .UpdateAppNotification(
+                    ServiceId, lang.Scanning,
+                    lang.ScanningExplanation,
+                    Resource.Drawable.TagSyncIcon, Resource.Drawable.Icon);
         }
 
         public void StopLoop()
@@ -111,9 +113,11 @@ namespace TOI_MobileClient.Droid.Services
             Looping = false;
 
             var lang = DependencyManager.Get<ILanguage>();
-            DependencyManager.Get<NotifierBase>().UpdateAppNotification(ServiceId, lang.ScanningPaused,
-                lang.NotScanningExplanation,
-                Resource.Drawable.TagSyncIcon, Resource.Drawable.Icon);
+            DependencyManager.Get<NotifierBase>()
+                .UpdateAppNotification(
+                    ServiceId, lang.ScanningPaused,
+                    lang.NotScanningExplanation,
+                    Resource.Drawable.TagSyncIcon, Resource.Drawable.Icon);
         }
 
         public override IBinder OnBind(Intent intent)
@@ -138,7 +142,6 @@ namespace TOI_MobileClient.Droid.Services
             return;
         }
 
-        
 
         private async Task ScanLoop()
         {
