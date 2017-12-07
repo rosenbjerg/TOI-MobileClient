@@ -63,7 +63,7 @@ namespace TOI_MobileClient.ViewModels
                 }
                 else if (SubscriptionManager.Instance.SubscribedServers.TryGetValue(BaseUrl, out var ss))
                 {
-                    ss.Contexts = ctxs;
+                    SubscriptionManager.Instance.UpdateServer(BaseUrl, ctxs);
                 }
                 else
                 {

@@ -1,4 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using Android.Database.Sqlite;
+using Newtonsoft.Json;
 using Plugin.Settings;
 using Plugin.Settings.Abstractions;
 using TOI_MobileClient.Localization;
@@ -13,6 +16,20 @@ namespace TOI_MobileClient.Managers
         public static string Url => "http://ssh.windelborg.info:7474";
 
         private const bool Default = true;
+
+        public static void SaveServers(Dictionary<string, SubscribedServer> servers)
+        {
+            AppSettings.AddOrUpdateValue("subscribed_servers", JsonConvert.SerializeObject(servers.Values));
+        }
+
+        public static Dictionary<string, SubscribedServer> ReadServers()
+        {
+            var values = AppSettings.GetValueOrDefault("subscribed_servers", null);
+            if (values == null) return null;
+
+            return JsonConvert.DeserializeObject<List<SubscribedServer>>(values)
+                .ToDictionary(e => e.BaseUrl, e => e);
+        }
 
         public static bool BleEnabled
         {

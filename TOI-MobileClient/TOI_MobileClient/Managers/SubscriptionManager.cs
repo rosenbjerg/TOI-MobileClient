@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TOIClasses;
+using Xamarin.Forms;
+using Newtonsoft.Json;
+using Xamarin.Forms.Internals;
 
 #pragma warning disable 4014
 
@@ -14,7 +17,7 @@ namespace TOI_MobileClient.Managers
 
         public static SubscriptionManager Instance => _instance ?? (_instance = new SubscriptionManager());
 
-        public readonly Dictionary<string, SubscribedServer> SubscribedServers =
+        public Dictionary<string, SubscribedServer> SubscribedServers =
             new Dictionary<string, SubscribedServer>();
 
         public void RefreshTags()
@@ -27,9 +30,15 @@ namespace TOI_MobileClient.Managers
 
         public HashSet<string> AllTags { get; private set; }
 
+        private void SaveServers()
+        {
+            SettingsManager.SaveServers(SubscribedServers);
+        }
+
         public void AddServer(string name, string url, List<string> contexts)
         {
             SubscribedServers.Add(url, new SubscribedServer(name, url, contexts));
+            SaveServers();
         }
 
         /// <summary>
@@ -41,6 +50,25 @@ namespace TOI_MobileClient.Managers
             if (!SubscribedServers.ContainsKey(url)) return;
 
             SubscribedServers.Remove(url);
+            SaveServers();
+        }
+
+        public void UpdateServer(string url, List<string> contexts)
+        {
+            SubscribedServers[url].Contexts = contexts;
+            SaveServers();
+        }
+
+        public void Init()
+        {
+            var subscribedServers = SettingsManager.ReadServers();
+            if (subscribedServers == null)
+            {
+                return;
+            }
+
+            SubscribedServers = subscribedServers;
+            SubscribedServers.ForEach(ss => ss.Value.LoadTois());
         }
     }
 
@@ -74,7 +102,6 @@ namespace TOI_MobileClient.Managers
             Name = name;
             BaseUrl = url;
             Contexts = contexts;
-            LoadTois();
         }
 
         public async Task LoadTois()
