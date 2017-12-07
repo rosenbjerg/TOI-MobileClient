@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DepMan;
 using TOIClasses;
 using Xamarin.Forms;
 using Newtonsoft.Json;
+using TOI_MobileClient.Dependencies;
 using Xamarin.Forms.Internals;
 
 #pragma warning disable 4014
@@ -62,8 +64,9 @@ namespace TOI_MobileClient.Managers
         public void Init()
         {
             var subscribedServers = SettingsManager.ReadServers();
-            if (subscribedServers == null)
+            if (subscribedServers == null || subscribedServers.Count == 0)
             {
+                DependencyManager.Get<NotifierBase>().DisplayToast("Please subscribe to feeds!!!", true);
                 return;
             }
 

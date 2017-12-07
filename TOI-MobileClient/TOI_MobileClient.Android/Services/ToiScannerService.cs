@@ -1,19 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.Design;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
-using Android.Graphics;
 using Android.OS;
-using Android.Locations;
-using Android.Support.V4.App;
 using DepMan;
 using TOI_MobileClient.Dependencies;
 using TOI_MobileClient.Managers;
-using Xamarin.Forms;
 
 
 namespace TOI_MobileClient.Droid.Services
@@ -23,22 +16,6 @@ namespace TOI_MobileClient.Droid.Services
     {
         public int ServiceId { get; } = 6969;
         public ScannerServiceBinder Binder { get; private set; }
-
-        // TODO: Change this shit up to the SettingsManager
-        public static HashSet<string> Filter = new HashSet<string>
-        {
-            SettingsManager.PrepId("84:16:f9:ae:a4:3a"),
-            SettingsManager.PrepId("90:A4:DE:E8:29:AC")
-        };
-
-        // TODO: Change this shit up to the SettingsManager
-        private static readonly HashSet<string> BleFilter = new HashSet<string>
-        {
-            SettingsManager.PrepId("CC1454015282"),
-            SettingsManager.PrepId("FAC4D1038D3D"),
-            SettingsManager.PrepId("CBFFB96CA47D"),
-            SettingsManager.PrepId("F4B415054205"),
-        };
 
         public CancellationTokenSource ScanLoopToken { get; private set; }
         public Task ScanLoopTask { get; private set; }

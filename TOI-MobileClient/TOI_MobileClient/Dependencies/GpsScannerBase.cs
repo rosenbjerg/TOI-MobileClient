@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Android.Widget;
 using Android.Locations;
 using Android.Runtime;
+using TOIClasses;
 
 namespace TOI_MobileClient.Dependencies
 {
@@ -12,7 +13,7 @@ namespace TOI_MobileClient.Dependencies
     {
         public abstract Location CurrentLocation { get; protected set; }
         public abstract Location GetLocation();
-        public abstract Task<Location> GetLocationAsync();
+        public abstract Task<GpsLocation> GetLocationAsync();
 
         public bool IsEnabled => false;
         public EventHandler<LocationFoundEventArgs> LocationFound { get; set; }

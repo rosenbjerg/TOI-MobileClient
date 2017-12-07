@@ -11,6 +11,7 @@ using Android.Content;
 using Android.Locations;
 using DepMan;
 using Newtonsoft.Json;
+using TOIClasses;
 using TOI_MobileClient.Managers;
 
 
@@ -75,17 +76,21 @@ namespace TOI_MobileClient.Droid
             return LocationServices.FusedLocationApi.GetLastLocation(_client);
         }
 
-        public override async Task<Location> GetLocationAsync()
+        public override async Task<GpsLocation> GetLocationAsync()
         {
             return await Task.Run(() =>
             {
                 var loc = GetLocation();
                 if (loc == null) return null;
-                var locationDict =
-                    new Dictionary<string, double> {{"Latitude", loc.Latitude}, {"Longitude", loc.Longitude}};
 
-                LocationFound?.Invoke(this, new LocationFoundEventArgs(JsonConvert.SerializeObject(locationDict)));
-                return loc;
+                var location = new GpsLocation
+                {
+                    Latitude = loc.Latitude,
+                    Longitude = loc.Longitude
+                };
+
+                LocationFound?.Invoke(this, new LocationFoundEventArgs(JsonConvert.SerializeObject(location)));
+                return location;
             });
         }
     }
