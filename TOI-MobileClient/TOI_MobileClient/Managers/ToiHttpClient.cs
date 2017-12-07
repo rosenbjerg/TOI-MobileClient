@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -46,8 +47,9 @@ namespace TOI_MobileClient.Managers
                 var list = JsonConvert.DeserializeObject<List<TModel>>(await res.Content.ReadAsStringAsync());
                 return list;
             }
-            catch (JsonException)
+            catch (Exception e)
             {
+                Console.WriteLine(e);
                 return null;
             }
         }

@@ -69,7 +69,7 @@ namespace TOI_MobileClient.Droid
                 .Select(r =>
                 {
                     Console.WriteLine($"AP: {r.Ssid} + {r.Bssid}");
-                    _androidWifi.WifiApFound?.Invoke(this, new WifiApFoundEventArg(r.Bssid));
+                    _androidWifi.WifiApFound?.Invoke(this, new WifiApFoundEventArg(SettingsManager.PrepId(r.Bssid)));
                     return r.Bssid;
                 });
             _tcs.SetResult(res.ToList());

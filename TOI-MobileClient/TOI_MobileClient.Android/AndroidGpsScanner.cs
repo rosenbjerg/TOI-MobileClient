@@ -89,7 +89,7 @@ namespace TOI_MobileClient.Droid
                     Longitude = loc.Longitude
                 };
 
-                LocationFound?.Invoke(this, new LocationFoundEventArgs(JsonConvert.SerializeObject(location)));
+                LocationFound?.Invoke(this, new LocationFoundEventArgs(location));
                 return location;
             });
         }

@@ -32,6 +32,16 @@ namespace TOI_MobileClient.Managers
 
         public HashSet<string> AllTags { get; private set; }
 
+        public IEnumerable<ToiModel> GetTois(string tag)
+        {
+            return SubscribedServers.Values.SelectMany(ss => ss.GetTois(tag));
+        }
+
+        public IEnumerable<ToiModel> GetToisByLocation(GpsLocation location)
+        {
+            return SubscribedServers.Values.SelectMany(ss => ss.GetToisByLocation(location));
+        }
+
         private void SaveServers()
         {
             SettingsManager.SaveServers(SubscribedServers);
@@ -61,6 +71,7 @@ namespace TOI_MobileClient.Managers
             SaveServers();
         }
 
+        public bool Inited { get; private set; }
         public void Init()
         {
             var subscribedServers = SettingsManager.ReadServers();
@@ -71,7 +82,9 @@ namespace TOI_MobileClient.Managers
             }
 
             SubscribedServers = subscribedServers;
-            SubscribedServers.ForEach(ss => ss.Value.LoadTois());
+            SubscribedServers.ForEach(async ss => await ss.Value.LoadTois());
+            RefreshTags();
+            Inited = true;
         }
     }
 
@@ -96,7 +109,10 @@ namespace TOI_MobileClient.Managers
             set
             {
                 _contexts = value;
-                LoadTois();
+                if (!string.IsNullOrEmpty(BaseUrl))
+                {
+                    LoadTois();
+                }
             }
         }
 
@@ -107,19 +123,39 @@ namespace TOI_MobileClient.Managers
             Contexts = contexts;
         }
 
+        private readonly List<ToiModel> _cache = new List<ToiModel>();
+
+        public List<ToiModel> GetTois(string tag)
+        {
+            return Index.TryGetValue(tag, out var value) ? value : _cache;
+        }
+
+        public List<ToiModel> GetToisByLocation(GpsLocation location)
+        {
+            var gps = GpsCache?.Where(t => t.WithinRange(location));
+            return gps?.SelectMany(t => Index[t.Id]).ToList() ?? _cache;
+        }
+
         public async Task LoadTois()
         {
-            var url = $"{BaseUrl}/tois?contexts={string.Join(",", Contexts)}";
-            ToiCache = await ToiHttpClient.Instance.GetMany<ToiModel>(url);
+            Console.WriteLine($"Fetching Contexts: '{string.Join(", ", Contexts)}' from {BaseUrl}");
+            var toiUrl = $"{BaseUrl}/tois?contexts={string.Join(",", Contexts)}";
+            var tagUrl = $"{BaseUrl}/tags?contexts={string.Join(",", Contexts)}";
+            ToiCache = await ToiHttpClient.Instance.GetMany<ToiModel>(toiUrl);
             TagCache = ToiCache.SelectMany(toi => toi.Tags).ToHashSet();
+            GpsCache = (await ToiHttpClient.Instance.GetMany<TagModel>(tagUrl))
+                ?.Where(t => t.Type == TagType.Gps)
+                .ToHashSet();
             Index = TagCache.ToDictionary(tagId => tagId,
                 tagId => ToiCache.Where(toi => toi.Tags.Contains(tagId)).ToList());
         }
+
 
         public Dictionary<string, List<ToiModel>> Index { get; set; }
 
         public List<ToiModel> ToiCache { get; private set; }
         public HashSet<string> TagCache = new HashSet<string>();
+        public HashSet<TagModel> GpsCache { get; set; }
         private List<string> _contexts;
     }
 }

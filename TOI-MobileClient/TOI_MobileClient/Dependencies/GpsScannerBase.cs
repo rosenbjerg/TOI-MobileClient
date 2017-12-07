@@ -21,9 +21,9 @@ namespace TOI_MobileClient.Dependencies
 
     public class LocationFoundEventArgs : EventArgs
     {
-        public string Location;
+        public GpsLocation Location;
 
-        public LocationFoundEventArgs(string location)
+        public LocationFoundEventArgs(GpsLocation location)
         {
             Location = location;
         }

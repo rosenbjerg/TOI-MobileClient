@@ -50,7 +50,7 @@ namespace TOI_MobileClient
 
         public ObservableCollection<ToiViewModel> ToiCollection { get; } = new ObservableCollection<ToiViewModel>();
 
-        public bool FoundTags => ToiCollection.Count > 0;
+        public bool FoundTois => ToiCollection.Count > 0;
         public bool NoTags => ToiCollection.Count == 0;
         public Color SyncColor => Loading ? Styling.DisabledIconColor : Styling.EnabledIconColor;
 
@@ -65,76 +65,21 @@ namespace TOI_MobileClient
         public ScanPageViewModel()
         {
             SyncCommand = new Command(Sync);
-            ClearCommand = new Command(() =>
+            ClearCommand = new Command(async () =>
             {
-                TagCache.Clear();
-                ToiCache.Clear();
+                // Empty ToiCache from ToiScannerService
+                (await DependencyManager.Get<IScannerServiceProvider>().GetServiceAsync()).ToiCache.Clear();
                 ToiCollection.Clear();
-                OnPropertyChanged(nameof(FoundTags));
+                OnPropertyChanged(nameof(FoundTois));
                 OnPropertyChanged(nameof(NoTags));
             });
         }
 
-        private HashSet<string> TagCache { get; } = new HashSet<string>();
-        private HashSet<ToiModel> ToiCache { get; } = new HashSet<ToiModel>();
-
-        private async void TagFound(object sender, TagFoundEventArgs args)
+        private void ToisFound(object sender, ToisFoundEventArgs e)
         {
-            if (TagCache.Contains(args.Tag)) return;
-
-            var rc = DependencyManager.Get<RestClient>();
-
-            try
-            {
-                var tois = await rc.PostMany<ToiModel>(
-                    SettingsManager.Url + (args.Gps ? "/toi/fromgps" : "/toi/fromtags"), new List<string> {args.Tag});
-
-                if (tois == null) return;
-                foreach (var toi in tois)
-                {
-                    if (ToiCache.Contains(toi)) continue;
-
-                    ToiCache.Add(toi);
-                    var vm = new ToiViewModel(toi);
-                    if (ToiCollection.All(v => v.Model.Id != vm.Model.Id))
-                    {
-                        ToiCollection.Add(vm);
-                    }
-                    TagCache.Add(args.Tag);
-
-                    OnPropertyChanged(nameof(FoundTags));
-                    OnPropertyChanged(nameof(NoTags));
-                }
-
-                //tois?.ForEach(t =>
-                //{
-                //    ToiCache.Add(t);
-                //    var vm = new ToiViewModel(t);
-                //    if (ToiCollection.All(v => v.Model.Id != vm.Model.Id))
-                //    {
-                //        ToiCollection.Add(vm);
-                //    }
-                //    TagCache.Add(args.Tag);
-
-                //    OnPropertyChanged(nameof(FoundTags));
-                //    OnPropertyChanged(nameof(NoTags));
-                //});
-            }
-            catch (WebException e)
-            {
-                DependencyManager.Get<NotifierBase>().DisplayToast("Could not connect to server", false);
-                Console.WriteLine(e);
-            }
-            catch (JsonReaderException e)
-            {
-                DependencyManager.Get<NotifierBase>().DisplayToast("Invalid data received from feed", false);
-                Console.WriteLine(e);
-            }
-            catch (HttpRequestException e)
-            {
-                DependencyManager.Get<NotifierBase>().DisplayToast("Server is offline!", false);
-                Console.WriteLine(e);
-            }
+            e.Tois.ForEach(t => ToiCollection.Add(new ToiViewModel(t)));
+            OnPropertyChanged(nameof(FoundTois));
+            OnPropertyChanged(nameof(NoTags));
         }
 
         private void Sync()
@@ -157,7 +102,7 @@ namespace TOI_MobileClient
             if (_scanner == null)
                 _scanner = await DependencyManager.Get<IScannerServiceProvider>().GetServiceAsync();
 
-            _scanner.TagFound += TagFound;
+            _scanner.ToisFound += ToisFound;
         }
 
         public override async void OnViewDisappearing()
@@ -165,7 +110,7 @@ namespace TOI_MobileClient
             if (_scanner == null)
                 _scanner = await DependencyManager.Get<IScannerServiceProvider>().GetServiceAsync();
 
-            _scanner.TagFound -= TagFound;
+            _scanner.ToisFound += ToisFound;
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using TOIClasses;
 using TOI_MobileClient.Managers;
 
 namespace TOI_MobileClient.Dependencies
@@ -12,31 +13,17 @@ namespace TOI_MobileClient.Dependencies
         void StopLoop();
         void StartLoop();
 
-        event EventHandler<TagsFoundsEventArgs> TagsFound;
-        event EventHandler<TagFoundEventArgs> TagFound;
+        List<ToiModel> ToiCache { get; }
+        event EventHandler<ToisFoundEventArgs> ToisFound;
     }
 
-    public class TagFoundEventArgs : EventArgs
+    public class ToisFoundEventArgs : EventArgs
     {
-        public string Tag { get; }
-        public bool Gps { get; }
+        public List<ToiModel> Tois { get; }
 
-        public TagFoundEventArgs(string tag, bool gps = false)
+        public ToisFoundEventArgs(List<ToiModel> tois)
         {
-            Tag = tag;
-            Gps = gps;
+            Tois = tois;
         }
     }
-
-    public class TagsFoundsEventArgs : EventArgs
-    {
-        public TagsFoundsEventArgs(List<string> addrs)
-        {
-            Tags = addrs;
-        }
-
-        public List<string> Tags { get; }
-        public bool Handled { get; set; } = false;
-    }
-
 }
