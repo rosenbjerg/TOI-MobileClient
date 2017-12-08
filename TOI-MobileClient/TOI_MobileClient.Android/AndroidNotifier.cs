@@ -77,13 +77,13 @@ namespace TOI_MobileClient.Droid
                 .SetVisibility(1)
                 .SetStyle(new NotificationCompat.BigTextStyle().BigText(content));
 
-            if (ToiScannerService.Looping)
+            if (ToiScannerService.Looping && bgId == 6969)
             {
                 nb.AddAction(Resource.Drawable.Cross, "Pause Scan", pPauseScanIntent);
                 nb.SetOngoing(true);
             }
                 
-            if(!ToiScannerService.Looping)
+            if(!ToiScannerService.Looping && bgId == 6969)
                 nb.AddAction(Resource.Drawable.Cross, "Start Scan", pScanIntent);
 
             if (makeNoice)
