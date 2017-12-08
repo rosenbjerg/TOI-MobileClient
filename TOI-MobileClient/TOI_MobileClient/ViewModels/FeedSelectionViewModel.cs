@@ -20,6 +20,7 @@ namespace TOI_MobileClient.ViewModels
             FeedServers.Add(new FeedServerViewModel
             {
                 Name = "Jespers Server",
+                Description = "En fin test server til at lave TOIs og kontekster på.",
                 BaseUrl = "http://ssh.windelborg.info:7474"
             });
         }
@@ -30,6 +31,7 @@ namespace TOI_MobileClient.ViewModels
     public class FeedServerViewModel : ViewModelBase
     {
         public string Name { get; set; }
+        public string Description { get; set; }
         public string BaseUrl { get; set; }
 
         public ICommand Tapped { get; }

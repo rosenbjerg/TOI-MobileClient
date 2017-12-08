@@ -5,15 +5,24 @@
              xmlns:toiMobileClient="clr-namespace:TOI_MobileClient;assembly=TOI_MobileClient.Android"
              x:Class="TOI_MobileClient.Views.FeedSelectionPage">
     <ContentPage.Content>
-        <StackLayout VerticalOptions="FillAndExpand">
+        <StackLayout Padding="10, 10, 10, 20"  VerticalOptions="FillAndExpand">
 <!--            <Button Text="{Binding Name}" Command="{Binding RedirectToContext}"></Button>-->
             
             
-            <ListView x:Name="FeedList" ItemsSource="{Binding FeedServers}">
+            <ListView RowHeight="70" x:Name="FeedList" ItemsSource="{Binding FeedServers}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <toiMobileClient:TapViewCell Command="{Binding Tapped}">
-                            <Label Text="{Binding Name}"/>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="0.5"></RowDefinition>
+                                    <RowDefinition Height="0.5"></RowDefinition>
+                                </Grid.RowDefinitions>
+                                <Grid.Children>
+                                    <Label Grid.Row="1" Text="{Binding Name}" FontSize="20"/>
+                                    <Label Grid.Row="2" Text="{Binding Description}" FontSize="14"/>
+                                </Grid.Children>
+                            </Grid>
                         </toiMobileClient:TapViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
