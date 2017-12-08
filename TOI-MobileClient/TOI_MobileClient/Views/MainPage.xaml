@@ -3,7 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TOI_MobileClient.MainPage"
              xmlns:pages="clr-namespace:TOI_MobileClient"
-             xmlns:iconize="clr-namespace:FormsPlugin.Iconize;assembly=FormsPlugin.Iconize">
+             NavigationPage.HasNavigationBar="false"
+             xmlns:iconize="clr-namespace:FormsPlugin.Iconize;assembly=FormsPlugin.Iconize"
+             xmlns:res="clr-namespace:Android.Content.Res;assembly=Mono.Android">
   
   <MasterDetailPage.Master>
     <pages:MainPageMaster x:Name="MasterPage" />

@@ -19,6 +19,7 @@ namespace TOI_MobileClient
 		{
 			InitializeComponent();
             MainPage = new NavigationPage(new MainPage());
+            
 		    Navigation = MainPage.Navigation;
 		    DependencyManager.Register<RestClient, RestClient>(new RestClient(new ToiHttpManager()));
 		    DependencyManager.Register<ILanguage, EnglishLanguage>(new EnglishLanguage());
