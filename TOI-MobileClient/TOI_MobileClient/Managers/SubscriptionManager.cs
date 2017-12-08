@@ -86,6 +86,14 @@ namespace TOI_MobileClient.Managers
             RefreshTags();
             Inited = true;
         }
+
+        public void ClearShown()
+        {
+            foreach (var ss in SubscribedServers.Values)
+            {
+                ss.LastFoundDict.Clear();
+            }
+        }
     }
 
     public class SubscribedServer
@@ -102,6 +110,7 @@ namespace TOI_MobileClient.Managers
 
         public string Name { get; set; }
         public string BaseUrl { get; set; }
+        private int _refreshInterval = 5;
 
         public List<string> Contexts
         {
@@ -123,17 +132,35 @@ namespace TOI_MobileClient.Managers
             Contexts = contexts;
         }
 
-        private readonly List<ToiModel> _cache = new List<ToiModel>();
+        private readonly List<ToiModel> _emptyList = new List<ToiModel>();
 
         public List<ToiModel> GetTois(string tag)
         {
-            return Index.TryGetValue(tag, out var value) ? value : _cache;
+            if (Index.TryGetValue(tag, out var value))
+            {
+                return value.Where(ShouldShowToi).ToList();
+            }
+            return _emptyList;
+        }
+
+        public bool ShouldShowToi(ToiModel toi)
+        {
+            if (LastFoundDict.TryGetValue(toi.Id, out var time))
+            {
+                var show = time.AddMinutes(_refreshInterval) < DateTime.UtcNow;
+                if (!show)
+                {
+                    return false;
+                }
+            }
+            LastFoundDict[toi.Id] = DateTime.UtcNow;
+            return true;
         }
 
         public List<ToiModel> GetToisByLocation(GpsLocation location)
         {
             var gps = GpsCache?.Where(t => t.WithinRange(location));
-            return gps?.SelectMany(t => Index[t.Id]).ToList() ?? _cache;
+            return gps?.SelectMany(t => Index[t.Id]).ToList() ?? _emptyList;
         }
 
         public async Task LoadTois()
@@ -152,6 +179,7 @@ namespace TOI_MobileClient.Managers
 
 
         public Dictionary<string, List<ToiModel>> Index { get; set; }
+        public Dictionary<string, DateTime> LastFoundDict { get; set; } = new Dictionary<string, DateTime>();
 
         public List<ToiModel> ToiCache { get; private set; }
         public HashSet<string> TagCache = new HashSet<string>();

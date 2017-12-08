@@ -65,19 +65,28 @@ namespace TOI_MobileClient
         public ScanPageViewModel()
         {
             SyncCommand = new Command(Sync);
-            ClearCommand = new Command(async () =>
+            ClearCommand = new Command(() =>
             {
                 // Empty ToiCache from ToiScannerService
-                (await DependencyManager.Get<IScannerServiceProvider>().GetServiceAsync()).ToiCache.Clear();
+                SubscriptionManager.Instance.ClearShown();
+                _shownTois.Clear();
                 ToiCollection.Clear();
                 OnPropertyChanged(nameof(FoundTois));
                 OnPropertyChanged(nameof(NoTags));
             });
         }
 
+        private readonly HashSet<ToiModel> _shownTois = new HashSet<ToiModel>();
+
         private void ToisFound(object sender, ToisFoundEventArgs e)
         {
-            e.Tois.ForEach(t => ToiCollection.Add(new ToiViewModel(t)));
+            foreach (var t in e.Tois)
+            {
+                if (_shownTois.Contains(t)) continue;
+
+                _shownTois.Add(t);
+                ToiCollection.Add(new ToiViewModel(t));
+            }
             OnPropertyChanged(nameof(FoundTois));
             OnPropertyChanged(nameof(NoTags));
         }

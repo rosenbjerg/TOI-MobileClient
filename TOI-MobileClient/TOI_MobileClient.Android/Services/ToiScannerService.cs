@@ -22,92 +22,36 @@ namespace TOI_MobileClient.Droid.Services
 
         public CancellationTokenSource ScanLoopToken { get; private set; }
         public Task ScanLoopTask { get; private set; }
-
-        public List<ToiModel> ToiCache { get; } = new List<ToiModel>();
-        //public Dictionary<ToiModel, DateTime> ToiTtl { get; } = new Dictionary<ToiModel, DateTime>();
-
-//        public bool ShouldShow(ToiModel toi)
-//        {
-//            if (!ToiTtl.TryGetValue(toi, out var time))
-//            {
-//                ToiTtl[toi] = DateTime.UtcNow;   
-//                return true;
-//            }
-//
-//            if (time.AddMinutes(15) > DateTime.UtcNow)
-//            {
-//                return false;
-//            }
-//
-//            ToiTtl[toi] = DateTime.UtcNow;
-//            return true;
-//        }
-
+        
         public ToiScannerService()
         {
-//            TagsFound += async delegate(object sender, TagsFoundsEventArgs args)
-//            {
-//                await Task.Delay(1000);
-//                if (args.Handled) return;
-//
-//                var lang = DependencyManager.Get<ILanguage>();
-//
-//                if (args.Tags.Count == 0)
-//                {
-//                    DependencyManager.Get<NotifierBase>().UpdateAppNotification(ServiceId, lang.Scanning,
-//                        lang.ScanningExplanation,
-//                        Resource.Drawable.TagSyncIcon, Resource.Drawable.Icon);
-//                }
-//                else
-//                {
-//                    DependencyManager.Get<NotifierBase>().UpdateAppNotification(ServiceId, lang.NewToi,
-//                        lang.NewToiExplanation,
-//                        Resource.Drawable.TagFoundIcon, Resource.Drawable.Icon, true);
-//                }
-//            };
-
-
             DependencyManager.Get<BleScannerBase>().BleDeviceFound += (sender, args) =>
             {
-                var tois = SubscriptionManager.Instance.GetTois(args.Device.Address)
-                    .Where(t => !ToiCache.Contains(t))
-                    .ToList();
+                var tois = SubscriptionManager.Instance.GetTois(args.Device.Address).ToList();
                 if (!tois.Any()) return;
-
-                ToiCache.AddRange(tois);
                 ToisFound?.Invoke(this, new ToisFoundEventArgs(tois));
             };
 
             DependencyManager.Get<WiFiScannerBase>().WifiApFound += (sender, args) =>
             {
                 var tois = SubscriptionManager.Instance.GetTois(args.Bssid)
-                    .Where(t => !ToiCache.Contains(t))
                     .ToList();
                 if (!tois.Any()) return;
-
-                ToiCache.AddRange(tois);
                 ToisFound?.Invoke(this, new ToisFoundEventArgs(tois));
             };
 
             DependencyManager.Get<NfcScannerBase>().NfcTagFound += (sender, args) =>
             {
                 var tois = SubscriptionManager.Instance.GetTois(args.TagId)
-                    .Where(t => !ToiCache.Contains(t))
                     .ToList();
                 if (!tois.Any()) return;
-
-                ToiCache.AddRange(tois);
                 ToisFound?.Invoke(this, new ToisFoundEventArgs(tois));
             };
 
             DependencyManager.Get<GpsScannerBase>().LocationFound += (sender, args) =>
             {
                 var tois = SubscriptionManager.Instance.GetToisByLocation(args.Location)
-                    .Where(t => !ToiCache.Contains(t))
                     .ToList();
-                if (!tois.Any()) return;
-
-                ToiCache.AddRange(tois);
                 ToisFound?.Invoke(this, new ToisFoundEventArgs(tois));
             };
             StartLoop();

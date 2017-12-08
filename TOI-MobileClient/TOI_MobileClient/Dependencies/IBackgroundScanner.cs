@@ -12,8 +12,7 @@ namespace TOI_MobileClient.Dependencies
         Task StartScan();
         void StopLoop();
         void StartLoop();
-
-        List<ToiModel> ToiCache { get; }
+        
         event EventHandler<ToisFoundEventArgs> ToisFound;
     }
 
