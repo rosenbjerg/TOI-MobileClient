@@ -7,6 +7,7 @@ using TOIClasses;
 using Xamarin.Forms;
 using Newtonsoft.Json;
 using TOI_MobileClient.Dependencies;
+using TOI_MobileClient.Views;
 using Xamarin.Forms.Internals;
 
 #pragma warning disable 4014
@@ -72,12 +73,16 @@ namespace TOI_MobileClient.Managers
         }
 
         public bool Inited { get; private set; }
-        public void Init()
+        public async void Init()
         {
             var subscribedServers = SettingsManager.ReadServers();
             if (subscribedServers == null || subscribedServers.Count == 0)
             {
-                DependencyManager.Get<NotifierBase>().DisplayToast("Please subscribe to feeds!!!", true);
+                if (await App.Current.MainPage.DisplayAlert("Select feeds", "Please subcribe to a feed", "Select",
+                    "Cancel"))
+                {
+                    App.Current.MainPage.Navigation.PushAsync(new FeedSelectionPage());
+                }
                 return;
             }
 
@@ -147,7 +152,7 @@ namespace TOI_MobileClient.Managers
                 ?.Where(t => t.Type == TagType.Gps)
                 .ToHashSet();
             Index = TagCache.ToDictionary(tagId => tagId,
-                tagId => ToiCache.Where(toi => toi.Tags.Contains(tagId)).ToList());
+            tagId => ToiCache.Where(toi => toi.Tags.Contains(tagId)).ToList());
         }
 
 
