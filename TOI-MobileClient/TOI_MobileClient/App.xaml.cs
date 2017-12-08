@@ -27,12 +27,7 @@ namespace TOI_MobileClient
             SubscriptionManager.Instance.Init();
             Console.WriteLine("Finished Init'ing Subscription Manager");
         }
-
-        public void SetStartPage(Page page)
-        {
-            MainPage = page;
-        }
-
+        
         protected override void OnStart()
         {
             // Handle when your app starts

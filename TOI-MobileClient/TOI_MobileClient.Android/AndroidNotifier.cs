@@ -6,8 +6,10 @@ using Android.Graphics;
 using Android.Support.Design.Widget;
 using Android.Support.V4.App;
 using Android.Widget;
+using DepMan;
 using TOI_MobileClient.Dependencies;
 using TOI_MobileClient.Droid.Services;
+using TOI_MobileClient.Managers;
 using Xamarin.Forms;
 
 namespace TOI_MobileClient.Droid
@@ -77,14 +79,15 @@ namespace TOI_MobileClient.Droid
                 .SetVisibility(1)
                 .SetStyle(new NotificationCompat.BigTextStyle().BigText(content));
 
-            if (ToiScannerService.Looping)
+            if (SettingsManager.IsScanning)
             {
                 nb.AddAction(Resource.Drawable.Cross, "Pause Scan", pPauseScanIntent);
                 nb.SetOngoing(true);
             }
-                
-            if(!ToiScannerService.Looping)
+            else
+            {
                 nb.AddAction(Resource.Drawable.Cross, "Start Scan", pScanIntent);
+            }
 
             if (makeNoice)
                 nb.SetDefaults((int) NotificationDefaults.All);

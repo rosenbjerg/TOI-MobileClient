@@ -9,17 +9,17 @@ using TOIClasses;
 
 namespace TOI_MobileClient.Dependencies
 {
-    public abstract class GpsScannerBase : Java.Lang.Object, IHardware
+    public abstract class GpsScannerBase : Java.Lang.Object, IHardware, IScanner<LocationFoundEventArgs>
     {
         public abstract Location CurrentLocation { get; protected set; }
-        public abstract Location GetLocation();
-        public abstract Task<GpsLocation> GetLocationAsync();
 
         public bool IsEnabled => false;
-        public EventHandler<LocationFoundEventArgs> LocationFound { get; set; }
+
+        public abstract Task ScanAsync();
+        public abstract event EventHandler<LocationFoundEventArgs> ResultFound;
     }
 
-    public class LocationFoundEventArgs : EventArgs
+    public class LocationFoundEventArgs : EventArgs, IScanResultEvent
     {
         public GpsLocation Location;
 
@@ -27,5 +27,7 @@ namespace TOI_MobileClient.Dependencies
         {
             Location = location;
         }
+
+        public string Id => "G" + Location.Latitude + "P" + Location.Longitude + "S";
     }
 }

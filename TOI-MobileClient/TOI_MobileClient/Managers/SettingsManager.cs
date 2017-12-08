@@ -31,6 +31,7 @@ namespace TOI_MobileClient.Managers
                 .ToDictionary(e => e.BaseUrl, e => e);
         }
 
+        public static bool IsScanning { get; set; }
         public static bool BleEnabled
         {
             get => AppSettings.GetValueOrDefault(nameof(BleEnabled), Default);

@@ -24,11 +24,35 @@ namespace TOI_MobileClient.Droid
         Android.Gms.Location.ILocationListener
     {
         private readonly GoogleApiClient _client;
-        public override Location CurrentLocation { get; protected set; }
         private readonly LocationManager _locationManager;
         private bool _enabled;
+        public override Location CurrentLocation { get; protected set; }
 
         public new bool IsEnabled => _locationManager.IsProviderEnabled(LocationManager.GpsProvider) && _enabled;
+
+        public override async Task ScanAsync()
+        {
+            if (!_client.IsConnected || 
+                SettingsManager.GpsEnabled || 
+                !IsEnabled)
+                return;
+
+            await Task.Run(() =>
+            {
+                var locationRequest = new LocationRequest();
+                locationRequest.SetPriority(100);
+                locationRequest.SetInterval(10000);
+                locationRequest.SetFastestInterval(5000);
+                var location = LocationServices.FusedLocationApi.GetLastLocation(_client);
+                ResultFound?.Invoke(this, new LocationFoundEventArgs(new GpsLocation
+                {
+                    Latitude = location.Latitude,
+                    Longitude = location.Longitude
+                }));
+            });
+        }
+
+        public override event EventHandler<LocationFoundEventArgs> ResultFound;
 
         public AndroidGpsScanner()
         {
@@ -61,37 +85,6 @@ namespace TOI_MobileClient.Droid
         public void OnLocationChanged(Location location)
         {
             CurrentLocation = location;
-        }
-
-        public override Location GetLocation()
-        {
-            if (!_client.IsConnected) return null;
-            if (!SettingsManager.GpsEnabled) return null;
-            if (!IsEnabled) return null;
-
-            var locationRequest = new LocationRequest();
-            locationRequest.SetPriority(100);
-            locationRequest.SetInterval(10000);
-            locationRequest.SetFastestInterval(5000);
-            return LocationServices.FusedLocationApi.GetLastLocation(_client);
-        }
-
-        public override async Task<GpsLocation> GetLocationAsync()
-        {
-            return await Task.Run(() =>
-            {
-                var loc = GetLocation();
-                if (loc == null) return null;
-
-                var location = new GpsLocation
-                {
-                    Latitude = loc.Latitude,
-                    Longitude = loc.Longitude
-                };
-
-                LocationFound?.Invoke(this, new LocationFoundEventArgs(location));
-                return location;
-            });
         }
     }
 }

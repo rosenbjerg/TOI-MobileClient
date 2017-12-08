@@ -14,11 +14,13 @@ namespace TOI_MobileClient.Droid
 {
     public class AndroidBleScanner : BleScannerBase
     {
+        private const int ScanTimeout = 2000;
         private bool _isScanning;
+        
+        public override bool IsEnabled => Ble.IsOn && Ble.IsAvailable;
 
-        public new bool IsEnabled => Ble.IsOn && Ble.IsAvailable;
-
-        public override async Task ScanAsync(int scanTimeout = 2000)
+        public override event EventHandler<BleDeviceFoundEventArgs> ResultFound;
+        public override async Task ScanAsync()
         {
             if (_isScanning || !SettingsManager.BleEnabled) return;
             if (!IsEnabled)
@@ -28,7 +30,7 @@ namespace TOI_MobileClient.Droid
             }
             _isScanning = true;
 
-            Adapter.ScanTimeout = scanTimeout;
+            Adapter.ScanTimeout = ScanTimeout;
             void OnAdapterOnDeviceDiscovered(object sender, DeviceEventArgs args)
             {
                 if (!Filter(args.Device)) return;
@@ -38,7 +40,7 @@ namespace TOI_MobileClient.Droid
                     Rssi = args.Device.Rssi,
                     Address = SettingsManager.PrepId(args.Device.Id.ToString("N")).TrimStart('0')
                 };
-                BleDeviceFound?.Invoke(sender, new BleDeviceFoundEventArgs(dev));
+                ResultFound?.Invoke(sender, new BleDeviceFoundEventArgs(dev));
             }
 
             Adapter.DeviceDiscovered += OnAdapterOnDeviceDiscovered;

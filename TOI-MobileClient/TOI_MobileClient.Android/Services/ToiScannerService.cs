@@ -22,49 +22,39 @@ namespace TOI_MobileClient.Droid.Services
 
         public CancellationTokenSource ScanLoopToken { get; private set; }
         public Task ScanLoopTask { get; private set; }
+        private readonly BleScannerBase _bleScanner = DependencyManager.Get<BleScannerBase>();
+        private readonly GpsScannerBase _gpsScanner = DependencyManager.Get<GpsScannerBase>();
+        private readonly NfcScannerBase _nfcScanner = DependencyManager.Get<NfcScannerBase>();
+        private readonly WiFiScannerBase _wifiScanner = DependencyManager.Get<WiFiScannerBase>();
         
         public ToiScannerService()
         {
-            DependencyManager.Get<BleScannerBase>().BleDeviceFound += (sender, args) =>
+            _bleScanner.ResultFound += OnTagFound;
+            _wifiScanner.ResultFound += OnTagFound;
+            _nfcScanner.ResultFound += OnTagFound;
+            _gpsScanner.ResultFound += (sender, args) =>
             {
-                var tois = SubscriptionManager.Instance.GetTois(args.Device.Address).ToList();
-                if (!tois.Any()) return;
+                var tois = SubscriptionManager.Instance.GetToisByLocation(args.Location).ToList();
+                if (!tois.Any())
+                    return;
                 ToisFound?.Invoke(this, new ToisFoundEventArgs(tois));
             };
-
-            DependencyManager.Get<WiFiScannerBase>().WifiApFound += (sender, args) =>
-            {
-                var tois = SubscriptionManager.Instance.GetTois(args.Bssid)
-                    .ToList();
-                if (!tois.Any()) return;
-                ToisFound?.Invoke(this, new ToisFoundEventArgs(tois));
-            };
-
-            DependencyManager.Get<NfcScannerBase>().NfcTagFound += (sender, args) =>
-            {
-                var tois = SubscriptionManager.Instance.GetTois(args.TagId)
-                    .ToList();
-                if (!tois.Any()) return;
-                ToisFound?.Invoke(this, new ToisFoundEventArgs(tois));
-            };
-
-            DependencyManager.Get<GpsScannerBase>().LocationFound += (sender, args) =>
-            {
-                var tois = SubscriptionManager.Instance.GetToisByLocation(args.Location)
-                    .ToList();
-                ToisFound?.Invoke(this, new ToisFoundEventArgs(tois));
-            };
-            StartLoop();
         }
 
-        public void StartLoop()
+        private void OnTagFound(object sender, IScanResultEvent args)
+        {
+            var tois = SubscriptionManager.Instance.GetTois(args.Id).ToList();
+            if (!tois.Any()) return;
+            ToisFound?.Invoke(this, new ToisFoundEventArgs(tois));
+        }
+
+        public void StartBackgroundScanning()
         {
             if (ScanLoopTask?.IsCanceled == true) return;
-
-            Console.WriteLine("Starting ScanLoop");
+            
             ScanLoopToken = new CancellationTokenSource();
             ScanLoopTask = Task.Run(ScanLoop, ScanLoopToken.Token);
-            Looping = true;
+            SettingsManager.IsScanning = true;
             var lang = DependencyManager.Get<ILanguage>();
             DependencyManager.Get<NotifierBase>()
                 .UpdateAppNotification(
@@ -72,14 +62,14 @@ namespace TOI_MobileClient.Droid.Services
                     lang.ScanningExplanation,
                     Resource.Drawable.TagSyncIcon, Resource.Drawable.Icon);
         }
+        
 
-        public void StopLoop()
+        public void StopBackgroundScanning()
         {
             if (ScanLoopTask?.IsCanceled ?? true) return;
-
-            Console.WriteLine("Stopping ScanLoop");
+            
             ScanLoopToken.Cancel();
-            Looping = false;
+            SettingsManager.IsScanning = false;
 
             var lang = DependencyManager.Get<ILanguage>();
             DependencyManager.Get<NotifierBase>()
@@ -99,51 +89,33 @@ namespace TOI_MobileClient.Droid.Services
         {
             return StartCommandResult.Sticky;
         }
-
-
-        public async Task StartScan()
-        {
-            if (Looping) return;
-
-            //await DependencyManager.Get<GpsScannerBase>().GetLocationAsync();
-            //await DependencyManager.Get<BleScannerBase>().ScanBle(BleFilter);
-            //await DependencyManager.Get<WiFiScannerBase>().ScanAsync(Filter);
-            return;
-        }
-
-
+        
         private async Task ScanLoop()
         {
             while (!ScanLoopToken.IsCancellationRequested)
             {
-                if (!SubscriptionManager.Instance.Inited)
+                if (!SubscriptionManager.Instance.Initiated)
                 {
                     await Task.Delay(1000);
                     continue;
                 }
 
+                SettingsManager.IsScanning = true;
+                SubscriptionManager.Instance.RefreshTags();
+                
+                var bleTask = _bleScanner.ScanAsync();
+                var wifiTask = _wifiScanner.ScanAsync();
+                var gpsTask = _gpsScanner.ScanAsync();
+                await Task.WhenAll(bleTask, wifiTask, gpsTask);
+                await Task.Delay(SettingsManager.ScanDelay());
+
                 if (SettingsManager.ScanFrequencyValue == SettingsManager.Language.Never)
                 {
-                    Looping = false;
-                    await Task.Delay(SettingsManager.ScanDelay());
-                    continue;
+                    SettingsManager.IsScanning = false;
+                    return;
                 }
-
-                Looping = true;
-                SubscriptionManager.Instance.RefreshTags();
-
-                Console.WriteLine("Starting Bluetooth Low Energy scan.");
-                await DependencyManager.Get<BleScannerBase>().ScanAsync();
-                Console.WriteLine("Starting Wi-Fi scan.");
-                await DependencyManager.Get<WiFiScannerBase>().ScanAsync();
-//                Console.WriteLine("Starting GPS scan.");
-//                await DependencyManager.Get<GpsScannerBase>().GetLocationAsync();
-                Console.WriteLine("Finished scanning, delaying...");
-                await Task.Delay(SettingsManager.ScanDelay());
             }
         }
-
-        public static bool Looping { get; set; }
 
         public event EventHandler<ToisFoundEventArgs> ToisFound;
     }

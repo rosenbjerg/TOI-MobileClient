@@ -30,7 +30,7 @@ namespace TOI_MobileClient.Managers
                 .SelectMany(ss => ss.TagCache).ToHashSet();
         }
 
-        public HashSet<string> AllTags { get; private set; }
+        public HashSet<string> AllTags { get; private set; } = new HashSet<string>();
 
         public IEnumerable<ToiModel> GetTois(string tag)
         {
@@ -71,7 +71,7 @@ namespace TOI_MobileClient.Managers
             SaveServers();
         }
 
-        public bool Inited { get; private set; }
+        public bool Initiated { get; private set; }
         public void Init()
         {
             var subscribedServers = SettingsManager.ReadServers();
@@ -84,7 +84,7 @@ namespace TOI_MobileClient.Managers
             SubscribedServers = subscribedServers;
             SubscribedServers.ForEach(async ss => await ss.Value.LoadTois());
             RefreshTags();
-            Inited = true;
+            Initiated = true;
         }
 
         public void ClearShown()

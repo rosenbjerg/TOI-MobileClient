@@ -34,10 +34,10 @@ namespace TOI_MobileClient.Droid
             switch (intent.Action)
             {
                 case PauseScanningFromBackground:
-                    (await DependencyManager.Get<IScannerServiceProvider>().GetServiceAsync()).StopLoop();
+                    (await DependencyManager.Get<IScannerServiceProvider>().GetServiceAsync()).StopBackgroundScanning();
                     break;
                 case StartScanningFromBackground:
-                    (await DependencyManager.Get<IScannerServiceProvider>().GetServiceAsync()).StartLoop();
+                    (await DependencyManager.Get<IScannerServiceProvider>().GetServiceAsync()).StartBackgroundScanning();
                     break;
             }
         }

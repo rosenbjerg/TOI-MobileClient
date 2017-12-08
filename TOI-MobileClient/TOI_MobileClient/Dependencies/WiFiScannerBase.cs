@@ -4,21 +4,22 @@ using System.Threading.Tasks;
 
 namespace TOI_MobileClient.Dependencies
 {
-    public abstract class WiFiScannerBase : IHardware
+    public abstract class WiFiScannerBase : IHardware, IScanner<WifiApFoundEventArg>
     {
-        public abstract Task<IEnumerable<string>> ScanAsync();
+        public abstract Task ScanAsync();
+        public abstract event EventHandler<WifiApFoundEventArg> ResultFound;
         public bool IsEnabled => false;
 
         public EventHandler<WifiApFoundEventArg> WifiApFound;
     }
 
-    public class WifiApFoundEventArg : EventArgs
+    public class WifiApFoundEventArg : EventArgs, IScanResultEvent
     {
-        public string Bssid { get; }
+        public string Id { get; }
 
-        public WifiApFoundEventArg(string bssid)
+        public WifiApFoundEventArg(string id)
         {
-            Bssid = bssid;
+            Id = id;
         }
     }
 }

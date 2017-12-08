@@ -21,7 +21,7 @@ namespace TOI_MobileClient.Droid
             if (intent.Action != NfcAdapter.ActionTagDiscovered || !(intent.GetParcelableExtra(NfcAdapter.ExtraTag) is Tag tag))
                 return;
 
-            NfcTagFound?.Invoke(this, new NfcEventArgs(ByteArrayToString(tag.GetId())));
+            ResultFound?.Invoke(this, new NfcEventArgs(ByteArrayToString(tag.GetId())));
         }
 
         public static string ByteArrayToString(byte[] ba)
@@ -31,6 +31,8 @@ namespace TOI_MobileClient.Droid
                 hex.AppendFormat("{0:x2}", b);
             return hex.ToString();
         }
+
+        public override event EventHandler<NfcEventArgs> ResultFound;
 
         public new bool IsEnabled => NfcAdapter?.IsEnabled ?? false;
         public NfcAdapter NfcAdapter { get; protected set; }

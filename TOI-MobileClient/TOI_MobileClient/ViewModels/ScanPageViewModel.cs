@@ -80,6 +80,7 @@ namespace TOI_MobileClient
 
         private void ToisFound(object sender, ToisFoundEventArgs e)
         {
+            Loading = false;
             foreach (var t in e.Tois)
             {
                 if (_shownTois.Contains(t)) continue;
@@ -99,9 +100,7 @@ namespace TOI_MobileClient
             ToiCollection.Clear();
             Loading = true;
 
-            var task = _scanner.StartScan();
-            task.Wait();
-            Loading = false;
+            _scanner.StartBackgroundScanning();
         }
 
         public override async void OnViewAppearing()

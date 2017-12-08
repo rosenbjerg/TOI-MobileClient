@@ -7,7 +7,7 @@ using TOI_MobileClient.Dependencies;
 
 namespace TOI_MobileClient
 {
-    public abstract class BleScannerBase : IHardware
+    public abstract class BleScannerBase : IHardware, IScanner<BleDeviceFoundEventArgs>
     {
         protected BleScannerBase(bool test = false)
         {
@@ -20,14 +20,15 @@ namespace TOI_MobileClient
         protected IBluetoothLE Ble;
         protected IAdapter Adapter;
 
-        public abstract Task ScanAsync(int scanTimeout = 2000);
+        public abstract Task ScanAsync();
 
-        public EventHandler<BleDeviceFoundEventArgs> BleDeviceFound;
 
-        public bool IsEnabled => false;
+        public abstract bool IsEnabled { get; }
+        
+        public abstract event EventHandler<BleDeviceFoundEventArgs> ResultFound;
     }
 
-    public class BleDeviceFoundEventArgs : EventArgs
+    public class BleDeviceFoundEventArgs : EventArgs, IScanResultEvent
     {
         public readonly BleDevice Device;
 
@@ -35,6 +36,8 @@ namespace TOI_MobileClient
         {
             Device = device;
         }
+
+        public string Id => Device.Address;
     }
 
     public class BleDevice

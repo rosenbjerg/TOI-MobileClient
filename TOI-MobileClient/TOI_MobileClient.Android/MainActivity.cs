@@ -34,23 +34,29 @@ namespace TOI_MobileClient.Droid
 		        Console.WriteLine(e);
 		    }
 
-            DependencyManager.Register<BleScannerBase, AndroidBleScanner>(new AndroidBleScanner());
-		    DependencyManager.Register<NotifierBase, AndroidNotifier>(new AndroidNotifier(GetSystemService(NotificationService) as NotificationManager));
-		    DependencyManager.Register<GpsScannerBase, AndroidGpsScanner>(new AndroidGpsScanner());
-		    DependencyManager.Register<WiFiScannerBase, AndroidWifiScanner>(new AndroidWifiScanner());
-            _nfcScanner = new AndroidNfcScanner(NfcAdapter.GetDefaultAdapter(this));
-		    DependencyManager.Register<NfcScannerBase, AndroidNfcScanner>(_nfcScanner);
+		    if (!DependencyManager.IsRegistered<BleScannerBase>())
+		    {
+		        DependencyManager.Register<NotifierBase, AndroidNotifier>(new AndroidNotifier(GetSystemService(NotificationService) as NotificationManager));
+                DependencyManager.Register<BleScannerBase, AndroidBleScanner>(new AndroidBleScanner());
+		        DependencyManager.Register<GpsScannerBase, AndroidGpsScanner>(new AndroidGpsScanner());
+		        DependencyManager.Register<WiFiScannerBase, AndroidWifiScanner>(new AndroidWifiScanner());
+		        _nfcScanner = new AndroidNfcScanner(NfcAdapter.GetDefaultAdapter(this));
+		        DependencyManager.Register<NfcScannerBase, AndroidNfcScanner>(_nfcScanner);
+		        ServiceConnection = new ScannerServiceConnection();
+		        DependencyManager.Register<IScannerServiceProvider, ScannerServiceConnection>(ServiceConnection);
+            }
 
             Forms.Init (this, bundle);
 		    Plugin.Iconize.Iconize.With(new Plugin.Iconize.Fonts.FontAwesomeModule());
             FormsPlugin.Iconize.Droid.IconControls.Init(Resource.Id.toolbar, Resource.Id.sliding_tabs);
-            
-		    ServiceConnection = new ScannerServiceConnection();
-		    DependencyManager.Register<IScannerServiceProvider, ScannerServiceConnection>(ServiceConnection);
-
+//
+//		    if (!DependencyManager.IsRegistered<IScannerServiceProvider>())
+//		    {
+//            }
 		    NotificationActionHandler = new NotificationActionHandler(this);
 
-		    LoadApplication(new App());
+
+            LoadApplication(new App());
 
         }
 
