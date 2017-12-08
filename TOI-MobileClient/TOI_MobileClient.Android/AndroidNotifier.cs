@@ -25,12 +25,9 @@ namespace TOI_MobileClient.Droid
                 notificationManager ?? throw new NullReferenceException("Notification manager was null!");
         }
 
-        public override void DisplaySnackbar(string text, bool longDur = true)
+        public override void DisplaySnackbar(string text, int dur)
         {
-            var activity = (Activity) Android.App.Application.Context;
-            var view = activity.FindViewById(Android.Resource.Id.Content);
-
-            Device.BeginInvokeOnMainThread(() => { Snackbar.Make(view, text, longDur ? 10000 : 3000).Show(); });
+            throw new NotImplementedException();
         }
 
         public override void DisplayToast(string text, bool longDur = true)

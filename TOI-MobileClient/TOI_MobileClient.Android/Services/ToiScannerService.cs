@@ -17,7 +17,8 @@ namespace TOI_MobileClient.Droid.Services
     [Service(Exported = false, Label = "ToiScannerService")]
     public class ToiScannerService : Service, IBackgroundScanner
     {
-        public int ServiceId { get; } = 6969;
+        public int ScanningNotificationServiceId { get; } = 6969;
+        public int ToiFoundNotificationServiceId { get; } = 9696;
         public ScannerServiceBinder Binder { get; private set; }
 
         public CancellationTokenSource ScanLoopToken { get; private set; }
@@ -38,6 +39,8 @@ namespace TOI_MobileClient.Droid.Services
                 if (!tois.Any())
                     return;
                 ToisFound?.Invoke(this, new ToisFoundEventArgs(tois));
+
+                NewToiFoundNotification();
             };
         }
 
@@ -58,7 +61,7 @@ namespace TOI_MobileClient.Droid.Services
             var lang = DependencyManager.Get<ILanguage>();
             DependencyManager.Get<NotifierBase>()
                 .UpdateAppNotification(
-                    ServiceId, lang.Scanning,
+                    ScanningNotificationServiceId, lang.Scanning,
                     lang.ScanningExplanation,
                     Resource.Drawable.TagSyncIcon, Resource.Drawable.Icon);
         }
@@ -74,7 +77,7 @@ namespace TOI_MobileClient.Droid.Services
             var lang = DependencyManager.Get<ILanguage>();
             DependencyManager.Get<NotifierBase>()
                 .UpdateAppNotification(
-                    ServiceId, lang.ScanningPaused,
+                    ScanningNotificationServiceId, lang.ScanningPaused,
                     lang.NotScanningExplanation,
                     Resource.Drawable.TagSyncIcon, Resource.Drawable.Icon);
         }

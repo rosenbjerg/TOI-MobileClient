@@ -82,6 +82,7 @@ namespace TOI_MobileClient.Droid
 	    {
 	        base.OnDestroy();
             DependencyManager.Get<NotifierBase>().CancelNotification(6969);
+            UnregisterReceiver(NotificationActionHandler);
             ServiceConnection.UnbindFromService();
 	    }
 	}

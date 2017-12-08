@@ -12,20 +12,17 @@ using Xamarin.Forms;
 
 namespace TOI_MobileClient
 {
-    public partial class App
-    {
-        public static INavigation Navigation;
-
-        public App()
-        {
-            InitializeComponent();
-            MainPage = new MainPage();
-            Navigation = MainPage.Navigation;
-            DependencyManager.Register<RestClient, RestClient>(new RestClient(new ToiHttpManager()));
-            DependencyManager.Register<ILanguage, EnglishLanguage>(new EnglishLanguage());
-
-            SubscriptionManager.Instance.Init();
-            Console.WriteLine("Finished Init'ing Subscription Manager");
+	public partial class App
+	{
+	    public static INavigation Navigation;
+		public App ()
+		{
+			InitializeComponent();
+            MainPage = new NavigationPage(new MainPage());
+            
+		    Navigation = MainPage.Navigation;
+		    DependencyManager.Register<RestClient, RestClient>(new RestClient(new ToiHttpManager()));
+		    DependencyManager.Register<ILanguage, EnglishLanguage>(new EnglishLanguage());
         }
         
         protected override void OnStart()
