@@ -17,55 +17,60 @@ namespace TOI_MobileClient.Droid.Services
     [Service(Exported = false, Label = "ToiScannerService")]
     public class ToiScannerService : Service, IBackgroundScanner
     {
-        public int ServiceId { get; } = 6969;
+        public int ScanningNotificationServiceId { get; } = 6969;
+        public int ToiFoundNotificationServiceId { get; } = 9696;
         public ScannerServiceBinder Binder { get; private set; }
 
         public CancellationTokenSource ScanLoopToken { get; private set; }
         public Task ScanLoopTask { get; private set; }
 
         public List<ToiModel> ToiCache { get; } = new List<ToiModel>();
+
+        #region Commented out
         //public Dictionary<ToiModel, DateTime> ToiTtl { get; } = new Dictionary<ToiModel, DateTime>();
 
-//        public bool ShouldShow(ToiModel toi)
-//        {
-//            if (!ToiTtl.TryGetValue(toi, out var time))
-//            {
-//                ToiTtl[toi] = DateTime.UtcNow;   
-//                return true;
-//            }
-//
-//            if (time.AddMinutes(15) > DateTime.UtcNow)
-//            {
-//                return false;
-//            }
-//
-//            ToiTtl[toi] = DateTime.UtcNow;
-//            return true;
-//        }
+        //        public bool ShouldShow(ToiModel toi)
+        //        {
+        //            if (!ToiTtl.TryGetValue(toi, out var time))
+        //            {
+        //                ToiTtl[toi] = DateTime.UtcNow;   
+        //                return true;
+        //            }
+        //
+        //            if (time.AddMinutes(15) > DateTime.UtcNow)
+        //            {
+        //                return false;
+        //            }
+        //
+        //            ToiTtl[toi] = DateTime.UtcNow;
+        //            return true;
+        //        }
+        #endregion
 
         public ToiScannerService()
         {
-//            TagsFound += async delegate(object sender, TagsFoundsEventArgs args)
-//            {
-//                await Task.Delay(1000);
-//                if (args.Handled) return;
-//
-//                var lang = DependencyManager.Get<ILanguage>();
-//
-//                if (args.Tags.Count == 0)
-//                {
-//                    DependencyManager.Get<NotifierBase>().UpdateAppNotification(ServiceId, lang.Scanning,
-//                        lang.ScanningExplanation,
-//                        Resource.Drawable.TagSyncIcon, Resource.Drawable.Icon);
-//                }
-//                else
-//                {
-//                    DependencyManager.Get<NotifierBase>().UpdateAppNotification(ServiceId, lang.NewToi,
-//                        lang.NewToiExplanation,
-//                        Resource.Drawable.TagFoundIcon, Resource.Drawable.Icon, true);
-//                }
-//            };
-
+            #region commeted out
+            //            TagsFound += async delegate(object sender, TagsFoundsEventArgs args)
+            //            {
+            //                await Task.Delay(1000);
+            //                if (args.Handled) return;
+            //
+            //                var lang = DependencyManager.Get<ILanguage>();
+            //
+            //                if (args.Tags.Count == 0)
+            //                {
+            //                    DependencyManager.Get<NotifierBase>().UpdateAppNotification(ScanningNotificationServiceId, lang.Scanning,
+            //                        lang.ScanningExplanation,
+            //                        Resource.Drawable.TagSyncIcon, Resource.Drawable.Icon);
+            //                }
+            //                else
+            //                {
+            //                    DependencyManager.Get<NotifierBase>().UpdateAppNotification(ScanningNotificationServiceId, lang.NewToi,
+            //                        lang.NewToiExplanation,
+            //                        Resource.Drawable.TagFoundIcon, Resource.Drawable.Icon, true);
+            //                }
+            //            };
+            #endregion
 
             DependencyManager.Get<BleScannerBase>().BleDeviceFound += (sender, args) =>
             {
@@ -76,6 +81,8 @@ namespace TOI_MobileClient.Droid.Services
 
                 ToiCache.AddRange(tois);
                 ToisFound?.Invoke(this, new ToisFoundEventArgs(tois));
+
+                NewToiFoundNotification();
             };
 
             DependencyManager.Get<WiFiScannerBase>().WifiApFound += (sender, args) =>
@@ -87,6 +94,8 @@ namespace TOI_MobileClient.Droid.Services
 
                 ToiCache.AddRange(tois);
                 ToisFound?.Invoke(this, new ToisFoundEventArgs(tois));
+
+                NewToiFoundNotification();
             };
 
             DependencyManager.Get<NfcScannerBase>().NfcTagFound += (sender, args) =>
@@ -109,8 +118,20 @@ namespace TOI_MobileClient.Droid.Services
 
                 ToiCache.AddRange(tois);
                 ToisFound?.Invoke(this, new ToisFoundEventArgs(tois));
+
+                NewToiFoundNotification();
             };
             StartLoop();
+        }
+
+        private void NewToiFoundNotification()
+        {
+            var lang = DependencyManager.Get<ILanguage>();
+            DependencyManager.Get<NotifierBase>()
+                .UpdateAppNotification(
+                    ToiFoundNotificationServiceId, lang.NewToi,
+                    lang.NewToiExplanation,
+                    Resource.Drawable.TagSyncIcon, Resource.Drawable.Icon);
         }
 
         public void StartLoop()
@@ -124,7 +145,7 @@ namespace TOI_MobileClient.Droid.Services
             var lang = DependencyManager.Get<ILanguage>();
             DependencyManager.Get<NotifierBase>()
                 .UpdateAppNotification(
-                    ServiceId, lang.Scanning,
+                    ScanningNotificationServiceId, lang.Scanning,
                     lang.ScanningExplanation,
                     Resource.Drawable.TagSyncIcon, Resource.Drawable.Icon);
         }
@@ -140,7 +161,7 @@ namespace TOI_MobileClient.Droid.Services
             var lang = DependencyManager.Get<ILanguage>();
             DependencyManager.Get<NotifierBase>()
                 .UpdateAppNotification(
-                    ServiceId, lang.ScanningPaused,
+                    ScanningNotificationServiceId, lang.ScanningPaused,
                     lang.NotScanningExplanation,
                     Resource.Drawable.TagSyncIcon, Resource.Drawable.Icon);
         }
