@@ -19,5 +19,10 @@ namespace TOIClasses
         {
             return Id + "." + Filetype;
         }
+
+        public override bool Equals(object obj)
+        {
+            return (obj is StaticFile file) && file.Id == this.Id;
+        }
     }
 }
