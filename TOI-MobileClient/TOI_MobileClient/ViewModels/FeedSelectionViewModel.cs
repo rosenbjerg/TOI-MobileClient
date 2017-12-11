@@ -20,7 +20,13 @@ namespace TOI_MobileClient.ViewModels
             FeedServers.Add(new FeedServerViewModel
             {
                 Name = "Jespers Server",
-                Description = "En fin test server til at lave TOIs og kontekster på.",
+                Description = "En fin test server til at lave TOIs og kontekster på. Denne server har en meget lang description, som fylder en masse, for at vi kan teste lange descriptions. Fedt man, spa!",
+                BaseUrl = "http://ssh.windelborg.info:7474"
+            });
+            FeedServers.Add(new FeedServerViewModel
+            {
+                Name = "sw706 Hyggehulen",
+                Description = "Denne hule har samme kontekster som Jespers Server. Det er bare noget vi leger.",
                 BaseUrl = "http://ssh.windelborg.info:7474"
             });
         }
@@ -35,16 +41,23 @@ namespace TOI_MobileClient.ViewModels
         public string BaseUrl { get; set; }
 
         public ICommand Tapped { get; }
+        public ICommand Info { get; }
 
         public FeedServerViewModel()
         {
             Tapped = new Command(RedirectContext);
+            Info = new Command(ShowDescription);
         }
 
         private async void RedirectContext()
         {
             await Application.Current.MainPage.Navigation.PushModalAsync(
                 new ContextPage(Name, BaseUrl));
+        }
+
+        private void ShowDescription()
+        {
+            App.Current.MainPage.DisplayAlert(Name, Description, "OK");
         }
     }
 }

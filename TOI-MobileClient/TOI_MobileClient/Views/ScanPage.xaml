@@ -9,7 +9,7 @@
              Title="Scan for ToI">
     <ContentPage.ToolbarItems>
         <iconize:IconToolbarItem Icon="fa-refresh" IconColor="{Binding SyncColor}" Order="Primary" Command="{Binding SyncCommand}" IsVisible="{Binding SyncBtnVisibility}" />
-        <iconize:IconToolbarItem Icon="fa-times" IconColor="{Binding SyncColor}" Order="Primary" Command="{Binding ClearCommand}" IsVisible="{Binding ClearBtnVisibility}"></iconize:IconToolbarItem>
+        <iconize:IconToolbarItem Icon="fa-times" IconColor="{Binding SyncColor}" Order="Primary" Command="{Binding ClearCommand}" IsVisible="{Binding ClearBtnVisibility}"/>
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <StackLayout VerticalOptions="FillAndExpand">
@@ -32,10 +32,10 @@
                                                 <RowDefinition Height="3*" />
                                                 <RowDefinition Height="7*" />
                                             </Grid.RowDefinitions>
-                                            <Label Grid.Row="0" Grid.Column="0" Text="{Binding Title}" FontSize="12"
+                                            <Label Grid.Column="0" Grid.Row="0" Text="{Binding Title}" FontSize="12"
                                                    FontAttributes="Bold" />
-                                            <Label Grid.Row="1" Grid.Column="0" Text="{Binding ShortDescription}" FontSize="10" />
-                                            <Image Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Source="{Binding Image}" />
+                                            <Label Grid.Column="0" Grid.Row="1" Text="{Binding ShortDescription}" FontSize="10" />
+                                            <Image Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Source="{Binding Image}" />
                                         </Grid>
                                     </Frame>
                                 </toiMobileClient:TapViewCell.View>
