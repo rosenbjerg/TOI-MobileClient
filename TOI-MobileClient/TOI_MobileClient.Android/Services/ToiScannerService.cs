@@ -42,6 +42,8 @@ namespace TOI_MobileClient.Droid.Services
 
                 NewToiFoundNotification();
             };
+
+            StartBackgroundScanning();
         }
 
         private void OnTagFound(object sender, IScanResultEvent args)

@@ -13,7 +13,8 @@ using Xamarin.Forms;
 
 namespace TOI_MobileClient.Droid
 {
-	[Activity (Label = "Things of Interest", Icon = "@drawable/icon", Theme="@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation, LaunchMode = LaunchMode.SingleTop)]
+
+    [Activity (Label = "Things of Interest", Icon = "@drawable/icon", Theme="@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation, LaunchMode = LaunchMode.SingleTop)]
 	public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
 	{
 	    public static ScannerServiceConnection ServiceConnection;
@@ -45,14 +46,15 @@ namespace TOI_MobileClient.Droid
 		        ServiceConnection = new ScannerServiceConnection();
 		        DependencyManager.Register<IScannerServiceProvider, ScannerServiceConnection>(ServiceConnection);
             }
+            else if (_nfcScanner == null)
+		    {
+		        _nfcScanner = new AndroidNfcScanner(NfcAdapter.GetDefaultAdapter(this));
+            }
 
             Forms.Init (this, bundle);
 		    Plugin.Iconize.Iconize.With(new Plugin.Iconize.Fonts.FontAwesomeModule());
             FormsPlugin.Iconize.Droid.IconControls.Init(Resource.Id.toolbar, Resource.Id.sliding_tabs);
-//
-//		    if (!DependencyManager.IsRegistered<IScannerServiceProvider>())
-//		    {
-//            }
+
 		    NotificationActionHandler = new NotificationActionHandler(this);
 
 
@@ -71,6 +73,8 @@ namespace TOI_MobileClient.Droid
 
 	        var pendingIntent = PendingIntent.GetActivity(this, 0, intent, 0);
 	        _nfcScanner.NfcAdapter?.EnableForegroundDispatch(this, pendingIntent, filters, null);
+
+	        
 	    }
 
         protected override void OnNewIntent(Intent intent)
@@ -78,12 +82,15 @@ namespace TOI_MobileClient.Droid
 	        DependencyManager.Get<NfcScannerBase>().HandleNfcIntent(intent);
 	    }
 
+
 	    protected override void OnDestroy()
 	    {
 	        base.OnDestroy();
-            DependencyManager.Get<NotifierBase>().CancelNotification(6969);
-            UnregisterReceiver(NotificationActionHandler);
-            ServiceConnection.UnbindFromService();
+//          DependencyManager.Get<NotifierBase>().CancelNotification(6969);
+//          DependencyManager.Get<NotifierBase>().CancelNotification(9696);
+//          UnregisterReceiver(NotificationActionHandler);
+            //ServiceConnection.UnbindFromService();
+            
 	    }
 	}
 }

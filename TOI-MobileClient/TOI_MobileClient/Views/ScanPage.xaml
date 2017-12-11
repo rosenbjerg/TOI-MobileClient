@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:toiMobileClient="clr-namespace:TOI_MobileClient;assembly=TOI_MobileClient.Android"
+             xmlns:toiMobileClient="clr-namespace:TOI_MobileClient;assembly=toi_mobileclient.android"
              xmlns:iconize="clr-namespace:FormsPlugin.Iconize;assembly=FormsPlugin.Iconize"
              xmlns:views="clr-namespace:TOI_MobileClient.Views;assembly=TOI_MobileClient.Android"
-             xmlns:managers="clr-namespace:TOI_MobileClient.Managers;assembly=TOI_MobileClient.Android"
+             xmlns:managers="clr-namespace:TOI_MobileClient.Managers;assembly=toi_mobileclient.android"
              x:Class="TOI_MobileClient.ScanPage"
              Title="Scan for ToI">
     <ContentPage.ToolbarItems>
