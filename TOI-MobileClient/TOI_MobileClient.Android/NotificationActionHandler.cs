@@ -21,24 +21,31 @@ namespace TOI_MobileClient.Droid
         {
             var killAppIntentFilter = new IntentFilter(PauseScanningFromBackground);
             var startScanningIntentFilter = new IntentFilter(StartScanningFromBackground);
+            var stopServiceIntentFilter = new IntentFilter(StopServiceWhenSwiped);
             activity.RegisterReceiver(this, killAppIntentFilter);
             activity.RegisterReceiver(this, startScanningIntentFilter);
+            activity.RegisterReceiver(this, stopServiceIntentFilter);
         }
 
         public const string PauseScanningFromBackground = "android.toi.PAUSE_SCAN_NOTIFIER";
         public const string StartScanningFromBackground = "android.toi.START_SCAN_NOTIFIER";
+        public const string StopServiceWhenSwiped = "android.toi.SERVICE_STOP";
 
         public override async void OnReceive(Context context, Intent intent)
         {
             Console.WriteLine($"Received a broadcast: {intent.Action}");
             switch (intent.Action)
             {
+                case StopServiceWhenSwiped:
+                    //kill the background service?
+                    break;
                 case PauseScanningFromBackground:
                     (await DependencyManager.Get<IScannerServiceProvider>().GetServiceAsync()).StopBackgroundScanning();
                     break;
                 case StartScanningFromBackground:
                     (await DependencyManager.Get<IScannerServiceProvider>().GetServiceAsync()).StartBackgroundScanning();
                     break;
+                
             }
         }
     }

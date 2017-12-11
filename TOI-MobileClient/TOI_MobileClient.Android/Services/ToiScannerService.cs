@@ -20,6 +20,7 @@ namespace TOI_MobileClient.Droid.Services
         public int ScanningNotificationServiceId { get; } = 6969;
         public int ToiFoundNotificationServiceId { get; } = 9696;
         public ScannerServiceBinder Binder { get; private set; }
+        public NotificationActionHandler NotificationActionHandler { get; private set; }
 
         public CancellationTokenSource ScanLoopToken { get; private set; }
         public Task ScanLoopTask { get; private set; }
@@ -44,6 +45,12 @@ namespace TOI_MobileClient.Droid.Services
             };
 
             StartBackgroundScanning();
+        }
+
+        public override void OnCreate()
+        {
+            base.OnCreate();
+            NotificationActionHandler = new NotificationActionHandler(this);
         }
 
         private void OnTagFound(object sender, IScanResultEvent args)
@@ -93,7 +100,7 @@ namespace TOI_MobileClient.Droid.Services
                     lang.NotScanningExplanation,
                     Resource.Drawable.TagSyncIcon, Resource.Drawable.Icon);
         }
-
+        
         public override IBinder OnBind(Intent intent)
         {
             Binder = new ScannerServiceBinder(this);

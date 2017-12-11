@@ -18,7 +18,7 @@ namespace TOI_MobileClient.Droid
 	public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
 	{
 	    public static ScannerServiceConnection ServiceConnection;
-	    public NotificationActionHandler NotificationActionHandler { get; private set; }
+
 	    private AndroidNfcScanner _nfcScanner;
 
         protected override void OnCreate (Bundle bundle)
@@ -55,9 +55,6 @@ namespace TOI_MobileClient.Droid
 		    Plugin.Iconize.Iconize.With(new Plugin.Iconize.Fonts.FontAwesomeModule());
             FormsPlugin.Iconize.Droid.IconControls.Init(Resource.Id.toolbar, Resource.Id.sliding_tabs);
 
-		    NotificationActionHandler = new NotificationActionHandler(this);
-
-
             LoadApplication(new App());
 
         }
@@ -74,8 +71,9 @@ namespace TOI_MobileClient.Droid
 	        var pendingIntent = PendingIntent.GetActivity(this, 0, intent, 0);
 	        _nfcScanner.NfcAdapter?.EnableForegroundDispatch(this, pendingIntent, filters, null);
 
-	        
-	    }
+            
+
+        }
 
         protected override void OnNewIntent(Intent intent)
 	    {
