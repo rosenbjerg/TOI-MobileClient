@@ -33,7 +33,7 @@ namespace TOI_MobileClient.Droid
         public override async Task ScanAsync()
         {
             if (!_client.IsConnected || 
-                SettingsManager.GpsEnabled || 
+                !SettingsManager.GpsEnabled || 
                 !IsEnabled)
                 return;
 

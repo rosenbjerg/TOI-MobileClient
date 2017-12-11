@@ -176,7 +176,7 @@ namespace TOI_MobileClient.Managers
             ToiCache = await ToiHttpClient.Instance.GetMany<ToiModel>(toiUrl);
             TagCache = ToiCache.SelectMany(toi => toi.Tags).ToHashSet();
             GpsCache = (await ToiHttpClient.Instance.GetMany<TagModel>(tagUrl))
-                ?.Where(t => t.Type == TagType.Gps)
+                .Where(t => t.Type == TagType.Gps)
                 .ToHashSet();
             Index = TagCache.ToDictionary(tagId => tagId,
             tagId => ToiCache.Where(toi => toi.Tags.Contains(tagId)).ToList());
