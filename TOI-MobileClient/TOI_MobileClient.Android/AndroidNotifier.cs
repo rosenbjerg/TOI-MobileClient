@@ -57,6 +57,8 @@ namespace TOI_MobileClient.Droid
                 PendingIntentFlags.CancelCurrent);
             var pScanIntent = PendingIntent.GetBroadcast(Android.App.Application.Context, 0,
                 new Intent(NotificationActionHandler.StartScanningFromBackground), PendingIntentFlags.CancelCurrent);
+            var pStopServiceIntent = PendingIntent.GetBroadcast(Android.App.Application.Context, 0,
+                new Intent(NotificationActionHandler.StopServiceWhenSwiped), PendingIntentFlags.CancelCurrent);
 
             if (!_bitmaps.ContainsKey(largeIcon))
             {
@@ -76,14 +78,18 @@ namespace TOI_MobileClient.Droid
                 .SetVisibility(1)
                 .SetStyle(new NotificationCompat.BigTextStyle().BigText(content));
 
+                
             if (SettingsManager.IsScanning)
             {
                 nb.AddAction(Resource.Drawable.Cross, "Pause Scan", pPauseScanIntent);
                 nb.SetOngoing(true);
+                nb.SetDeleteIntent(null);
+
             }
             else
             {
                 nb.AddAction(Resource.Drawable.Cross, "Start Scan", pScanIntent);
+                nb.SetDeleteIntent(pStopServiceIntent);
             }
 
             if (makeNoice)

@@ -21,6 +21,7 @@ namespace TOI_MobileClient.Droid
     {
         public AndroidWifiScanner()
         {
+
         }
 
         public new bool IsEnabled =>
