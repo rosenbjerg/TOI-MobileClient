@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:viewModels="clr-namespace:TOI_MobileClient.ViewModels;assembly=TOI_MobileClient.Android"
-             xmlns:toiMobileClient="clr-namespace:TOI_MobileClient;assembly=TOI_MobileClient.Android"
+             xmlns:viewModels="clr-namespace:TOI_MobileClient.ViewModels;assembly=toi_mobileclient.android"
+             xmlns:toiMobileClient="clr-namespace:TOI_MobileClient;assembly=toi_mobileclient.android"
              x:Class="TOI_MobileClient.Views.FeedSelectionPage">
     <ContentPage.Content>
         <StackLayout Padding="10, 10, 10, 20"  VerticalOptions="FillAndExpand">

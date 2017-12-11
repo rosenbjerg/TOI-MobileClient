@@ -12,7 +12,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>TOI_MobileClient.Droid</RootNamespace>
-    <AssemblyName>TOI_MobileClient.Android</AssemblyName>
+    <AssemblyName>toi_mobileclient.android</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <AndroidApplication>true</AndroidApplication>
     <AndroidResgenFile>Resources\Resource.Designer.cs</AndroidResgenFile>

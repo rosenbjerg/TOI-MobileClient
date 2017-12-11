@@ -2,7 +2,7 @@
 
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:viewModels="clr-namespace:TOI_MobileClient.ViewModels;assembly=TOI_MobileClient.Android"
+             xmlns:viewModels="clr-namespace:TOI_MobileClient.ViewModels;assembly=toi_mobileclient.android"
              x:Class="TOI_MobileClient.Views.SettingsPage">
 
     <ContentPage.BindingContext>

@@ -19,18 +19,17 @@ namespace TOI_MobileClient
 		{
 			InitializeComponent();
             MainPage = new NavigationPage(new MainPage());
-            
 		    Navigation = MainPage.Navigation;
-		    DependencyManager.Register<RestClient, RestClient>(new RestClient(new ToiHttpManager()));
-		    DependencyManager.Register<ILanguage, EnglishLanguage>(new EnglishLanguage());
-        }
-        
-        protected override void OnStart()
-        {
-            // Handle when your app starts
         }
 
-        protected override void OnSleep()
+	    protected override void OnStart()
+	    {
+	        if (DependencyManager.IsRegistered<RestClient>()) return;
+	        DependencyManager.Register<RestClient, RestClient>(new RestClient(new ToiHttpManager()));
+	        DependencyManager.Register<ILanguage, EnglishLanguage>(new EnglishLanguage());
+	    }
+
+	    protected override void OnSleep()
         {
             // Handle when your app sleeps
         }
