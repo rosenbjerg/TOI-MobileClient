@@ -27,7 +27,7 @@ namespace TOI_MobileClient.Droid.Services
         private readonly GpsScannerBase _gpsScanner = DependencyManager.Get<GpsScannerBase>();
         private readonly NfcScannerBase _nfcScanner = DependencyManager.Get<NfcScannerBase>();
         private readonly WiFiScannerBase _wifiScanner = DependencyManager.Get<WiFiScannerBase>();
-        
+
         public ToiScannerService()
         {
             _bleScanner.ResultFound += OnTagFound;
@@ -51,10 +51,20 @@ namespace TOI_MobileClient.Droid.Services
             ToisFound?.Invoke(this, new ToisFoundEventArgs(tois));
         }
 
+        private void NewToiFoundNotification()
+        {
+            var lang = DependencyManager.Get<ILanguage>();
+            DependencyManager.Get<NotifierBase>()
+                    .UpdateAppNotification(
+                        ToiFoundNotificationServiceId, lang.NewToi,
+                        lang.NewToiExplanation,
+                        Resource.Drawable.TagSyncIcon, Resource.Drawable.Icon);
+        }
+
         public void StartBackgroundScanning()
         {
             if (ScanLoopTask?.IsCanceled == true) return;
-            
+
             ScanLoopToken = new CancellationTokenSource();
             ScanLoopTask = Task.Run(ScanLoop, ScanLoopToken.Token);
             SettingsManager.IsScanning = true;
@@ -65,12 +75,12 @@ namespace TOI_MobileClient.Droid.Services
                     lang.ScanningExplanation,
                     Resource.Drawable.TagSyncIcon, Resource.Drawable.Icon);
         }
-        
+
 
         public void StopBackgroundScanning()
         {
             if (ScanLoopTask?.IsCanceled ?? true) return;
-            
+
             ScanLoopToken.Cancel();
             SettingsManager.IsScanning = false;
 
@@ -92,7 +102,7 @@ namespace TOI_MobileClient.Droid.Services
         {
             return StartCommandResult.Sticky;
         }
-        
+
         private async Task ScanLoop()
         {
             while (!ScanLoopToken.IsCancellationRequested)
@@ -105,7 +115,7 @@ namespace TOI_MobileClient.Droid.Services
 
                 SettingsManager.IsScanning = true;
                 SubscriptionManager.Instance.RefreshTags();
-                
+
                 var bleTask = _bleScanner.ScanAsync();
                 var wifiTask = _wifiScanner.ScanAsync();
                 var gpsTask = _gpsScanner.ScanAsync();

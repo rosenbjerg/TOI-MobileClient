@@ -73,7 +73,7 @@ namespace TOI_MobileClient.Managers
         }
 
         public bool Initiated { get; private set; }
-        public void Init()
+        public async void Init()
         {
             var subscribedServers = SettingsManager.ReadServers();
             if (subscribedServers == null || subscribedServers.Count == 0)
