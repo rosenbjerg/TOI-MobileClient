@@ -1,6 +1,6 @@
 ﻿namespace TOIClasses
 {
-    public class TagModel : ModelBase
+    public class TagModel : LocationModel
     {
         public TagModel()
         {
@@ -13,9 +13,18 @@
         }
         
         public TagType Type { get; set; }
-        public double Latitude { get; set; }
-        public double Longitude { get; set; }
-        public int Radius { get; set; }
+
+        public double Latitude
+        {
+            get => LocationCenter.Latitude;
+            set => LocationCenter.Latitude = value;
+        }
+
+        public double Longitude
+        {
+            get => LocationCenter.Longitude;
+            set => LocationCenter.Longitude = value;
+        }
 
         public override bool Equals(object obj)
         {
