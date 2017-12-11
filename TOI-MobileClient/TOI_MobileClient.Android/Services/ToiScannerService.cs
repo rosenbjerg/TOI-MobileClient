@@ -46,7 +46,7 @@ namespace TOI_MobileClient.Droid.Services
 
         private void OnTagFound(object sender, IScanResultEvent args)
         {
-            var tois = SubscriptionManager.Instance.GetTois(args.Id).ToList();
+            var tois = SubscriptionManager.Instance.GetTois(args.Id.ToUpper()).ToList();
             if (!tois.Any()) return;
             ToisFound?.Invoke(this, new ToisFoundEventArgs(tois));
         }
