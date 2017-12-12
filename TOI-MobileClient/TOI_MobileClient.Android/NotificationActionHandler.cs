@@ -26,7 +26,7 @@ namespace TOI_MobileClient.Droid
             activity.RegisterReceiver(this, startScanningIntentFilter);
             activity.RegisterReceiver(this, stopServiceIntentFilter);
         }
-
+        public bool IsRunning { get; set; }
         public const string PauseScanningFromBackground = "android.toi.PAUSE_SCAN_NOTIFIER";
         public const string StartScanningFromBackground = "android.toi.START_SCAN_NOTIFIER";
         public const string StopServiceWhenSwiped = "android.toi.SERVICE_STOP";
@@ -37,7 +37,6 @@ namespace TOI_MobileClient.Droid
             switch (intent.Action)
             {
                 case StopServiceWhenSwiped:
-                    //kill the background service?
                     break;
                 case PauseScanningFromBackground:
                     (await DependencyManager.Get<IScannerServiceProvider>().GetServiceAsync()).StopBackgroundScanning();

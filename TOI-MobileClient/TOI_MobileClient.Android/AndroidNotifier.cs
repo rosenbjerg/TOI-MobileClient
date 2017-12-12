@@ -52,10 +52,10 @@ namespace TOI_MobileClient.Droid
                 PendingIntent.GetActivity(Android.App.Application.Context, pendingIntentId,
                     new Intent(Android.App.Application.Context, typeof(MainActivity)),
                     PendingIntentFlags.UpdateCurrent);
-            var pPauseScanIntent = PendingIntent.GetBroadcast(Android.App.Application.Context, 0,
+            var pPauseScanIntent = PendingIntent.GetBroadcast(Android.App.Application.Context, pendingIntentId,
                 new Intent(NotificationActionHandler.PauseScanningFromBackground),
                 PendingIntentFlags.CancelCurrent);
-            var pScanIntent = PendingIntent.GetBroadcast(Android.App.Application.Context, 0,
+            var pScanIntent = PendingIntent.GetBroadcast(Android.App.Application.Context, pendingIntentId,
                 new Intent(NotificationActionHandler.StartScanningFromBackground), PendingIntentFlags.CancelCurrent);
             var pStopServiceIntent = PendingIntent.GetBroadcast(Android.App.Application.Context, 0,
                 new Intent(NotificationActionHandler.StopServiceWhenSwiped), PendingIntentFlags.CancelCurrent);
@@ -84,7 +84,6 @@ namespace TOI_MobileClient.Droid
                 nb.AddAction(Resource.Drawable.Cross, "Pause Scan", pPauseScanIntent);
                 nb.SetOngoing(true);
                 nb.SetDeleteIntent(null);
-
             }
             else
             {

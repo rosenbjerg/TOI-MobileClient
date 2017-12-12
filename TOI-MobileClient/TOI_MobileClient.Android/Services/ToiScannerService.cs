@@ -17,6 +17,7 @@ namespace TOI_MobileClient.Droid.Services
     [Service(Exported = false, Label = "ToiScannerService")]
     public class ToiScannerService : Service, IBackgroundScanner
     {
+        
         public int ScanningNotificationServiceId { get; } = 6969;
         public int ToiFoundNotificationServiceId { get; } = 9696;
         public ScannerServiceBinder Binder { get; private set; }
