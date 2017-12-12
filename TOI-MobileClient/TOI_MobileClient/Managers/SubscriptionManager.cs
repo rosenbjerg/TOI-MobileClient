@@ -38,7 +38,7 @@ namespace TOI_MobileClient.Managers
             return SubscribedServers.Values.SelectMany(ss => ss.GetTois(tag));
         }
 
-        public IEnumerable<ToiModel> GetToisByLocation(GpsLocation location)
+        public IEnumerable<ToiModel> GetToisByLocation(LocationModel location)
         {
             return SubscribedServers.Values.SelectMany(ss => ss.GetToisByLocation(location));
         }
@@ -162,7 +162,7 @@ namespace TOI_MobileClient.Managers
             return true;
         }
 
-        public List<ToiModel> GetToisByLocation(GpsLocation location)
+        public List<ToiModel> GetToisByLocation(LocationModel location)
         {
             var gps = GpsCache?.Where(t => t.WithinRange(location));
             return gps?.SelectMany(t => Index[t.Id]).ToList() ?? _emptyList;
@@ -176,7 +176,7 @@ namespace TOI_MobileClient.Managers
             ToiCache = await ToiHttpClient.Instance.GetMany<ToiModel>(toiUrl);
             TagCache = ToiCache.SelectMany(toi => toi.Tags).ToHashSet();
             GpsCache = (await ToiHttpClient.Instance.GetMany<TagModel>(tagUrl))
-                ?.Where(t => t.Type == TagType.Gps)
+                .Where(t => t.Type == TagType.Gps)
                 .ToHashSet();
             Index = TagCache.ToDictionary(tagId => tagId,
             tagId => ToiCache.Where(toi => toi.Tags.Contains(tagId)).ToList());

@@ -21,9 +21,9 @@ namespace TOI_MobileClient.Dependencies
 
     public class LocationFoundEventArgs : EventArgs, IScanResultEvent
     {
-        public GpsLocation Location;
+        public LocationModel Location;
 
-        public LocationFoundEventArgs(GpsLocation location)
+        public LocationFoundEventArgs(LocationModel location)
         {
             Location = location;
         }

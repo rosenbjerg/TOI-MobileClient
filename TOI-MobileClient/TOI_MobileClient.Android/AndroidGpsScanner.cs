@@ -33,7 +33,7 @@ namespace TOI_MobileClient.Droid
         public override async Task ScanAsync()
         {
             if (!_client.IsConnected || 
-                SettingsManager.GpsEnabled || 
+                !SettingsManager.GpsEnabled || 
                 !IsEnabled)
                 return;
 
@@ -44,7 +44,7 @@ namespace TOI_MobileClient.Droid
                 locationRequest.SetInterval(10000);
                 locationRequest.SetFastestInterval(5000);
                 var location = LocationServices.FusedLocationApi.GetLastLocation(_client);
-                ResultFound?.Invoke(this, new LocationFoundEventArgs(new GpsLocation
+                ResultFound?.Invoke(this, new LocationFoundEventArgs(new GpsLocation()
                 {
                     Latitude = location.Latitude,
                     Longitude = location.Longitude

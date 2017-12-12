@@ -3,26 +3,33 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewModels="clr-namespace:TOI_MobileClient.ViewModels;assembly=toi_mobileclient.android"
              xmlns:toiMobileClient="clr-namespace:TOI_MobileClient;assembly=toi_mobileclient.android"
+             xmlns:iconize="clr-namespace:FormsPlugin.Iconize;assembly=FormsPlugin.Iconize"
              x:Class="TOI_MobileClient.Views.FeedSelectionPage">
     <ContentPage.Content>
-        <StackLayout Padding="10, 10, 10, 20"  VerticalOptions="FillAndExpand">
-<!--            <Button Text="{Binding Name}" Command="{Binding RedirectToContext}"></Button>-->
-            
-            
-            <ListView RowHeight="70" x:Name="FeedList" ItemsSource="{Binding FeedServers}">
+        <StackLayout VerticalOptions="FillAndExpand">
+            <ListView RowHeight="100" x:Name="FeedList" ItemsSource="{Binding FeedServers}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <toiMobileClient:TapViewCell Command="{Binding Tapped}">
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="0.5"></RowDefinition>
-                                    <RowDefinition Height="0.5"></RowDefinition>
-                                </Grid.RowDefinitions>
-                                <Grid.Children>
-                                    <Label Grid.Row="1" Text="{Binding Name}" FontSize="20"/>
-                                    <Label Grid.Row="2" Text="{Binding Description}" FontSize="14"/>
-                                </Grid.Children>
-                            </Grid>
+                            <toiMobileClient:TapViewCell.View>
+                                <Frame Margin="5,10">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="85*"/>
+                                            <ColumnDefinition Width="15*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="5*"/>
+                                            <RowDefinition Height="5*"/>
+                                        </Grid.RowDefinitions>
+                                        <Label Grid.Column="0" Grid.Row="0" Text="{Binding Name}" FontSize="12" VerticalTextAlignment="End" FontAttributes="Bold"/>
+                                        <Label Grid.Column="0" Grid.Row="1" Text="{Binding Description}" FontSize="10" VerticalTextAlignment="Start" LineBreakMode="TailTruncation"/>
+                                        <iconize:IconButton Text="fa-info" Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" VerticalOptions="Fill" HorizontalOptions="Fill" 
+                                                            BackgroundColor="Transparent" BorderColor="Transparent" BorderRadius="0" BorderWidth="0" Command="{Binding Info}"/>
+                                        <!--<iconize:IconImage Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Icon="fa-info-circle" IconSize="12" VerticalOptions="Center" HorizontalOptions="Center" />-->
+                                    </Grid>
+                                </Frame>
+                            </toiMobileClient:TapViewCell.View>
                         </toiMobileClient:TapViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
