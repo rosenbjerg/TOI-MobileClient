@@ -28,7 +28,7 @@ namespace TOI_MobileClient.Droid
         private bool _enabled;
         public override Location CurrentLocation { get; protected set; }
 
-        public new bool IsEnabled => _locationManager.IsProviderEnabled(LocationManager.GpsProvider) && _enabled;
+        public override bool IsEnabled => _locationManager.IsProviderEnabled(LocationManager.GpsProvider) && _enabled;
 
         public override async Task ScanAsync()
         {

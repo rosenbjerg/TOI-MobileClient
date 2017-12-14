@@ -13,7 +13,7 @@ namespace TOI_MobileClient.Dependencies
     {
         public abstract Location CurrentLocation { get; protected set; }
 
-        public bool IsEnabled => false;
+        public abstract bool IsEnabled { get; }
 
         public abstract Task ScanAsync();
         public abstract event EventHandler<LocationFoundEventArgs> ResultFound;

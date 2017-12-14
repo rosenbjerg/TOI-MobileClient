@@ -75,6 +75,7 @@ namespace TOI_MobileClient.Managers
         public bool Initiated { get; private set; }
         public async void Init()
         {
+            Initiated = true;
             var subscribedServers = SettingsManager.ReadServers();
             if (subscribedServers == null || subscribedServers.Count == 0)
             {
@@ -89,7 +90,6 @@ namespace TOI_MobileClient.Managers
             SubscribedServers = subscribedServers;
             SubscribedServers.ForEach(async ss => await ss.Value.LoadTois());
             RefreshTags();
-            Initiated = true;
         }
 
         public void ClearShown()

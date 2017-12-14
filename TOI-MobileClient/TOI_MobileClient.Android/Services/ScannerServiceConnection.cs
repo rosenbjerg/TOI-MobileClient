@@ -24,7 +24,6 @@ namespace TOI_MobileClient.Droid.Services
             Binder = scannerServiceBinder;
             var s = Binder.GetService();
             _tsc.SetResult(s);
-            s.StartBackgroundScanning();
         }
 
         public async Task<IBackgroundScanner> GetServiceAsync()
