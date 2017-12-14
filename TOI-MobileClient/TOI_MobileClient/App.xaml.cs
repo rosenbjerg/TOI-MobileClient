@@ -20,13 +20,13 @@ namespace TOI_MobileClient
 			InitializeComponent();
             MainPage = new NavigationPage(new MainPage());
 		    Navigation = MainPage.Navigation;
-	        SubscriptionManager.Instance.Init();
         }
 
         protected override void OnStart()
 	    {
-	        if (DependencyManager.IsRegistered<RestClient>()) return;
-	        DependencyManager.Register<RestClient, RestClient>(new RestClient(new ToiHttpManager()));
+            if (DependencyManager.IsRegistered<RestClient>()) return;
+	        SubscriptionManager.Instance.Init();
+            DependencyManager.Register<RestClient, RestClient>(new RestClient(new ToiHttpManager()));
 	        DependencyManager.Register<ILanguage, EnglishLanguage>(new EnglishLanguage());
 	    }
 

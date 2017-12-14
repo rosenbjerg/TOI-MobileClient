@@ -37,6 +37,7 @@ namespace TOI_MobileClient.Droid
             switch (intent.Action)
             {
                 case StopServiceWhenSwiped:
+                    //her kan servicen nakkes.
                     break;
                 case PauseScanningFromBackground:
                     (await DependencyManager.Get<IScannerServiceProvider>().GetServiceAsync()).StopBackgroundScanning();
