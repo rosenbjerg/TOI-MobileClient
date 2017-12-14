@@ -126,10 +126,10 @@ namespace TOI_MobileClient.Droid.Services
                 SettingsManager.IsScanning = true;
                 SubscriptionManager.Instance.RefreshTags();
 
-                var bleTask = _bleScanner.ScanAsync();
-                var wifiTask = _wifiScanner.ScanAsync();
-                var gpsTask = _gpsScanner.ScanAsync();
-                await Task.WhenAll(bleTask, wifiTask, gpsTask);
+                await _bleScanner.ScanAsync();
+                await _wifiScanner.ScanAsync();
+                _gpsScanner.Scan();
+                //await Task.WhenAll(bleTask, wifiTask, gpsTask);
                 await Task.Delay(SettingsManager.ScanDelay());
 
                 if (SettingsManager.ScanFrequencyValue == SettingsManager.Language.Never)
