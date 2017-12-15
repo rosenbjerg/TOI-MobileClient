@@ -70,7 +70,7 @@ namespace TOI_MobileClient.Droid.Services
                     .UpdateAppNotification(
                         ToiFoundNotificationServiceId, lang.NewToi,
                         lang.NewToiExplanation,
-                        Resource.Drawable.TagSyncIcon, Resource.Drawable.Icon);
+                        Resource.Drawable.TagFoundIcon, Resource.Drawable.Icon);
         }
 
         public void StartBackgroundScanning()
