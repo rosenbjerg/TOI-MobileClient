@@ -25,32 +25,30 @@ namespace TOI_MobileClient.Droid
 
         }
 
-        public override async Task ScanAsync()
+        public override Task ScanAsync()
         {
-            await Task.Run(() =>
+            if (_telMan.AllCellInfo is List<CellInfo> cellInfos)
             {
-                if (_telMan.AllCellInfo is List<CellInfo> cellInfos)
-                {
-                    var cigObj = cellInfos.FirstOrDefault(ci => ci is CellInfoGsm);
-                    if (cigObj == null)
-                        return;
-                    var cig = (CellInfoGsm)cigObj;
-                    ResultFound?.Invoke(this,
-                        new CellularIdFoundEventArgs(cig.CellIdentity.Cid.ToString(),
-                            cig.CellIdentity.Lac.ToString()));
+                var cigObj = cellInfos.FirstOrDefault(ci => ci is CellInfoGsm);
+                if (cigObj == null)
+                    return Task.CompletedTask;
+                var cig = (CellInfoGsm)cigObj;
+                ResultFound?.Invoke(this,
+                    new CellularIdFoundEventArgs(cig.CellIdentity.Cid.ToString(),
+                        cig.CellIdentity.Lac.ToString()));
 
-                    Console.WriteLine($"Cell id found using new API: cid={cig.CellIdentity.Cid} lac={cig.CellIdentity.Lac}");
-                }
-                else
+                Console.WriteLine($"Cell id found using new API: cid={cig.CellIdentity.Cid} lac={cig.CellIdentity.Lac}");
+            }
+            else
+            {
+                // Support for old devices ... 
+                if (_telMan.CellLocation is GsmCellLocation gcl)
                 {
-                    // Support for old devices ... 
-                    if (_telMan.CellLocation is GsmCellLocation gcl)
-                    {
-                        ResultFound?.Invoke(this, new CellularIdFoundEventArgs(gcl.Cid.ToString(), gcl.Lac.ToString()));
-                        Console.WriteLine($"Cell id found using old API: cid={gcl.Cid} lac={gcl.Lac}");
-                    }
+                    ResultFound?.Invoke(this, new CellularIdFoundEventArgs(gcl.Cid.ToString(), gcl.Lac.ToString()));
+                    Console.WriteLine($"Cell id found using old API: cid={gcl.Cid} lac={gcl.Lac}");
                 }
-            });
+            }
+            return Task.CompletedTask;
         }
 
         public override event EventHandler<CellularIdFoundEventArgs> ResultFound;
