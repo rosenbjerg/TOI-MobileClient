@@ -17,7 +17,7 @@ namespace TOI_MobileClient.Droid
 {
     class AndroidCellularScanner : CellularScannerBase
     {
-        private TelephonyManager _telMan;
+        private readonly TelephonyManager _telMan;
 
         public AndroidCellularScanner()
         {
