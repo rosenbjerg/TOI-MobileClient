@@ -79,13 +79,13 @@ namespace TOI_MobileClient.Droid
                 .SetStyle(new NotificationCompat.BigTextStyle().BigText(content));
 
                 
-            if (SettingsManager.IsScanning)
+            if (SettingsManager.IsScanning && bgId == 6969)
             {
                 nb.AddAction(Resource.Drawable.Cross, "Pause Scan", pPauseScanIntent);
                 nb.SetOngoing(true);
                 nb.SetDeleteIntent(null);
             }
-            else
+            if(!SettingsManager.IsScanning && bgId == 6969)
             {
                 nb.AddAction(Resource.Drawable.Cross, "Start Scan", pScanIntent);
                 nb.SetDeleteIntent(pStopServiceIntent);

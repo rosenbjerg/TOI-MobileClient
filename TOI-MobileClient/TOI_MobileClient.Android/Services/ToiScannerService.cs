@@ -59,6 +59,7 @@ namespace TOI_MobileClient.Droid.Services
             var tois = SubscriptionManager.Instance.GetTois(args.Id.ToUpper()).ToList();
             if (!tois.Any()) return;
             ToisFound?.Invoke(this, new ToisFoundEventArgs(tois));
+            NewToiFoundNotification();
         }
 
         private void NewToiFoundNotification()
