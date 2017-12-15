@@ -59,7 +59,6 @@ namespace TOI_MobileClient.Droid.Services
             var tois = SubscriptionManager.Instance.GetTois(args.Id.ToUpper()).ToList();
             if (!tois.Any()) return;
             ToisFound?.Invoke(this, new ToisFoundEventArgs(tois));
-            NewToiFoundNotification();
         }
 
         private void NewToiFoundNotification()
@@ -69,7 +68,7 @@ namespace TOI_MobileClient.Droid.Services
                     .UpdateAppNotification(
                         ToiFoundNotificationServiceId, lang.NewToi,
                         lang.NewToiExplanation,
-                        Resource.Drawable.TagSyncIcon, Resource.Drawable.Icon);
+                        Resource.Drawable.TagFoundIcon, Resource.Drawable.Icon);
         }
 
         public void StartBackgroundScanning()
@@ -84,7 +83,7 @@ namespace TOI_MobileClient.Droid.Services
                 .UpdateAppNotification(
                     ScanningNotificationServiceId, lang.Scanning,
                     lang.ScanningExplanation,
-                    Resource.Drawable.TagSyncIcon, Resource.Drawable.Icon);
+                    Resource.Drawable.TagFoundIcon, Resource.Drawable.Icon);
         }
 
 
