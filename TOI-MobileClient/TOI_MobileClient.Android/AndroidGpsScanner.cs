@@ -1,90 +1,104 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using Android.OS;
-using Android.Gms.Common.Apis;
 using TOI_MobileClient.Dependencies;
-using Android.Gms.Common;
+using Android.Locations;
 using Android.Gms.Location;
 using Android.App;
 using Android.Content;
-using Android.Locations;
-using DepMan;
-using Newtonsoft.Json;
-using TOIClasses;
+using Android.Gms.Extensions;
+using Android.OS;
 using TOI_MobileClient.Managers;
+using Xamarin.Forms;
 
 
 namespace TOI_MobileClient.Droid
 {
     public class AndroidGpsScanner :
-        GpsScannerBase,
-        GoogleApiClient.IConnectionCallbacks,
-        GoogleApiClient.IOnConnectionFailedListener,
-        Android.Gms.Location.ILocationListener
+        GpsScannerBase
     {
-        private readonly GoogleApiClient _client;
-        private readonly LocationManager _locationManager;
-        private bool _enabled;
+        private readonly FusedLocationProviderClient _client;
+        private readonly GpsLocationCallback _locationCallback;
+        private readonly SettingsClient _settingsClient;
+        private readonly LocationRequest _locationRequest;
+        private readonly LocationSettingsRequest _locationSettingsRequest;
+
+        private bool _running;
+        private TaskCompletionSource<bool> _tcs;
+        private LocationSettingsResponse _ready;
         public override Location CurrentLocation { get; protected set; }
 
-        public override bool IsEnabled => _locationManager.IsProviderEnabled(LocationManager.GpsProvider) && _enabled;
+        public override bool IsEnabled => true; //tænk lige på noget smart
 
+        void OnLocationResult(object sender, Location location)
+        {
+            Device.BeginInvokeOnMainThread(async () =>
+            {
+                await _client.RemoveLocationUpdatesAsync(_locationCallback);
+            });
+            ResultFound?.Invoke(this, new LocationFoundEventArgs(new GpsLocation()
+            {
+                Latitude = location.Latitude,
+                Longitude = location.Longitude
+            }));
+            _tcs.SetResult(true);
+        }
+        
         public override async Task ScanAsync()
         {
-            if (!_client.IsConnected || 
-                !SettingsManager.GpsEnabled || 
-                !IsEnabled)
+            if (_running)
                 return;
+            _tcs = new TaskCompletionSource<bool>();
+            _locationCallback.LocationUpdated += OnLocationResult;
+            _running = true;
 
-            await Task.Run(() =>
+            Device.BeginInvokeOnMainThread(async () =>
             {
-                var locationRequest = new LocationRequest();
-                locationRequest.SetPriority(100);
-                locationRequest.SetInterval(10000);
-                locationRequest.SetFastestInterval(5000);
-                var location = LocationServices.FusedLocationApi.GetLastLocation(_client);
-                ResultFound?.Invoke(this, new LocationFoundEventArgs(new GpsLocation()
+                try
                 {
-                    Latitude = location.Latitude,
-                    Longitude = location.Longitude
-                }));
+                    _ready = await _settingsClient.CheckLocationSettingsAsync(_locationSettingsRequest);
+                    if (_ready.LocationSettingsStates.IsGpsPresent && _ready.LocationSettingsStates.IsGpsUsable)
+                    {
+                        await _client.RequestLocationUpdatesAsync(_locationRequest, _locationCallback);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Whoops... Something went wrong :(");
+                    _tcs.SetException(ex);
+                }
             });
+            await _tcs.Task;
+            _locationCallback.LocationUpdated -= OnLocationResult;
+            _running = false;
         }
 
         public override event EventHandler<LocationFoundEventArgs> ResultFound;
 
         public AndroidGpsScanner()
         {
-            _client = new GoogleApiClient.Builder(Application.Context, this, this).AddApi(LocationServices.API).Build();
-            _client.Connect();
-            _locationManager = (LocationManager) Application.Context.GetSystemService(Context.LocationService);
+            var activity = Android.App.Application.Context;
+            _client = LocationServices.GetFusedLocationProviderClient(activity);
+            _settingsClient = LocationServices.GetSettingsClient(activity);
+
+            _locationRequest = new LocationRequest()
+                .SetInterval(10000)
+                .SetFastestInterval(5000)
+                .SetPriority(LocationRequest.PriorityHighAccuracy);
+
+            _locationSettingsRequest = new LocationSettingsRequest.Builder().AddLocationRequest(_locationRequest).Build();
+
+
+            _locationCallback = new GpsLocationCallback();
         }
+    }
+    class GpsLocationCallback : LocationCallback
+    {
+        public event EventHandler<Location> LocationUpdated;
 
-        public void OnConnected(Bundle connectionHint)
+        public override void OnLocationResult(LocationResult result)
         {
-            _enabled = true;
-        }
-
-        public void OnConnectionFailed(ConnectionResult result)
-        {
-            var queryResult = GoogleApiAvailability.Instance.IsGooglePlayServicesAvailable(Application.Context);
-
-            if (!GoogleApiAvailability.Instance.IsUserResolvableError(queryResult))
-                throw new Exception($"Google Play Services hasn't been installed: {queryResult}");
-
-            var errorString = GoogleApiAvailability.Instance.GetErrorString(queryResult);
-            throw new Exception(errorString);
-        }
-
-        public void OnConnectionSuspended(int cause)
-        {
-            _enabled = false;
-        }
-
-        public void OnLocationChanged(Location location)
-        {
-            CurrentLocation = location;
+            base.OnLocationResult(result);
+            LocationUpdated?.Invoke(this, result.LastLocation);
         }
     }
 }
