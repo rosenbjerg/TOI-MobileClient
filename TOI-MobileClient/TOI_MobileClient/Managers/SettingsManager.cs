@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Android.Database.Sqlite;
 using Newtonsoft.Json;
@@ -56,10 +57,10 @@ namespace TOI_MobileClient.Managers
             set => AppSettings.AddOrUpdateValue(nameof(NfcEnabled), value);
         }
 
-        public static int ScanFrequency
+        public static ScanFrequencyEnum ScanFrequency
         {
-            get => AppSettings.GetValueOrDefault(nameof(ScanFrequency), 1);
-            set => AppSettings.AddOrUpdateValue(nameof(ScanFrequency), value);
+            get => (ScanFrequencyEnum) AppSettings.GetValueOrDefault(nameof(ScanFrequency), 1);
+            set => AppSettings.AddOrUpdateValue(nameof(ScanFrequency), (int) value);
         }
 
         public static List<string> ScanFrequencyOptions => new List<string>
@@ -70,7 +71,7 @@ namespace TOI_MobileClient.Managers
             Language.Never
         };
 
-        public static string ScanFrequencyValue => ScanFrequencyOptions[ScanFrequency];
+        public static string ScanFrequencyValue => ScanFrequencyOptions[(int)ScanFrequency];
 
         public static string PrepId(string id)
         {
@@ -83,14 +84,31 @@ namespace TOI_MobileClient.Managers
         /// <returns>Scan delay in ms</returns>
         public static int ScanDelay()
         {
-            if (ScanFrequencyValue == Language.Often) return 5000;
-            if (ScanFrequencyValue == Language.Normal) return 15000;
-            return ScanFrequencyValue == Language.Rarely ? 60000 : 10000;
+            switch (ScanFrequency)
+            {
+                case ScanFrequencyEnum.Often:
+                    return 5000;
+                case ScanFrequencyEnum.Normal:
+                    return 15000;
+                case ScanFrequencyEnum.Rarely:
+                    return 60000;
+                default:
+                case ScanFrequencyEnum.Never:
+                    return 10000;
+            }
         }
 
         static SettingsManager()
         {
             Language = new EnglishLanguage();
         }
+    }
+
+    public enum ScanFrequencyEnum
+    {
+        Often,
+        Normal,
+        Rarely,
+        Never
     }
 }

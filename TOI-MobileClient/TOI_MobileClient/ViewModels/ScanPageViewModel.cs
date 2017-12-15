@@ -97,10 +97,12 @@ namespace TOI_MobileClient
             if (Loading)
                 return;
 
+            _shownTois.Clear();
             ToiCollection.Clear();
             Loading = true;
 
-            _scanner.StartBackgroundScanning();
+            if (SettingsManager.ScanFrequency == ScanFrequencyEnum.Never)
+                _scanner.StartBackgroundScanning();
         }
 
         public override async void OnViewAppearing()

@@ -59,10 +59,10 @@ namespace TOI_MobileClient.ViewModels
 
         public int ScanFrequency
         {
-            get => SettingsManager.ScanFrequency;
+            get => (int) SettingsManager.ScanFrequency;
             set
             {
-                SettingsManager.ScanFrequency = value;
+                SettingsManager.ScanFrequency = (ScanFrequencyEnum) value;
                 OnPropertyChanged();
             }
         }
