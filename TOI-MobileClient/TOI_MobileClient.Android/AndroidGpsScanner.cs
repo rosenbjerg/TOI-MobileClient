@@ -5,7 +5,10 @@ using Android.Locations;
 using Android.Gms.Location;
 using Android.App;
 using Android.Content;
+using Android.Gms.Extensions;
+using Android.OS;
 using TOI_MobileClient.Managers;
+using Xamarin.Forms;
 
 
 namespace TOI_MobileClient.Droid
@@ -14,27 +17,59 @@ namespace TOI_MobileClient.Droid
         GpsScannerBase
     {
         private readonly FusedLocationProviderClient _client;
-        private readonly LocationManager _locationManager;
+        private readonly GpsLocationCallback _locationCallback;
+        private readonly SettingsClient _settingsClient;
+        private readonly LocationRequest _locationRequest;
+        private readonly LocationSettingsRequest _locationSettingsRequest;
 
-        private bool _enabled;
+        private bool _running;
+        private TaskCompletionSource<bool> _tcs;
+        private LocationSettingsResponse _ready;
         public override Location CurrentLocation { get; protected set; }
 
-        public override bool IsEnabled => _locationManager.IsProviderEnabled(LocationManager.GpsProvider) && _enabled;
+        public override bool IsEnabled => true; //tænk lige på noget smart
 
-        public override async Task ScanAsync() { }
-        public override void Scan()
+        void OnLocationResult(object sender, Location location)
         {
-            var gpsEnabled = (LocationAvailability)_client.LocationAvailability.Result;
-            if (!SettingsManager.GpsEnabled || !gpsEnabled.IsLocationAvailable)
-                return;
-
-            var location = (Location) _client.LastLocation.Result;
+            Device.BeginInvokeOnMainThread(async () =>
+            {
+                await _client.RemoveLocationUpdatesAsync(_locationCallback);
+            });
             ResultFound?.Invoke(this, new LocationFoundEventArgs(new GpsLocation()
             {
                 Latitude = location.Latitude,
                 Longitude = location.Longitude
             }));
+            _tcs.SetResult(true);
+        }
+        
+        public override async Task ScanAsync()
+        {
+            if (_running)
+                return;
+            _tcs = new TaskCompletionSource<bool>();
+            _locationCallback.LocationUpdated += OnLocationResult;
+            _running = true;
 
+            Device.BeginInvokeOnMainThread(async () =>
+            {
+                try
+                {
+                    _ready = await _settingsClient.CheckLocationSettingsAsync(_locationSettingsRequest);
+                    if (_ready.LocationSettingsStates.IsGpsPresent && _ready.LocationSettingsStates.IsGpsUsable)
+                    {
+                        await _client.RequestLocationUpdatesAsync(_locationRequest, _locationCallback);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Whoops... Something went wrong :(");
+                    _tcs.SetException(ex);
+                }
+            });
+            await _tcs.Task;
+            _locationCallback.LocationUpdated -= OnLocationResult;
+            _running = false;
         }
 
         public override event EventHandler<LocationFoundEventArgs> ResultFound;
@@ -43,8 +78,27 @@ namespace TOI_MobileClient.Droid
         {
             var activity = Android.App.Application.Context;
             _client = LocationServices.GetFusedLocationProviderClient(activity);
-            _locationManager = (LocationManager) Application.Context.GetSystemService(Context.LocationService);
+            _settingsClient = LocationServices.GetSettingsClient(activity);
+
+            _locationRequest = new LocationRequest()
+                .SetInterval(10000)
+                .SetFastestInterval(5000)
+                .SetPriority(LocationRequest.PriorityHighAccuracy);
+
+            _locationSettingsRequest = new LocationSettingsRequest.Builder().AddLocationRequest(_locationRequest).Build();
+
+
+            _locationCallback = new GpsLocationCallback();
         }
     }
- 
+    class GpsLocationCallback : LocationCallback
+    {
+        public event EventHandler<Location> LocationUpdated;
+
+        public override void OnLocationResult(LocationResult result)
+        {
+            base.OnLocationResult(result);
+            LocationUpdated?.Invoke(this, result.LastLocation);
+        }
+    }
 }

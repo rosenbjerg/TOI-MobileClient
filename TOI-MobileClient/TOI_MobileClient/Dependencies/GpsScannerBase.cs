@@ -16,7 +16,6 @@ namespace TOI_MobileClient.Dependencies
         public abstract bool IsEnabled { get; }
 
         public abstract Task ScanAsync();
-        public abstract void Scan();
         public abstract event EventHandler<LocationFoundEventArgs> ResultFound;
     }
 
