@@ -25,7 +25,6 @@ namespace TOI_MobileClient.Droid
         private bool _running;
         private TaskCompletionSource<bool> _tcs;
         private LocationSettingsResponse _ready;
-        public override Location CurrentLocation { get; protected set; }
 
         public override bool IsEnabled => true; //tænk lige på noget smart
 

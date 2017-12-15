@@ -190,6 +190,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AndroidBleScanner.cs" />
+    <Compile Include="AndroidCellularScanner.cs" />
     <Compile Include="AndroidGpsScanner.cs" />
     <Compile Include="AndroidNfcScanner.cs" />
     <Compile Include="AndroidNotifier.cs" />

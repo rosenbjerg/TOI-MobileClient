@@ -11,8 +11,6 @@ namespace TOI_MobileClient.Dependencies
 {
     public abstract class GpsScannerBase : Java.Lang.Object, IHardware, IScanner<LocationFoundEventArgs>
     {
-        public abstract Location CurrentLocation { get; protected set; }
-
         public abstract bool IsEnabled { get; }
 
         public abstract Task ScanAsync();
@@ -30,4 +28,5 @@ namespace TOI_MobileClient.Dependencies
 
         public string Id => "G" + Location.Latitude + "P" + Location.Longitude + "S";
     }
+
 }

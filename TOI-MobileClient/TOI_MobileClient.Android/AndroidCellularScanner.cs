@@ -7,20 +7,52 @@ using Android.App;
 using Android.Content;
 using Android.OS;
 using Android.Runtime;
+using Android.Telephony;
+using Android.Telephony.Gsm;
 using Android.Views;
 using Android.Widget;
 using TOI_MobileClient.Dependencies;
 
 namespace TOI_MobileClient.Droid
 {
-    class AndroidCellularScanner : IHardware, IScanner<CellularIdFoundEventArgs>
+    class AndroidCellularScanner : CellularScannerBase
     {
-        public bool IsEnabled { get; } = true;
-        public Task ScanAsync()
+        private TelephonyManager _telMan;
+
+        public AndroidCellularScanner()
         {
-            throw new NotImplementedException();
+            _telMan = (TelephonyManager)Application.Context.GetSystemService(Context.TelephonyService);
+
         }
 
-        public event EventHandler<CellularIdFoundEventArgs> ResultFound;
+        public override async Task ScanAsync()
+        {
+            await Task.Run(() =>
+            {
+                if (_telMan.AllCellInfo is List<CellInfo> cellInfos)
+                {
+                    var cigObj = cellInfos.FirstOrDefault(ci => ci is CellInfoGsm);
+                    if (cigObj == null)
+                        return;
+                    var cig = (CellInfoGsm)cigObj;
+                    ResultFound?.Invoke(this,
+                        new CellularIdFoundEventArgs(cig.CellIdentity.Cid.ToString(),
+                            cig.CellIdentity.Lac.ToString()));
+
+                    Console.WriteLine($"Cell id found using new API: cid={cig.CellIdentity.Cid} lac={cig.CellIdentity.Lac}");
+                }
+                else
+                {
+                    // Support for old devices ... 
+                    if (_telMan.CellLocation is GsmCellLocation gcl)
+                    {
+                        ResultFound?.Invoke(this, new CellularIdFoundEventArgs(gcl.Cid.ToString(), gcl.Lac.ToString()));
+                        Console.WriteLine($"Cell id found using old API: cid={gcl.Cid} lac={gcl.Lac}");
+                    }
+                }
+            });
+        }
+
+        public override event EventHandler<CellularIdFoundEventArgs> ResultFound;
     }
 }

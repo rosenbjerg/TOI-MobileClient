@@ -1,9 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Android.Nfc;
 using Android.App;
 using TOI_MobileClient.Dependencies;
 using Android.Content;
 using System.Text;
+using System.Threading.Tasks;
+using Android.Telephony;
+using Android.Telephony.Gsm;
 using TOI_MobileClient.Managers;
 
 namespace TOI_MobileClient.Droid

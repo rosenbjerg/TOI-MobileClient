@@ -29,12 +29,14 @@ namespace TOI_MobileClient.Droid.Services
         private readonly GpsScannerBase _gpsScanner = DependencyManager.Get<GpsScannerBase>();
         private readonly NfcScannerBase _nfcScanner = DependencyManager.Get<NfcScannerBase>();
         private readonly WiFiScannerBase _wifiScanner = DependencyManager.Get<WiFiScannerBase>();
+        private readonly CellularScannerBase _cellularScanner = DependencyManager.Get<CellularScannerBase>();
 
         public ToiScannerService()
         {
             _bleScanner.ResultFound += OnTagFound;
             _wifiScanner.ResultFound += OnTagFound;
             _nfcScanner.ResultFound += OnTagFound;
+            _cellularScanner.ResultFound += OnTagFound;
             _gpsScanner.ResultFound += (sender, args) =>
             {
                 var tois = SubscriptionManager.Instance.GetToisByLocation(args.Location).ToList();
@@ -129,7 +131,8 @@ namespace TOI_MobileClient.Droid.Services
                 var bleTask = _bleScanner.ScanAsync();
                 var wifiTask = _wifiScanner.ScanAsync();
                 var gpsTask = _gpsScanner.ScanAsync();
-                await Task.WhenAll(bleTask, wifiTask, gpsTask);
+                var cellTask = _cellularScanner.ScanAsync();
+                await Task.WhenAll(bleTask, wifiTask, gpsTask, cellTask);
                 await Task.Delay(SettingsManager.ScanDelay());
 
                 if (SettingsManager.ScanFrequencyValue == SettingsManager.Language.Never)
