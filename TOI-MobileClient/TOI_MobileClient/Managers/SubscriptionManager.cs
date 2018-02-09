@@ -170,16 +170,23 @@ namespace TOI_MobileClient.Managers
 
         public async Task LoadTois()
         {
-            Console.WriteLine($"Fetching Contexts: '{string.Join(", ", Contexts)}' from {BaseUrl}");
-            var toiUrl = $"{BaseUrl}/tois?contexts={string.Join(",", Contexts)}";
-            var tagUrl = $"{BaseUrl}/tags?contexts={string.Join(",", Contexts)}";
-            ToiCache = await ToiHttpClient.Instance.GetMany<ToiModel>(toiUrl);
-            TagCache = ToiCache.SelectMany(toi => toi.Tags).ToHashSet();
-            GpsCache = (await ToiHttpClient.Instance.GetMany<TagModel>(tagUrl))
-                .Where(t => t.Type == TagType.Gps)
-                .ToHashSet();
-            Index = TagCache.ToDictionary(tagId => tagId,
-            tagId => ToiCache.Where(toi => toi.Tags.Contains(tagId)).ToList());
+            try
+            {
+                Console.WriteLine($"Fetching Contexts: '{string.Join(", ", Contexts)}' from {BaseUrl}");
+                var toiUrl = $"{BaseUrl}/tois?contexts={string.Join(",", Contexts)}";
+                var tagUrl = $"{BaseUrl}/tags?contexts={string.Join(",", Contexts)}";
+                ToiCache = await ToiHttpClient.Instance.GetMany<ToiModel>(toiUrl);
+                TagCache = ToiCache.SelectMany(toi => toi.Tags).ToHashSet();
+                GpsCache = (await ToiHttpClient.Instance.GetMany<TagModel>(tagUrl))
+                    .Where(t => t.Type == TagType.Gps)
+                    .ToHashSet();
+                Index = TagCache.ToDictionary(tagId => tagId,
+                    tagId => ToiCache.Where(toi => toi.Tags.Contains(tagId)).ToList());
+            }
+            catch (Exception e)
+            {
+                DependencyManager.Get<NotifierBase>().DisplayToast("Could not connect to: " + BaseUrl, true);
+            }
         }
 
 
