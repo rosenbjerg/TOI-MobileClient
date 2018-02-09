@@ -49,7 +49,6 @@ namespace TOI_MobileClient.Managers
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
                 return null;
             }
         }

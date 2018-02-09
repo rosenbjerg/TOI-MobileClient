@@ -33,7 +33,7 @@ namespace TOI_MobileClient
             catch (JsonReaderException e)
             {
                 Console.WriteLine(e);
-                throw new FormatException(e.Message);
+                throw;
             }
             catch (Exception e)
             {

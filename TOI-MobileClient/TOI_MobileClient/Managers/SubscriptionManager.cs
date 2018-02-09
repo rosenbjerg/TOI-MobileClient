@@ -185,7 +185,7 @@ namespace TOI_MobileClient.Managers
             }
             catch (Exception e)
             {
-                DependencyManager.Get<NotifierBase>().DisplayToast("Could not connect to: " + BaseUrl, true);
+                DependencyManager.Get<NotifierBase>().DisplayToast("Could not connect to: " + BaseUrl + "\n" + e.Message, true);
             }
         }
 

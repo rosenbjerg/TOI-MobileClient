@@ -23,12 +23,6 @@ namespace TOI_MobileClient.ViewModels
                 Description = "En fin test server til at lave TOIs og kontekster på. Denne server har en meget lang description, som fylder en masse, for at vi kan teste lange descriptions. Fedt man, spa!",
                 BaseUrl = "http://ssh.windelborg.info:7474"
             });
-            FeedServers.Add(new FeedServerViewModel
-            {
-                Name = "sw706 Hyggehulen",
-                Description = "Denne hule har samme kontekster som Jespers Server. Det er bare noget vi leger.",
-                BaseUrl = "http://ssh.windelborg.info:7474"
-            });
         }
 
         public override string PageTitle => SettingsManager.Language.SelectFeedServer;
